@@ -352,7 +352,6 @@ FOR EACH ROW
 WHEN (NEW.is_pending = false)
 EXECUTE FUNCTION handle_invite_response();
 
-
 CREATE OR REPLACE FUNCTION create_pending_notification()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -367,9 +366,9 @@ BEGIN
     
     VALUES (
         NEW.developer_id,
-        'invite',
+        'INVITE',
         NEW.project_id,
-        NEW.authenticated_user_id,
+        NEW.developer_id,
         NOW()
     );
 
@@ -396,5 +395,3 @@ CREATE TRIGGER assign_notification_trigger
     FOR EACH ROW
     WHEN (OLD.assigned_to IS DISTINCT FROM NEW.assigned_to) 
     EXECUTE PROCEDURE create_assign_notification();
-
-
