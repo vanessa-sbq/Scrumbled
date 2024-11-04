@@ -346,11 +346,12 @@ $$ LANGUAGE plpgsql;
 
 -- Trigger to handle the response to an invitation
 CREATE TRIGGER handle_invite_response_trigger
-AFTER UPDATE OF pending
+AFTER UPDATE OF is_pending
 ON developer_project
 FOR EACH ROW
-WHEN (NEW.pending = false)
+WHEN (NEW.is_pending = false)
 EXECUTE FUNCTION handle_invite_response();
+
 
 CREATE OR REPLACE FUNCTION create_pending_notification()
 RETURNS TRIGGER AS $$
