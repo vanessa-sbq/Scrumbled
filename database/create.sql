@@ -170,6 +170,12 @@ CREATE TABLE
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
+CREATE INDEX IDX01 ON notification USING HASH (receiver_id);
+
+CREATE INDEX IDX02 ON comment USING BTREE (task_id);
+
+CREATE INDEX IDX03 ON task USING BTREE (project_id);
+
 -- Add column to project to store computed ts_vectors.
 ALTER TABLE project
 ADD COLUMN tsvectors TSVECTOR;
@@ -395,3 +401,4 @@ CREATE TRIGGER assign_notification_trigger
     FOR EACH ROW
     WHEN (OLD.assigned_to IS DISTINCT FROM NEW.assigned_to) 
     EXECUTE PROCEDURE create_assign_notification();
+
