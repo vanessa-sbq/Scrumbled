@@ -1,0 +1,294 @@
+openapi: 3.0.0
+
+# Exact match search
+# Full text search
+# Search Filters
+
+info:
+  version: '1.0'
+  title: 'Scrumbled Web API'
+  description: 'Web Resources Specification (A7) for Scrumbled'
+
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/wikis/home
+
+tags:
+  - name: 'M01: Authentication and Individual Profile'
+  - name: 'M02: Projects'
+  - name: 'M03: Reviews and Wish list'
+  - name: 'M04: Loans'
+  - name: 'M05: User Administration and Static pages'
+
+paths:
+
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+ 
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:          # <!--- form field name
+                  type: string
+                password:    # <!--- form field name
+                  type: string
+              required:
+                - email
+                - password
+ 
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{username}'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+ 
+  /logout:
+
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated used. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to login form.'
+                  value: '/login'
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Provide new user registration form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show sign-up UI'
+
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                bio:
+                  type: string
+                fullname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+              required:
+                - username
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+
+  /users/{username}:
+    get:
+      operationId: R106
+      summary: 'R106: View user profile'
+      description: 'Show the individual user profile. Access: USR'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+ 
+  /users/{username}/edit:
+    parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+    get:
+      operationId: R109
+      summary: 'R109: Edit user profile'
+      description: 'Edit user page. Access: USR'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+      responses:
+        '200':
+          description: 'Returns edit user page.'
+    post:
+      operationId: R105
+      summary: 'R105: Create Project'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Individual Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                bio:
+                  type: string
+                picture:
+                  type: string
+                fullname:
+                  type: string
+
+      responses:
+        '302':
+          description: 'Redirect to user profile.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Edit Success.'
+                  value: '/user/{username}'
+  
+  /projects:
+    get:
+      operationId: R202
+      summary: 'R202: Search Works API'
+      description: 'Searches for works and returns the results as JSON. Access: PUB.'
+
+      tags: 
+        - 'M02: Projects'
+
+      parameters:
+        - in: query
+          name: slug
+          description: String to use for full-text search. 
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: type
+          description: Type of project to search.
+          schema:
+            enum:
+              - my_projects
+              - favorites
+              - public
+              - archive
+            example:
+             my_projects
+          required: false
+      responses:
+        '200':
+          description: 'Returns project page.'
+    post:
+      operationId: R105
+      summary: 'R105: Create Project'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M02: Projects'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                public:
+                  type: boolean
+                  default: false
+              required:
+                - title
+
+      responses:
+        '302':
+          description: 'Redirect after creating the project.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Project created successfully, redirecting to project page.'
+                  value: '/projects/{slug}'
+
+
+
+
+
