@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ProjectFactory extends Factory
 {
@@ -21,8 +22,6 @@ class ProjectFactory extends Factory
             'slug' => Str::slug($title),
             'title' => $title,
             'description' => $this->faker->paragraph,
-            'product_owner_id' => null, // This will be set in the seeder
-            'scrum_master_id' => null, // This will be set in the seeder
             'is_public' => $this->faker->boolean,
             'is_archived' => $this->faker->boolean,
             'created_at' => now(),

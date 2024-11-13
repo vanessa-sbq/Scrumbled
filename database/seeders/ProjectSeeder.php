@@ -25,8 +25,6 @@ class ProjectSeeder extends Seeder
             'description' => 'Lbaw project',
             'product_owner_id' => $antonio->id,
             'scrum_master_id' => $simao->id,
-            'is_public' => true,
-            'is_archived' => false,
         ]);
 
         $project2 = Project::factory()->create([
@@ -35,8 +33,6 @@ class ProjectSeeder extends Seeder
             'description' => 'Copy of Scrumbled',
             'product_owner_id' => $vanessa->id,
             'scrum_master_id' => $joao->id,
-            'is_public' => false,
-            'is_archived' => false,
         ]);
 
         // Add developers to projects

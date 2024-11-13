@@ -184,16 +184,16 @@ CREATE TRIGGER assign_notification_trigger
 CREATE OR REPLACE FUNCTION ensure_roles_before_project_insert() RETURNS TRIGGER AS $$
 BEGIN
     -- Ensure the product owner is in the product_owner table
-    IF NOT EXISTS (SELECT 1 FROM product_owner WHERE user_id = NEW.product_owner_id) THEN
+    IF NEW.product_owner_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM product_owner WHERE user_id = NEW.product_owner_id) THEN
         INSERT INTO product_owner (user_id) VALUES (NEW.product_owner_id);
     END IF;
 
     -- Ensure the scrum master is in the developer and scrum_master tables
-    IF NOT EXISTS (SELECT 1 FROM developer WHERE user_id = NEW.scrum_master_id) THEN
+    IF NEW.scrum_master_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM developer WHERE user_id = NEW.scrum_master_id) THEN
         INSERT INTO developer (user_id) VALUES (NEW.scrum_master_id);
     END IF;
 
-    IF NOT EXISTS (SELECT 1 FROM scrum_master WHERE developer_id = NEW.scrum_master_id) THEN
+    IF NEW.scrum_master_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM scrum_master WHERE developer_id = NEW.scrum_master_id) THEN
         INSERT INTO scrum_master (developer_id) VALUES (NEW.scrum_master_id);
     END IF;
 

@@ -11,8 +11,6 @@ class Developer extends Model
 
     protected $table = 'developer';
 
-    protected $primaryKey = 'user_id'; // Specify the primary key
-
     protected $fillable = [
         'user_id',
     ];
@@ -23,6 +21,7 @@ class Developer extends Model
 
     protected $keyType = 'bigint'; // Specify the type of the primary key
 
+    // Define relationships
     public function user()
     {
         return $this->belongsTo(AuthenticatedUser::class, 'user_id');

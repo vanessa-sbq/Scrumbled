@@ -41,6 +41,9 @@ class DatabaseSeeder extends Seeder
         // Call the SprintSeeder
         $this->call(SprintSeeder::class);
 
+        // Call the TaskSeeder
+        $this->call(TaskSeeder::class);
+
         $this->command->info('DB: Database seeded!');
     }
 }
