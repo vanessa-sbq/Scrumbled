@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\AuthenticatedUser;
 use App\Models\Project;
 use App\Models\DeveloperProject;
+use App\Models\Favorite;
 
 class ProjectSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class ProjectSeeder extends Seeder
         $simao = AuthenticatedUser::where('email', 'up202206370@up.pt')->first();
 
         // Create projects and associate them with the hardcoded users
-        $project1 = Project::create([
+        $project1 = Project::factory()->create([
             'slug' => 'scrumbled',
             'title' => 'Scrumbled',
             'description' => 'Lbaw project',
@@ -26,10 +27,9 @@ class ProjectSeeder extends Seeder
             'scrum_master_id' => $simao->id,
             'is_public' => true,
             'is_archived' => false,
-            'created_at' => now(),
         ]);
 
-        $project2 = Project::create([
+        $project2 = Project::factory()->create([
             'slug' => 'jira',
             'title' => 'Jira',
             'description' => 'Copy of Scrumbled',
@@ -37,7 +37,6 @@ class ProjectSeeder extends Seeder
             'scrum_master_id' => $joao->id,
             'is_public' => false,
             'is_archived' => false,
-            'created_at' => now(),
         ]);
 
         // Add developers to projects
@@ -63,6 +62,17 @@ class ProjectSeeder extends Seeder
             'developer_id' => $simao->id,
             'project_id' => $project2->id,
             'is_pending' => false,
+        ]);
+
+        // Add favorites
+        Favorite::create([
+            'user_id' => $antonio->id,
+            'project_id' => $project1->id,
+        ]);
+
+        Favorite::create([
+            'user_id' => $joao->id,
+            'project_id' => $project2->id,
         ]);
     }
 }
