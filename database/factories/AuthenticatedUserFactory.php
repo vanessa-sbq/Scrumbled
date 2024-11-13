@@ -18,7 +18,7 @@ class AuthenticatedUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->userName(),
+            'username' => fake()->unique()->userName(),
             'hashed_password' => bcrypt('password'),
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

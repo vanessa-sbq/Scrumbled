@@ -25,7 +25,7 @@ CREATE TABLE
         bio TEXT,
         picture TEXT,
         status account_status NOT NULL DEFAULT 'NEEDS_CONFIRMATION',
-        remember_token VARCHAR(255)
+        remember_token VARCHAR(255),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 

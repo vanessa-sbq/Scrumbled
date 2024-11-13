@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\AuthenticatedUser;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedUserSeeder extends Seeder
 {
@@ -12,6 +13,7 @@ class AuthenticatedUserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create specific users
         AuthenticatedUser::factory()->create([
             'username' => 'antonio',
             'hashed_password' => Hash::make('password'),
@@ -39,5 +41,7 @@ class AuthenticatedUserSeeder extends Seeder
             'full_name' => 'Simao Neri',
             'email' => 'up202206370@up.pt',
         ]);
+
+        AuthenticatedUser::factory()->count(10)->create();
     }
 }
