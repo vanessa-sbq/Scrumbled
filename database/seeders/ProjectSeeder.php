@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\AuthenticatedUser;
 use App\Models\Project;
+use App\Models\DeveloperProject;
 
 class ProjectSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class ProjectSeeder extends Seeder
         $simao = AuthenticatedUser::where('email', 'up202206370@up.pt')->first();
 
         // Create projects and associate them with the hardcoded users
-        Project::create([
+        $project1 = Project::create([
             'slug' => 'scrumbled',
             'title' => 'Scrumbled',
             'description' => 'Lbaw project',
@@ -28,7 +29,7 @@ class ProjectSeeder extends Seeder
             'created_at' => now(),
         ]);
 
-        Project::create([
+        $project2 = Project::create([
             'slug' => 'jira',
             'title' => 'Jira',
             'description' => 'Copy of Scrumbled',
@@ -37,6 +38,31 @@ class ProjectSeeder extends Seeder
             'is_public' => false,
             'is_archived' => false,
             'created_at' => now(),
+        ]);
+
+        // Add developers to projects
+        DeveloperProject::create([
+            'developer_id' => $joao->id,
+            'project_id' => $project1->id,
+            'is_pending' => false,
+        ]);
+
+        DeveloperProject::create([
+            'developer_id' => $joao->id,
+            'project_id' => $project2->id,
+            'is_pending' => false,
+        ]);
+
+        DeveloperProject::create([
+            'developer_id' => $simao->id,
+            'project_id' => $project1->id,
+            'is_pending' => true,
+        ]);
+
+        DeveloperProject::create([
+            'developer_id' => $simao->id,
+            'project_id' => $project2->id,
+            'is_pending' => false,
         ]);
     }
 }

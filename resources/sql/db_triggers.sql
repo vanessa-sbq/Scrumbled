@@ -142,7 +142,7 @@ BEGIN
         NEW.developer_id,
         'INVITE',
         NEW.project_id,
-        NEW.authenticated_user_id,
+        NEW.developer_id, -- Corrected field
         NOW()
     );
 
@@ -152,9 +152,9 @@ $$ LANGUAGE plpgsql;
 
 -- Create a trigger to notify when a new developer is added to a project.
 CREATE TRIGGER trigger_create_invite_notification
-    AFTER INSERT ON developer_project
-    FOR EACH ROW
-    EXECUTE FUNCTION create_pending_notification();
+AFTER INSERT ON developer_project
+FOR EACH ROW
+EXECUTE FUNCTION create_pending_notification();
 
 -----------------------------------------
 -- TRIGGER 06
@@ -175,3 +175,34 @@ CREATE TRIGGER assign_notification_trigger
     FOR EACH ROW
     WHEN (OLD.assigned_to IS DISTINCT FROM NEW.assigned_to) 
     EXECUTE PROCEDURE create_assign_notification();
+
+-----------------------------------------
+-- TRIGGER 07
+-----------------------------------------
+
+-- Create a function to ensure the user is added to the appropriate role tables before creating a project.
+CREATE OR REPLACE FUNCTION ensure_roles_before_project_insert() RETURNS TRIGGER AS $$
+BEGIN
+    -- Ensure the product owner is in the product_owner table
+    IF NOT EXISTS (SELECT 1 FROM product_owner WHERE user_id = NEW.product_owner_id) THEN
+        INSERT INTO product_owner (user_id) VALUES (NEW.product_owner_id);
+    END IF;
+
+    -- Ensure the scrum master is in the developer and scrum_master tables
+    IF NOT EXISTS (SELECT 1 FROM developer WHERE user_id = NEW.scrum_master_id) THEN
+        INSERT INTO developer (user_id) VALUES (NEW.scrum_master_id);
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM scrum_master WHERE developer_id = NEW.scrum_master_id) THEN
+        INSERT INTO scrum_master (developer_id) VALUES (NEW.scrum_master_id);
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the function before inserting a project.
+CREATE TRIGGER before_project_insert
+BEFORE INSERT ON project
+FOR EACH ROW
+EXECUTE FUNCTION ensure_roles_before_project_insert();
