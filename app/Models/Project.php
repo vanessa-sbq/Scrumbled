@@ -22,7 +22,9 @@ class Project extends Model
         'created_at',
     ];
 
-    public $timestamps = false;
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 
     // Define relationships
     public function productOwner()
@@ -33,5 +35,13 @@ class Project extends Model
     public function scrumMaster()
     {
         return $this->belongsTo(AuthenticatedUser::class, 'scrum_master_id');
+    }
+
+    /**
+     * Get the developers of the project.
+     */
+    public function developers()
+    {
+        return $this->belongsToMany(AuthenticatedUser::class, 'developer_project', 'project_id', 'developer_id');
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AuthenticatedUser>
  */
 class AuthenticatedUserFactory extends Factory
 {
@@ -19,7 +19,7 @@ class AuthenticatedUserFactory extends Factory
     {
         return [
             'username' => fake()->unique()->userName(),
-            'hashed_password' => bcrypt('password'),
+            'password' => bcrypt('password'),
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'bio' => fake()->text(),

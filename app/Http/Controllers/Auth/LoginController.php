@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\View\View;
-
 class LoginController extends Controller
 {
 
@@ -19,9 +17,9 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards');
+            return redirect('/projects');
         } else {
-            return view('auth.login');
+            return view('pages.auth.login');
         }
     }
 
@@ -38,7 +36,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/cards');
+            return redirect()->intended('/projects');
         }
  
         return back()->withErrors([

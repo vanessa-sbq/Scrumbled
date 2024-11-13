@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Eloquent;
-use DB;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 

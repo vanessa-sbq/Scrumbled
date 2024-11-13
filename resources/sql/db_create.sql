@@ -2,24 +2,19 @@
 CREATE TABLE
     admin (
         id BIGSERIAL PRIMARY KEY,
-        hashed_password VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 -- Relation: authenticated_user
-
-CREATE TYPE account_status AS ENUM (
-    'NEEDS_CONFIRMATION',
-    'ACTIVE',
-    'BANNED'
-);
+CREATE TYPE account_status AS ENUM ('NEEDS_CONFIRMATION', 'ACTIVE', 'BANNED');
 
 CREATE TABLE
     authenticated_user (
         id BIGSERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL UNIQUE,
-        hashed_password VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
         full_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         bio TEXT,

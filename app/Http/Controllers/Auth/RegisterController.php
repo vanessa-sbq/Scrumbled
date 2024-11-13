@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\View\View;
 
-use App\Models\User;
+use App\Models\AuthenticatedUser;
 
 class RegisterController extends Controller
 {
@@ -19,7 +19,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View
     {
-        return view('auth.register');
+        return view('pages.auth.register');
     }
 
     /**
@@ -28,13 +28,13 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:250',
+            'username' => 'required|string|max:250|alpha_dash|unique:users',
             'email' => 'required|email|max:250|unique:users',
             'password' => 'required|min:8|confirmed'
         ]);
 
-        User::create([
-            'name' => $request->name,
+        AuthenticatedUser::create([
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
@@ -42,7 +42,7 @@ class RegisterController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('cards')
+        return redirect()->route('projects')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }
