@@ -41,7 +41,5 @@ class AuthenticatedUserSeeder extends Seeder
             'full_name' => 'Simao Neri',
             'email' => 'up202206370@up.pt',
         ]);
-
-        AuthenticatedUser::factory()->count(10)->create();
     }
 }
