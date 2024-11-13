@@ -44,6 +44,9 @@ class DatabaseSeeder extends Seeder
         // Call the TaskSeeder
         $this->call(TaskSeeder::class);
 
+        // Call the CommentSeeder
+        $this->call(CommentSeeder::class);
+
         $this->command->info('DB: Database seeded!');
     }
 }

@@ -70,10 +70,14 @@ class TaskSeeder extends Seeder
         // Create random tasks for the projects
         Task::factory()->count(5)->create([
             'project_id' => $project1->id,
+            'sprint_id' => $sprint1->id,
+            'assigned_to' => $joao->user_id,
         ]);
 
         Task::factory()->count(5)->create([
             'project_id' => $project2->id,
+            'sprint_id' => $sprint2->id,
+            'assigned_to' => $simao->user_id,
         ]);
     }
 }
