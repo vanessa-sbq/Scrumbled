@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
         DB::unprepared(file_get_contents('resources/sql/db_performance_indexes.sql'));
         $this->command->info('DB: Performance indexes created');
 
+        DB::unprepared(file_get_contents('resources/sql/db_fts_indexes.sql'));
+        $this->command->info('DB: Full text search indexes created');
+
         // Execute the triggers SQL file
         DB::unprepared(file_get_contents('resources/sql/db_triggers.sql'));
         $this->command->info('DB: Triggers created');

@@ -20,10 +20,7 @@ class Task extends Model
         'value',
         'state',
         'effort',
-        'created_at',
     ];
-
-    public $timestamps = false;
 
     // Define relationships
     public function project()

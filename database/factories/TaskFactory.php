@@ -23,6 +23,7 @@ class TaskFactory extends Factory
             'state' => $this->faker->randomElement(['BACKLOG', 'SPRINT_BACKLOG', 'IN_PROGRESS', 'DONE', 'ACCEPTED']),
             'effort' => $this->faker->randomElement([1, 2, 3, 5, 8, 13]),
             'created_at' => now(),
+            'updated_at'=> now(),
         ];
     }
 }

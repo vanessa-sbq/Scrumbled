@@ -16,6 +16,4 @@ class DeveloperProject extends Pivot
         'project_id',
         'is_pending',
     ];
-
-    public $timestamps = false;
 }

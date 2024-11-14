@@ -20,15 +20,12 @@ class AuthenticatedUser extends Authenticatable
         'picture',
         'status',
         'remember_token',
-        'created_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    public $timestamps = false;
 
     /**
      * Get the projects where the user is a product owner.

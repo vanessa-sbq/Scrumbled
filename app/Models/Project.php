@@ -19,11 +19,6 @@ class Project extends Model
         'scrum_master_id',
         'is_public',
         'is_archived',
-        'created_at',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
     ];
 
     // Define relationships

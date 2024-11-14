@@ -4,7 +4,8 @@ CREATE TABLE
         id BIGSERIAL PRIMARY KEY,
         password VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 -- Relation: authenticated_user
@@ -21,7 +22,8 @@ CREATE TABLE
         picture TEXT,
         status account_status NOT NULL DEFAULT 'NEEDS_CONFIRMATION',
         remember_token VARCHAR(255),
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 -- Relation: product_owner
@@ -53,7 +55,8 @@ CREATE TABLE
         scrum_master_id BIGINT REFERENCES scrum_master (developer_id) ON DELETE SET NULL ON UPDATE CASCADE,
         is_public BOOLEAN NOT NULL DEFAULT FALSE,
         is_archived BOOLEAN NOT NULL DEFAULT FALSE,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 -- Relation: favorite
@@ -70,6 +73,8 @@ CREATE TABLE
         developer_id BIGINT NOT NULL REFERENCES developer (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
         project_id BIGINT NOT NULL REFERENCES project (id) ON DELETE CASCADE ON UPDATE CASCADE,
         is_pending BOOLEAN NOT NULL DEFAULT TRUE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
         PRIMARY KEY (developer_id, project_id)
     );
 
@@ -111,7 +116,8 @@ CREATE TABLE
         value value_level,
         state task_state NOT NULL DEFAULT 'BACKLOG',
         effort INT CHECK (effort IN (1, 2, 3, 5, 8, 13)),
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 -- Relation: comment
@@ -121,7 +127,8 @@ CREATE TABLE
         task_id BIGINT NOT NULL REFERENCES task (id) ON DELETE CASCADE ON UPDATE CASCADE,
         user_id BIGINT REFERENCES authenticated_user (id) ON DELETE SET NULL ON UPDATE CASCADE,
         description TEXT NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
 
 CREATE TYPE notification_type AS ENUM (

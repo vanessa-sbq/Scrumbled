@@ -26,7 +26,6 @@ class AuthenticatedUserFactory extends Factory
             'picture' => fake()->imageUrl(),
             'status' => 'NEEDS_CONFIRMATION',
             'remember_token' => Str::random(10),
-            'created_at' => now(),
         ];
     }
 }

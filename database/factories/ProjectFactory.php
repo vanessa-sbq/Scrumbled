@@ -24,7 +24,6 @@ class ProjectFactory extends Factory
             'description' => $this->faker->paragraph,
             'is_public' => $this->faker->boolean,
             'is_archived' => $this->faker->boolean,
-            'created_at' => now(),
         ];
     }
 }

@@ -15,10 +15,7 @@ class Comment extends Model
         'task_id',
         'user_id',
         'description',
-        'created_at',
     ];
-
-    public $timestamps = false;
 
     // Define relationships
     public function task()
