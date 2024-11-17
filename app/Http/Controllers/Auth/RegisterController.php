@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\View\View;
 
-use App\Models\User;
+use App\Models\AuthenticatedUser;
 
 class RegisterController extends Controller
 {
@@ -19,7 +19,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View
     {
-        return view('auth.register');
+        return view('pages.auth.register');
     }
 
     /**
@@ -27,22 +27,30 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        // Validate the request data
         $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user',
+            'email' => 'required|email|max:250|unique:authenticated_user',
+            'password' => 'required|min:8|confirmed',
+            'full_name' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
+        // Collect the validated data
+        $data = $request->only('username', 'email', 'full_name', 'bio');
+        $data['password'] = Hash::make($request->password);
 
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials);
-        $request->session()->regenerate();
-        return redirect()->route('cards')
-            ->withSuccess('You have successfully registered & logged in!');
+        // Handle the file upload
+        if ($request->hasFile('picture')) {
+            $picturePath = $request->file('picture')->store('profile_pictures', 'public');
+            $data['picture'] = $picturePath;
+        }
+
+        // Create the user
+        AuthenticatedUser::create($data);
+
+        // Redirect to the login page with a success message
+        return redirect()->route('login')->with('success', 'Registration successful. Please login.');
     }
 }

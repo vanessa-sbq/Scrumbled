@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Seeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,9 +14,42 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $path = base_path('database/create.sql');
-        $sql = file_get_contents($path);
-        DB::unprepared($sql);
-        $this->command->info('Database seeded!');
+        Eloquent::unguard();
+
+        // Execute the schema creation SQL file
+        DB::unprepared(file_get_contents('resources/sql/db_create_schema.sql'));
+        $this->command->info('DB: Schema created');
+
+        // Execute the database creation SQL file
+        DB::unprepared(file_get_contents('resources/sql/db_create.sql'));
+        $this->command->info('DB: Database created');
+
+        // Execute the performance indexes SQL file
+        DB::unprepared(file_get_contents('resources/sql/db_performance_indexes.sql'));
+        $this->command->info('DB: Performance indexes created');
+
+        DB::unprepared(file_get_contents('resources/sql/db_fts_indexes.sql'));
+        $this->command->info('DB: Full text search indexes created');
+
+        // Execute the triggers SQL file
+        DB::unprepared(file_get_contents('resources/sql/db_triggers.sql'));
+        $this->command->info('DB: Triggers created');
+
+        // Call the AuthenticatedUserSeeder
+        $this->call(AuthenticatedUserSeeder::class);
+
+        // Call the ProjectSeeder
+        $this->call(ProjectSeeder::class);
+
+        // Call the SprintSeeder
+        $this->call(SprintSeeder::class);
+
+        // Call the TaskSeeder
+        $this->call(TaskSeeder::class);
+
+        // Call the CommentSeeder
+        $this->call(CommentSeeder::class);
+
+        $this->command->info('DB: Database seeded!');
     }
 }
