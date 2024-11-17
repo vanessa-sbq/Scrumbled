@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 .DS_Store
 upload_image.sh
+package-lock.json
+public/mix-manifest.json
