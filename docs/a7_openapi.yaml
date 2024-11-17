@@ -215,7 +215,7 @@ paths:
                 302Error:
                   description: 'Failure while updating profile.'
                   value: '/profile/{username}/edit'
-  /profile/search:
+  /api/profile/search:
     get:
       operationId: R204
       summary: 'R204: Search Profiles'
@@ -296,6 +296,17 @@ paths:
                 302Success:
                   description: 'Redirecting to login.'
                   value: '/login'
+
+  /projects/new:
+    get:
+      operationId: R101
+      summary: 'R101: Project create UI'
+      description: 'Get the Project creation form. Access: USR'
+      tags:
+        - 'M03 - Project'
+      responses:
+        '200':
+          description: 'Ok. Show Project Create UI'
     post:
       operationId: R302
       summary: 'R302: Create a new project'
@@ -368,6 +379,15 @@ paths:
                   description: 'Redirecting to projects.'
                   value: '/projects'
   /projects/{slug}/add:
+    get:
+      operationId: R101
+      summary: 'R101: Add user to Project UI'
+      description: 'Get the Add user to Project form. Access: PO'
+      tags:
+        - 'M03 - Project'
+      responses:
+        '200':
+          description: 'Ok. Show Add User UI'
     post:
       operationId: R304
       summary: 'R304: Add User to Project'
@@ -403,68 +423,23 @@ paths:
           description: User successfully added to the project.
         '400':
           description: User not found.
-  /projects/{slug}/{sprint_id}:
+  
+  /projects/{slug}/backlog:
     get:
-      operationId: R4305
-      summary: 'R4305: List Tasks for a Sprint'
-      description: 'Gets the list of tasks associated with a specific sprint in a project. Access: PUB.'
+      operationId: R303
+      summary: 'R303: View project backlog page'
+      description: 'Show the individual project backlog. Access: USR.'
       tags:
         - 'M03 - Project'
-        - 'M04 - Task'
       parameters:
         - in: path
           name: slug
           schema:
             type: string
           required: true
-        - in: path
-          name: sprint_id
-          schema:
-            type: integer
-          required: true
       responses:
         '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    sprint_id:
-                      type: integer
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    assigned_to:
-                      type: integer
-                    value:
-                      type: string
-                      enum:
-                        - Low
-                        - Medium
-                        - High
-                    effort:
-                      type: integer
-                      enum:
-                        - 1
-                        - 2
-                        - 3
-                        - 5
-                        - 8
-                        - 13
-                  example:
-                    - id: 101
-                      sprint_id: 5
-                      title: "Task Title"
-                      description: "Description blah blah clah."
-                      assigned_to: 42
-                      value: "High"
-                      effort: 8
+          description: 'Success. Show Project Backlog UI'
         '302':
           description: Access Denied
           headers:
@@ -475,15 +450,13 @@ paths:
                 302Success:
                   description: 'Redirecting to projects.'
                   value: '/projects'
-        '400':
-          description: 'Sprint not found.'
-  /projects/{slug}/backlog/search:
+  /api/projects/{slug}/backlog/search:
     get:
       operationId: R402
       summary: 'R402: Search for task'
       description: 'Searches for tasks inside of the project backlog and returns the results as JSON. Access: PUB'
       tags:
-        - 'M04 - Task'
+        - 'M03 - Project'
       parameters:
         - in: path
           name: slug
@@ -524,28 +497,67 @@ paths:
                 302Success:
                   description: 'Redirecting to projects.'
                   value: '/projects'
-  /projects/{slug}/{sprint_id}/{task_id}:
+  /tasks/new:
+    get:
+      operationId: R101
+      summary: 'R101: Create task UI'
+      description: 'Get the Create Task form. Access: PO'
+      tags:
+        - 'M04 - Task'
+      parameters:
+        - in: query
+          name: project_id
+          description: Project where I'm creating a task
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Ok. Show Create Task UI'
+    post:
+      operationId: R304
+      summary: 'R304: Create a new Task'
+      description: 'Creates a new task with the specified details. Access: PO'
+      tags:
+        - 'M04 - Task'
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: The details of the user to add to the project.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                id:
+                  type: integer
+                email:
+                  type: string
+              oneOf:
+                - required: [username]
+                - required: [user_id]
+                - required: [email]
+      responses:
+        '200':
+          description: User successfully added to the project.
+        '400':
+          description: User not found.
+  /projects/{slug}/tasks/{id}:
     get:
       operationId: R403
-      summary: 'R403: View task (from sprint) details'
+      summary: 'R403: View task details'
       description: 'Show the task details. Access: PUB'
       tags:
         - 'M04 - Task'
       parameters:
         - in: path
-          name: slug
-          description: Project identifier
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: sprint_id
-          description: Sprint identifier
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: task_id
+          name: id
           description: Task identifier
           schema:
             type: integer
@@ -565,42 +577,16 @@ paths:
                   value: '/projects'
         '400':
           description: 'Task not found.'
-  /projects/{slug}/backlog/{task_id}:
+  /projects/{slug}/tasks/{task_id}/edit:
     get:
-      operationId: R404
-      summary: 'R404: View task (from backlog) details'
-      description: 'Show the task details. Access: PUB'
+      operationId: R101
+      summary: 'R101: Edit task UI'
+      description: 'Get the Edit Task form. Access: PO'
       tags:
         - 'M04 - Task'
-      parameters:
-        - in: path
-          name: slug
-          description: Project identifier
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: task_id
-          description: Task identifier
-          schema:
-            type: integer
-          required: true
       responses:
         '200':
-          description: 'Ok. Show task details.'
-        '302':
-          description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
-        '400':
-          description: 'Task not found.'
-  /projects/{slug}/backlog/{task_id}/edit:
+          description: 'Ok. Show Edit Task UI'
     post:
       operationId: R405
       summary: 'R405: Edit task (in backlog) details'
@@ -608,78 +594,6 @@ paths:
       tags:
         - 'M04 - Task'
       parameters:
-        - in: path
-          name: slug
-          description: Project identifier
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: task_id
-          description: Task identifier
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlenconded:
-            schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                description:
-                  type: string
-                assigned_to:
-                  type: string
-                value:
-                  type: string
-                  enum: [must-have, should-have, could-have, will-not-have]
-                effort:
-                  type: integer
-                  enum: [1, 2, 3, 5, 8, 13]
-                state:
-                  type: string
-                  enum: [backlog, sprint-backlog, in-progress, done, accepted]
-              required:
-                - title
-                - state
-      responses:
-        '200':
-          description: 'Ok. Task details edited'
-        '302':
-          description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
-        '400':
-          description: 'Task not found.'
-  /projects/{slug}/{sprint_id}/{task_id}/edit:
-    post:
-      operationId: R406
-      summary: 'R406: Edit task (in backlog) details'
-      description: 'Edits the details of a task.'
-      tags:
-        - 'M04 - Task'
-      parameters:
-        - in: path
-          name: slug
-          description: Project identifier
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: sprint_id
-          description: Sprint identifier
-          schema:
-            type: integer
-          required: true
         - in: path
           name: task_id
           description: Task identifier
