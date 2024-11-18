@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
         DB::unprepared(file_get_contents('resources/sql/db_triggers.sql'));
         $this->command->info('DB: Triggers created');
 
+        // Call the AdminSeeder
+        $this->call(AdminSeeder::class);
+
         // Call the AuthenticatedUserSeeder
         $this->call(AuthenticatedUserSeeder::class);
 
