@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Projects')
+@extends('web.layout')
 
 @section('content')
     <div class="container p-4 md:py-16">
@@ -11,7 +9,7 @@
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($projects as $project)
-                    @include('partials._project', ['project' => $project])
+                    @include('web.sections.project.components._project', ['project' => $project])
                 @endforeach
             </div>
         @endif
