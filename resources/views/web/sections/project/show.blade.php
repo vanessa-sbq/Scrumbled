@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('title', $project->title)
+@extends('web.layout')
 
 @section('content')
     <div class="container mx-auto py-8">

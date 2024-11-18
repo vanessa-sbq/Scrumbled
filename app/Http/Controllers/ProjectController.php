@@ -26,7 +26,7 @@ class ProjectController extends Controller
             ->get();
 
         // Return the view with the projects
-        return view('pages.projects.index', compact('projects'));
+        return view('web.sections.project.index', compact('projects'));
     }
 
     /**
@@ -41,6 +41,6 @@ class ProjectController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
 
         // Return the view with the project
-        return view('pages.projects.show', compact('project'));
+        return view('web.sections.project.show', compact('project'));
     }
 }

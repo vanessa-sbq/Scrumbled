@@ -19,7 +19,7 @@ class LoginController extends Controller
         if (Auth::check()) {
             return redirect('/projects');
         } else {
-            return view('pages.auth.login');
+            return view('web.sections.auth.login');
         }
     }
 
