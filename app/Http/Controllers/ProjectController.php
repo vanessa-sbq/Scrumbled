@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuthenticatedUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
@@ -16,20 +17,28 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function list()
+    public function list(Request $request)
     {
-        // Get the authenticated user
+        /** @var AuthenticatedUser $user */
         $user = Auth::user();
+        $type = $request->query('type', $user ? 'my_projects' : 'public');
 
-        // Get the projects where the user is a product owner or a developer
-        $projects = Project::where('product_owner_id', $user->id)
-            ->orWhereHas('developers', function ($query) use ($user) {
-                $query->where('developer_id', $user->id);
-            })
-            ->get();
+        if ($type === 'my_projects' && $user) {
+            $projects = Project::where('product_owner_id', $user->id)
+                ->orWhereHas('developers', function ($query) use ($user) {
+                    $query->where('developer_id', $user->id);
+                })
+                ->get();
+        } elseif ($type === 'public') {
+            $projects = Project::where('is_public', true)->get();
+        } elseif ($type === 'favorites' && $user) {
+            // Assuming you have a favorites relationship
+            $projects = $user->favorites()->get();
+        } else {
+            $projects = collect(); // Empty collection if no valid type
+        }
 
-        // Return the view with the projects
-        return view('web.sections.project.index', compact('projects'));
+        return view('web.sections.project.index', compact('projects', 'type'));
     }
 
     /**
