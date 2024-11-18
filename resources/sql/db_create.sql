@@ -4,6 +4,7 @@ CREATE TABLE
         id BIGSERIAL PRIMARY KEY,
         password VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
+        remember_token VARCHAR(255),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
     );
