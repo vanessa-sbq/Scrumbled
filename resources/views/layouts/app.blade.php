@@ -15,7 +15,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body>
     @include('partials._header')
     <main class="container mx-auto">
         @yield('content')
