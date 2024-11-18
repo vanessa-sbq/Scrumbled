@@ -8,9 +8,9 @@
             {{ csrf_field() }}
 
             <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-muted-foreground">E-Mail Address</label>
+                <label for="email" class="block text-sm font-medium text-muted-foreground">E-Mail</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                    class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                 @if ($errors->has('email'))
                     <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
                 @endif
@@ -19,7 +19,7 @@
             <div class="mb-4">
                 <label for="password" class="block text-sm font-medium text-muted-foreground">Password</label>
                 <input id="password" type="password" name="password" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                    class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                 @if ($errors->has('password'))
                     <span class="text-red-500 text-sm">{{ $errors->first('password') }}</span>
                 @endif
@@ -27,7 +27,7 @@
 
             <div class="mb-4 flex items-center">
                 <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}
-                    class="h-4 w-4 text-blue-600 focus:ring-primary border-gray-300 rounded">
+                    class="h-4 w-4 text-blue-600 focus:ring-primary border-muted rounded">
                 <label for="remember" class="ml-2 block text-sm ">Remember Me</label>
             </div>
 

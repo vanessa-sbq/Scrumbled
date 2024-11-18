@@ -37,6 +37,8 @@ Route::prefix('admin')->group(function () {
 // Projects
 Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects', 'list')->name('projects');
+    Route::get('/projects/new', 'create')->name('projects.create');
+    Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
 });
 
