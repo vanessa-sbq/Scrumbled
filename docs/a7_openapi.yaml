@@ -17,15 +17,16 @@ tags:
   - name : 'M01 - Auth'
   - name : 'M02 - Profile'
   - name : 'M03 - Project'
-  - name : 'M04 - Task'
-  - name : 'M05 - Admin'
+  - name : 'M04 - Sprint'
+  - name : 'M05 - Task'
+  - name : 'M06 - Admin'
 
 paths:
   /login:
     get:
       operationId: R101
       summary: 'R101: Login UI'
-      description: 'Get the Login UI. Access: PUB'
+      description: 'Get the Login Page UI. Access: PUB'
       tags:
         - 'M01 - Auth'
       responses:
@@ -53,7 +54,7 @@ paths:
                 - password
       responses:
         '302':
-          description: 'Redirect occours after processing the login credentials.'
+          description: 'Redirect occurs after processing the login credentials.'
           headers:
             Location:
               schema:
@@ -62,23 +63,24 @@ paths:
                 302Success:
                   description: 'Successful authentication. Redirect to user profile.'
                   value: '/users/{username}'
-                302Error:
-                  description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
+        '401':
+              description: 'Failed authentication, incorrect password.'
+        '404':
+              description: 'Failed, user not found.'
   /register:
     get:
       operationId: R103
-      summary: 'R103: User Registration'
+      summary: 'R103: Register UI'
       description: 'Get the Registration Page UI. Access: PUB'
       tags:
         - 'M01 - Auth'
       responses:
         '200':
-          description: 'Ok. Show User Registration UI.'
+          description: 'Ok. Show Register UI.'
     post:
       operationId: R104
-      summary: 'R104: User Registration Action'
-      description: 'Processes the User Registration Form submission. Access: PUB'
+      summary: 'R104: Register Action'
+      description: 'Processes the Register Form submission. Access: PUB'
       tags:
         - 'M01 - Auth'
       requestBody:
@@ -107,7 +109,7 @@ paths:
                 - password
       responses:
         '302':
-          description: 'Redirect occours after processing the login credentials.'
+          description: 'Redirect occurs after processing the login credentials.'
           headers:
             Location:
               schema:
@@ -123,7 +125,7 @@ paths:
     post:
       operationId: R105
       summary: 'R105: Logout Action'
-      description: 'Logout the current authenticated used. Access: USR, ADM'
+      description: 'Logout the current authenticated used. Access: USR'
       tags:
         - 'M01 - Auth'
       responses:
@@ -140,10 +142,12 @@ paths:
                 302Error:
                   description: 'Unsuccessful logout. Redirect to projects.'
                   value: '/projects'
-  /profile/{username}:
+        '403':
+          description: 'Access denied.'
+  /profiles/{username}:
     get:
       operationId: R201
-      summary: 'R201: User Profile'
+      summary: 'R201: User Profile UI'
       description: 'Get the user profile. Access: PUB'
       tags:
         - 'M02 - Profile'
@@ -152,32 +156,44 @@ paths:
           description: 'Ok. Show user profile.'
         '404':
           description: 'User was not found.'
-  /profile/{username}/edit:
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+  /profiles/{username}/edit:
     get:
       operationId: R202
       summary: 'R202: Edit User Profile'
-      description: 'Get page for user profile editing. Access: PUB'
+      description: 'Get page for user profile editing. Access: OWN'
       tags:
         - 'M02 - Profile'
+      parameters:
+        - in: path
+          name : username
+          schema:
+            type: string
+          required: true
       responses:
         '200':
           description: 'Ok. Show the page for editing the user profile.'
-        '302':
-          description: 'No privileges to edit account.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
+        '403':
+          description: 'Access Denied.'
+        '404':
+          description: 'User was not found.'
     post:
       operationId: R203
       summary: 'R203: Edit User Profile Action'
-      description: 'Processes the Edit User Profile Form submission. Access: PUB'
+      description: 'Processes the Edit User Profile Form submission. Access: OWN'
       tags:
         - 'M02 - Profile'
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
@@ -211,11 +227,16 @@ paths:
               examples:
                 302Success:
                   description: 'Profile has been edited successfully. Redirecting to profile'
-                  value: '/profile/{username}'
+                  value: '/profiles/{username}'
                 302Error:
                   description: 'Failure while updating profile.'
-                  value: '/profile/{username}/edit'
-  /api/profile/search:
+                  value: '/profiles/{username}/edit'
+        '403':
+          description: Access Denied
+        '404':
+          description: 'User was not found.'
+          
+  /api/profiles/search:
     get:
       operationId: R204
       summary: 'R204: Search Profiles'
@@ -279,15 +300,21 @@ paths:
                 items:
                   type: object
                   properties:
+                    title:
+                      type: string
                     slug:
                       type: string
                     description:
                       type: string
+                    favorite:
+                      type: boolean
                   example:
-                    - slug: test_project
+                    - title: Test Project
+                      slug: test_project
                       description: "This is a test project for demonstration purposes."
+                      favorite: false
         '302':
-          description: Access Denied
+          description: Login Required.
           headers:
             Location:
               schema:
@@ -296,20 +323,29 @@ paths:
                 302Success:
                   description: 'Redirecting to login.'
                   value: '/login'
-
   /projects/new:
     get:
-      operationId: R101
-      summary: 'R101: Project create UI'
+      operationId: R302
+      summary: 'R302: Project create UI'
       description: 'Get the Project creation form. Access: USR'
       tags:
         - 'M03 - Project'
       responses:
         '200':
           description: 'Ok. Show Project Create UI'
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
     post:
-      operationId: R302
-      summary: 'R302: Create a new project'
+      operationId: R303
+      summary: 'R303: Create a new project'
       description: 'Creates a new project with the specified details. Access: USR.'
       tags:
         - 'M03 - Project'
@@ -317,7 +353,7 @@ paths:
         description: The details of the project to be created.
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -352,11 +388,13 @@ paths:
                 302Failure:
                   description: 'Error while creating the project. Redirect to projects page.'
                   value: '/projects'
+        '403':
+          description: Access Denied
   /projects/{slug}:
     get:
-      operationId: R303
-      summary: 'R303: View project page'
-      description: 'Show the individual project page. Access: USR.'
+      operationId: R304
+      summary: 'R304: View project page'
+      description: 'Show the individual project page. Access: PUB.'
       tags:
         - 'M03 - Project'
       parameters:
@@ -368,29 +406,27 @@ paths:
       responses:
         '200':
           description: 'Success. Show Project Page UI'
-        '302':
+        '403':
           description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
+        '404':
+          description: 'Project was not found.'
   /projects/{slug}/add:
     get:
-      operationId: R101
-      summary: 'R101: Add user to Project UI'
-      description: 'Get the Add user to Project form. Access: PO'
+      operationId: R305
+      summary: 'R305: Add user to Project UI'
+      description: 'Get the Add user to Project form. Access: OWN'
       tags:
         - 'M03 - Project'
       responses:
         '200':
           description: 'Ok. Show Add User UI'
+        '403':
+          description: Access Denied
+        '404':
+          description: 'Project was not found.'
     post:
-      operationId: R304
-      summary: 'R304: Add User to Project'
+      operationId: R306
+      summary: 'R306: Add User to Project'
       description: 'Adds a user to the project Access: USR.'
       tags:
         - 'M03 - Project'
@@ -404,7 +440,7 @@ paths:
         description: The details of the user to add to the project.
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -421,14 +457,16 @@ paths:
       responses:
         '200':
           description: User successfully added to the project.
-        '400':
-          description: User not found.
-  
+        '404':
+          description: 'Project was not found.'
+        '403':
+          description: Access Denied.
+
   /projects/{slug}/backlog:
     get:
-      operationId: R303
-      summary: 'R303: View project backlog page'
-      description: 'Show the individual project backlog. Access: USR.'
+      operationId: R307
+      summary: 'R307: View project backlog page'
+      description: 'Show the individual project backlog. Access: PUB.'
       tags:
         - 'M03 - Project'
       parameters:
@@ -440,20 +478,15 @@ paths:
       responses:
         '200':
           description: 'Success. Show Project Backlog UI'
-        '302':
+        '404':
+          description: 'Project was not found.'
+        '403':
           description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
+
   /api/projects/{slug}/backlog/search:
     get:
-      operationId: R402
-      summary: 'R402: Search for task'
+      operationId: R308
+      summary: 'R308: Search for task'
       description: 'Searches for tasks inside of the project backlog and returns the results as JSON. Access: PUB'
       tags:
         - 'M03 - Project'
@@ -487,41 +520,240 @@ paths:
       responses:
         '200':
           description: 'Ok. Search results returned'
-        '302':
+        '403':
           description: Access Denied
+        '404':
+          description: 'Project was not found.'
+  
+  /projects/{slug}/sprints/new:
+    get:
+      operationId: R401
+      summary: 'R401: Create a new Sprint'
+      description: 'Get the Create Sprint form. Access: USR'
+      tags:
+        - 'M04 - Sprint'
+      parameters:
+        - in: path
+          name: slug
+          description: Project where I'm creating a sprint
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show Create Sprint UI'
+        '302':
+          description: Login Required.
           headers:
             Location:
               schema:
                 type: string
               examples:
                 302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
-  /tasks/new:
-    get:
-      operationId: R101
-      summary: 'R101: Create task UI'
-      description: 'Get the Create Task form. Access: PO'
-      tags:
-        - 'M04 - Task'
-      parameters:
-        - in: query
-          name: project_id
-          description: Project where I'm creating a task
-          schema:
-            type: string
-      responses:
-        '200':
-          description: 'Ok. Show Create Task UI'
+                  description: 'Redirecting to login.'
+                  value: '/login'
+        '403':
+          description: Access Denied
+        
     post:
-      operationId: R304
-      summary: 'R304: Create a new Task'
-      description: 'Creates a new task with the specified details. Access: PO'
+      operationId: R402
+      summary: 'R402: Create a new Sprint'
+      description: 'Creates a new sprint with the specified details. Access: USR'
       tags:
-        - 'M04 - Task'
+        - 'M04 - Sprint'
       parameters:
         - in: path
           name: slug
+          description: Project where I'm creating a sprint
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: The details of the sprint to add to the project.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+                is_open:
+                  type: boolean
+      responses:
+        '200':
+          description: Sprint created successfully.
+        '404':
+          description: Project not found.
+        '403':
+          description: Access Denied
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+                302Error:
+                  description: 'Failure while creating a sprint.'
+                  value: '/project/{slug}/backlog'
+  
+  /sprints/{id}/edit:
+    get:
+      operationId: R404
+      summary: 'R404: Edit sprint UI'
+      description: 'Get the Edit Sprint form. Access: USR'
+      tags:
+        - 'M04 - Sprint'
+      responses:
+        '200':
+          description: 'Ok. Show Edit Sprint UI'
+    post:
+      operationId: R405
+      summary: 'R405: Edit sprint details'
+      description: 'Edits the details of a sprint.'
+      tags:
+        - 'M04 - Sprint'
+      parameters:
+        - in: path
+          name: id
+          description: Sprint identifier
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlenconded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                start_date:
+                  type: integer
+                end_date:
+                  type: integer
+      responses:
+        '200':
+          description: 'Ok. Task details edited'
+        '404':
+          description: 'Task not found.'
+        '403':
+          description: 'Access denied.'
+  /sprints/{id}/close:
+    post:
+      operationId: R406
+      summary: 'R406 - Close a sprint'
+      description: 'Mark the sprint as closed.'
+      tags:
+        - 'M04 - Sprint'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Task successfully accepted.
+        '403':
+          description: Access denied.
+        '404':
+          description: Task not found. 
+          
+  /api/projects/{slug}/sprint:
+    get:
+      operationId: R308
+      summary: 'R407: Get open sprint'
+      description: 'Gets the open sprint of a project. Access: PUB'
+      tags:
+        - 'M04 - Sprint'
+      responses:
+        '200':
+          description: 'Ok. Show open sprint.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  start_date:
+                    type: string
+                    format: date
+                  end_date:
+                    type: string
+                    format: date
+                  is_open:
+                    type: boolean
+                example:
+                  id: 1
+                  name: "Sprint 1"
+                  start_date: "2021-05-01"
+                  end_date: "2021-05-15"
+                  is_open: true
+        '403':
+          description: Access Denied
+        '404':
+          description: 'Project was not found.'
+        
+  
+
+
+
+
+  /projects/{slug}/tasks/new:
+    get:
+      operationId: R401
+      summary: 'R401: Create task UI'
+      description: 'Get the Create Task form. Access: USR'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: slug
+          description: Project where I'm creating a task
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show Create Task UI'
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+        '403':
+          description: Access Denied
+        
+    post:
+      operationId: R402
+      summary: 'R402: Create a new Task'
+      description: 'Creates a new task with the specified details. Access: USR'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: slug
+          description: Project where I'm creating a task
           schema:
             type: string
           required: true
@@ -529,32 +761,49 @@ paths:
         description: The details of the user to add to the project.
         required: true
         content:
-          application/json:
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                username:
+                title:
                   type: string
-                id:
+                description:
+                  type: string
+                value:
+                  type: string
+                  enum: ['must_have', 'should_have', 'could_have', 'will_not_have']
+                effort:
                   type: integer
-                email:
-                  type: string
-              oneOf:
-                - required: [username]
-                - required: [user_id]
-                - required: [email]
+              required:
+                - title
       responses:
         '200':
-          description: User successfully added to the project.
-        '400':
-          description: User not found.
-  /projects/{slug}/tasks/{id}:
+          description: Task created successfully.
+        '404':
+          description: Project not found.
+        '403':
+          description: Access Denied
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+                302Error:
+                  description: 'Failure while creating a task.'
+                  value: '/project/{slug}/backlog'
+                  
+  /tasks/{id}:
     get:
       operationId: R403
       summary: 'R403: View task details'
       description: 'Show the task details. Access: PUB'
       tags:
-        - 'M04 - Task'
+        - 'M05 - Task'
       parameters:
         - in: path
           name: id
@@ -565,25 +814,18 @@ paths:
       responses:
         '200':
           description: 'Ok. Show task details.'
-        '302':
-          description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
-        '400':
+        '403':
+          description: 'Access Denied'
+        '404':
           description: 'Task not found.'
-  /projects/{slug}/tasks/{task_id}/edit:
+          
+  /tasks/{id}/edit:
     get:
-      operationId: R101
-      summary: 'R101: Edit task UI'
-      description: 'Get the Edit Task form. Access: PO'
+      operationId: R404
+      summary: 'R404: Edit task UI'
+      description: 'Get the Edit Task form. Access: USR'
       tags:
-        - 'M04 - Task'
+        - 'M05 - Task'
       responses:
         '200':
           description: 'Ok. Show Edit Task UI'
@@ -592,7 +834,7 @@ paths:
       summary: 'R405: Edit task (in backlog) details'
       description: 'Edits the details of a task.'
       tags:
-        - 'M04 - Task'
+        - 'M05 - Task'
       parameters:
         - in: path
           name: task_id
@@ -628,25 +870,150 @@ paths:
       responses:
         '200':
           description: 'Ok. Task details edited'
-        '302':
-          description: Access Denied
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to projects.'
-                  value: '/projects'
-        '400':
+        '404':
           description: 'Task not found.'
+        '403':
+          description: 'Access denied.'
+  
+  /tasks/{id}/assign:
+    post:
+      operationId: R406
+      summary: 'R406 - Assign myself to a task'
+      description: 'Assign myself to a task. Access: USR'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: The task to be assigned.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: Successfully assigned to task.
+        '403':
+          description: Access denied.
+        '404':
+          description: Task not found.
+
+  /tasks/{id}/start:
+    post:
+      operationId: R406
+      summary: 'R406 - Start a task.'
+      description: 'Start a task; make it be in progress.'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+      
+        description: The task to be marked as in-progress.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: Task successfully started.
+        '403':
+          description: Access denied.
+        '404':
+          description: Task not found.
+
+  /tasks/{id}/complete:
+    post:
+      operationId: R406
+      summary: 'R406 - Complete a task'
+      description: 'Complete a task and mark it as done. Access: '
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: The task to be marked as done.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: Task successfully marked as done.
+        '403':
+          description: Access denied.
+        '404':
+          description: Task not found.
+
+  /tasks/{id}/accept:
+    post:
+      operationId: R406
+      summary: 'R406 - Accept a task'
+      description: 'Mark the task as accepted.'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: The task to be marked as accepted.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+      responses:
+        '200':
+          description: Task successfully accepted.
+        '403':
+          description: Access denied.
+        '404':
+          description: Task not found. 
   /admin/users:
     get:
       operationId: R501
       summary: 'R501: Search user accounts'
       description: 'Retrieve list of user accounts with filtering.'
       tags:
-        - 'M05 - Admin'
+        - 'M06 - Admin'
       parameters:
         - in: query
           name: query
@@ -665,7 +1032,7 @@ paths:
         '200':
           description: 'Ok. List of user accounts returned.'
           content:
-            application/json:
+            application/x-www-form-urlencoded:
               schema:
                 type: array
                 items:
@@ -689,7 +1056,7 @@ paths:
       summary: 'R502: View user account details for editing'
       description: 'Gets the deetails of the user account to be edited.'
       tags:
-        - 'M05 - Admin'
+        - 'M06 - Admin'
       parameters:
         - in: path
           name: username
@@ -701,7 +1068,7 @@ paths:
         '200':
           description: 'Ok. User account details returned'
           content:
-            application/json:
+            application/x-www-form-urlencoded:
               schema:
                 type: object
                 properties:
@@ -724,7 +1091,7 @@ paths:
       summary: 'R503 - Edit user account'
       description: 'Edits a user account.'
       tags:
-        - 'M05 - Admin'
+        - 'M06 - Admin'
       parameters:
         - in: path
           name: username
