@@ -4,7 +4,7 @@
     <section class="container p-4 md:py-16">
         <h1 class="text-4xl font-bold text-center">Admin Dashboard</h1>
 
-        <form method="POST" action="{{ route('admin.sections.auth.login') }}"
+        <form method="POST" action="{{ route('admin.login') }}"
             class="container max-w-lg bg-white p-8 rounded-card shadow-md my-8">
             {{ csrf_field() }}
 
