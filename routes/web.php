@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\ProfileController as ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -52,4 +53,10 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// Profile
+
+Route::controller(ProfileController::class)->group(function() {
+    Route::get('/profiles', 'index');
 });
