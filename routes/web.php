@@ -25,6 +25,9 @@ Route::redirect('/', '/login');
 
 Route::redirect('/admin', '/admin/login');
 
+// End point Profiles needs an argument
+Route::redirect('/profiles', '/');
+
 
 // Admin
 Route::prefix('admin')->group(function () {
@@ -58,5 +61,7 @@ Route::controller(RegisterController::class)->group(function () {
 // Profile
 
 Route::controller(ProfileController::class)->group(function() {
-    Route::get('/profiles', 'index');
+    Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
+    Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
+    Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
