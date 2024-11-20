@@ -1,7 +1,7 @@
 @extends('web.layout')
 
 @section('content')
-    <div class="container mx-auto py-8">
+    <div class="container py-8">
         <h1 class="text-4xl font-bold mb-4">{{ $project->title }}</h1>
         <p class="text-gray-700 mb-4">{{ $project->description }}</p>
 

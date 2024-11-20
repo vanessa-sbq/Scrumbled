@@ -25,4 +25,9 @@ class Sprint extends Model
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'sprint_id');
+    }
 }
