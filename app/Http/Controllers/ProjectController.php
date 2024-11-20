@@ -122,4 +122,39 @@ class ProjectController extends Controller
             return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
         }
     }
+
+    /**
+     * Show the form for inviting a member to the project.
+     *
+     * @param string $slug
+     * @return \Illuminate\View\View
+     */
+    public function showInviteForm($slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $users = AuthenticatedUser::all();
+
+        return view('web.sections.project.invite', compact('project', 'users'));
+    }
+
+    /**
+     * Invite a member to the project.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function inviteMember(Request $request, $slug)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = AuthenticatedUser::findOrFail($request->user_id);
+
+        $project->developers()->attach($user);
+
+        return redirect()->route('projects.show', $project->slug)->with('success', 'Member invited successfully.');
+    }
 }
