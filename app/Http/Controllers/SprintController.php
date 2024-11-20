@@ -31,4 +31,23 @@ class SprintController extends Controller {
         ));
     }
 
+    /**
+     * Show the form for creating a new sprint.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create($slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        return view('web.sections.sprint.create', compact('project'));
+    }
+
+    /**
+     * Store a newly created project in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
 }

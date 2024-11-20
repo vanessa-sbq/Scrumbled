@@ -60,18 +60,18 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-
 Route::controller(ProfileController::class)->group(function() {
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
 
+//Sprint
 Route::controller(SprintController::class)->group(function () {
-    Route::get('/projects/{slug}/sprints/new', 'create')->name('sprints.create');
-    Route::post('/projects/{slug}/sprints/new', 'store')->name('sprints.store');
+    Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
+    Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
     Route::get('/sprints/{id}/edit', 'edit')->name('sprints.edit');
     Route::post('/sprints/{id}/edit', 'update')->name('sprints.update');
     Route::post('sprints/{id}/close', 'close')->name('sprints.close');
-    Route::get('/sprints/{id}', [SprintController::class, 'show'])->name('sprints.show');
+    Route::get('/sprints/{id}', 'show')->name('sprints.show');
 });
