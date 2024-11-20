@@ -28,7 +28,7 @@
                     @if ($projects->isEmpty())
                         <p class="grow text-gray-600">No public projects.</p>
                     @else
-                        <div class="p-5 pl-0 flex flex-col gap-2 overflow-y-scroll">
+                        <div class="p-5 pl-0 flex flex-col gap-2">
                             @foreach ($projects as $project)
                                 @if ($project->is_public || $user->username === $profileOwner->username)
                                     @include('web.sections.project.components._project', ['project' => $project])
