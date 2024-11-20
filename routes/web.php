@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SprintController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -52,4 +53,13 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(SprintController::class)->group(function () {
+    Route::get('/projects/{slug}/sprints/new', 'create')->name('sprints.create');
+    Route::post('/projects/{slug}/sprints/new', 'store')->name('sprints.store');
+    Route::get('/sprints/{id}/edit', 'edit')->name('sprints.edit');
+    Route::post('/sprints/{id}/edit', 'update')->name('sprints.update');
+    Route::post('sprints/{id}/close', 'close')->name('sprints.close');
+    Route::get('/api/projects/{slug}/sprint', [SprintController::class, 'show'])->name('sprint.show');
 });

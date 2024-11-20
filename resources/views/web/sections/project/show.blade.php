@@ -9,6 +9,11 @@
             <h2 class="text-2xl font-semibold mb-2">Project Details</h2>
             <p class="text-gray-700 mb-4">Owner: {{ $project->productOwner->name }}</p>
             <p class="text-gray-700 mb-4">Status: {{ $project->status }}</p>
+
+            <div class="mt-8">
+                <a href="{{ route('sprints.show', ['sprint_id' => $sprint->id]) }}" class="text-blue-500 hover:underline">Sprint</a>
+            </div>
+
             <p class="text-gray-700 mb-4">Created at: {{ $project->created_at->format('M d, Y') }}</p>
         </div>
 
