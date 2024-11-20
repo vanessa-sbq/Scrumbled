@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Sprint;
-
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SprintController extends Controller {
     /**
@@ -44,10 +46,47 @@ class SprintController extends Controller {
     }
 
     /**
-     * Store a newly created project in storage.
+     * Store a newly created sprint in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+        public function store(Request $request, Project $project)
+        {
+            $request->validate([
+                'name' => 'string|max:255',
+                'start_date' => 'date',
+                'end_date' => 'date|after:start_date',
+                'is_archived' => 'boolean',
+            ]);
 
+            $user = auth()->user();
+            if(!$user) {
+                return redirect('/login')->with('error', 'Login required.');
+            }
+
+            try{
+                $sprint  = new Sprint();
+                $sprint->project_id = $project->id;
+                $sprint->name = $request->name;
+                $sprint->start_date = $request->input('start_date', now());
+                $sprint->end_date = $request->end_date;
+                $sprint->is_archived = $request->input('is_archived', false);
+
+                Log::info('Sprint attributes before saving:', $sprint->getAttributes());
+
+                $project->save();
+
+                Log::info('Sprint attributes after saving:', $sprint->getAttributes());
+
+                return redirect()->route('sprint.show', $project->slug)->with('success', 'Sprint created successfully.');
+            } catch (QueryException $e) {
+                Log::error('QueryException: ', ['error' => $e->getMessage(), 'errorInfo' => $e->errorInfo]);
+
+                if($e->errorInfo[1] == 1062) {
+                    return back()->with('error', 'Sprint name already exists.')->withInput();
+                }
+                return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
+            }
+        }
 }
