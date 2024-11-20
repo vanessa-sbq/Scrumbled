@@ -3,12 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuthenticatedUser; 
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function list()
     {
-        return view('admin.sections.user.index');
+        $users = AuthenticatedUser::all();
+        return view('admin.sections.user.index', compact('users'));
+    }
+
+    public function show($username)
+    {
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+        $projects = $user->allProjects();
+        return view('admin.sections.user.show', compact('user', 'projects'));
+    }
+
+    public function edit($username)
+    {
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+        return view('admin.sections.user.edit', compact('user'));
     }
 }

@@ -18,7 +18,7 @@ class LoginController extends Controller
         if (Auth::guard("admin")->check()) {
             return redirect('/admin/users');
         } else {
-            return view('admin.login');
+            return view('admin.sections.auth.login');
         }
     }
 

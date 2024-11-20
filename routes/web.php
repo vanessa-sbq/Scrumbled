@@ -34,8 +34,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-
     Route::get('/users', [AdminUserController::class,'list'])->name('admin.users');
+
+    Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
+    Route::get('/users/{username}', [AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::get('/users/{username}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
 });
 
 // Projects
