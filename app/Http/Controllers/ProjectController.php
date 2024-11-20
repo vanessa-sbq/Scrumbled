@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
@@ -52,8 +53,11 @@ class ProjectController extends Controller
         // Find the project by slug
         $project = Project::where('slug', $slug)->firstOrFail();
 
+        $sprint = Sprint::where('project_id', $project->id)->firstOrFail();
+
+
         // Return the view with the project
-        return view('web.sections.project.show', compact('project'));
+        return view('web.sections.project.show', compact('project', 'sprint'));
     }
 
     /**

@@ -12,8 +12,10 @@ use App\Models\Sprint;
  * @return \Illuminate\View\View
  */
 class SprintController extends Controller {
-    public function show($sprint, $project)
+    public function show($id)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
+        $sprint = Sprint::where('id', $id)->firstOrFail();
+
+        return view('web.sections.sprint.show', compact('sprint'));
     }
 }

@@ -61,5 +61,5 @@ Route::controller(SprintController::class)->group(function () {
     Route::get('/sprints/{id}/edit', 'edit')->name('sprints.edit');
     Route::post('/sprints/{id}/edit', 'update')->name('sprints.update');
     Route::post('sprints/{id}/close', 'close')->name('sprints.close');
-    Route::get('/api/projects/{slug}/sprint', [SprintController::class, 'show'])->name('sprint.show');
+    Route::get('/sprints/{id}', [SprintController::class, 'show'])->name('sprints.show');
 });
