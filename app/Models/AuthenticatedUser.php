@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 class AuthenticatedUser extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -49,5 +50,10 @@ class AuthenticatedUser extends Authenticatable
     public function allProjects()
     {
         return $this->ownedProjects->merge($this->developerProjects);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Project::class, 'favorite', 'user_id', 'project_id');
     }
 }
