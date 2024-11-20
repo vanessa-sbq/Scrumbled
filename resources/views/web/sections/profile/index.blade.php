@@ -2,9 +2,12 @@
 
 @section('content')
     <div class="container p-4 md:py-16 flex flex-col gap-2">
-        <!-- Profile Header -->
         <div class="flex gap-2">
-            <img class="h-24 w-24" src="{{$profileOwner->picture}}" alt="Profile Picture">
+            @if ($profileOwner->picture)
+                <img class="h-24 w-24 rounded" src="{{asset('storage/' . $profileOwner->picture)}}" alt="Profile Picture">
+            @else
+                <img class="h-24 w-24 rounded" src="{{asset('img/users/default.png')}}" alt="Profile Picture">
+            @endif
             <div>
                 <h2 class="text-2xl font-bold">{{$profileOwner->full_name}}</h2>
                 <h5>{{$profileOwner->username}}</h5>
@@ -21,11 +24,9 @@
 
         <div>
             <div class="md:flex md:gap-1">
-
-                <!--TODO: remove Public Projects Header -->
                 <div class="flex flex-1 flex-wrap gap-2 flex-col">
                     @if ($projects->isEmpty())
-                        <p class="grow text-gray-600 place-self-center">No public projects.</p>
+                        <p class="grow text-gray-600">No public projects.</p>
                     @else
                         <div class="p-5 pl-0 flex flex-col gap-2 overflow-y-scroll">
                             @foreach ($projects as $project)
@@ -37,8 +38,6 @@
                     @endif
 
                 </div>
-
-                <!--TODO: remove Information Header -->
                 <div class="flex flex-1 flex-col max-w-min gap-4">
                     <h2 class="text-lg font-bold">Info</h2>
 
@@ -61,7 +60,6 @@
                                 <h3 class="text-red-700">(Banned)</h3>
                         @endswitch
                     </div>
-
                     <h3>Bio: {{$profileOwner->bio}}</h3>
                 </div>
             </div>

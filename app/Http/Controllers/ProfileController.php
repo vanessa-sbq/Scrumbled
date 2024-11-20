@@ -17,25 +17,6 @@ class ProfileController extends Controller
      *
      * @return View
      */
-    public function index() {
-        //TODO:
-        // Implement the button to edit profile.
-        // Implement profile edit page.
-        // Change function/blade files names ?
-        // Change routes in web.php.
-        // Prevent non authenticated users from connecting to the endpoint...
-
-
-        //FIXME:
-        // Password needs to use bcrypt instead of hash
-        // As we declared in the ER and EBD, a user
-        // cannot have a null username
-        // cannot have a null full_name
-        // cannot have a null email
-        // This not only affects some of the pages but also the edit profile...
-        // Photos are being saved to /storage/app/public/img/users...
-    }
-
     public function getProfile($username) {
 
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
@@ -101,7 +82,6 @@ class ProfileController extends Controller
         $request->validate([
             'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
             'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
-            'password' => 'required',
             'full_name' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -110,21 +90,14 @@ class ProfileController extends Controller
         // Collect the validated data
         $data = $request->only('username', 'email', 'full_name', 'bio');
 
-        if (!Hash::check($request->password, Auth::user()->password)) {
-            return redirect()->back()->withErrors(['password' => 'The provided password is incorrect.']);
-        }
-
-        $data['password'] = Hash::make($request->password);
-
         // Handle the file upload
         if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('img/users', 'public');
+            $picturePath = $request->file('picture')->store('public/img/users', 'public');
             $data['picture'] = $picturePath;
         }
 
         // Edit the user's profile
         $user->update($data);
-
 
         // Redirect to the login page with a success message
         return redirect()->route('show.profile', $user->username)->with('success', 'Profile edited successfully');
