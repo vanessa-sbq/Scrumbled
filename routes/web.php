@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\ProfileController as ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,9 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 Route::redirect('/', '/login');
 
 Route::redirect('/admin', '/admin/login');
+
+// End point Profiles needs an argument
+Route::redirect('/profiles', '/');
 
 
 // Admin
@@ -53,6 +57,14 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// Profile
+
+Route::controller(ProfileController::class)->group(function() {
+    Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
+    Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
+    Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
 
 Route::controller(SprintController::class)->group(function () {
