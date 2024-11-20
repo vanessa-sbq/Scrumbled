@@ -8,5 +8,17 @@
             <p class="mt-4">{{ $user->email }}</p>
             <p>{{ $user->username }}</p>
         </div>
+        <h1 class="text-4xl font-bold text-center">{{ $user->full_name }}'s projects </h1>
+        <div class="mt-8">
+            @if($projects->isEmpty())
+                <p class="text-center">User has no projects.</p>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach ($projects as $project)
+                        @include('web.sections.project.components._project', ['project' => $project])
+                    @endforeach
+                </div>
+            @endif
+        </div>
     </section>
 @endsection

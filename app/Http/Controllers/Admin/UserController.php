@@ -17,7 +17,8 @@ class UserController extends Controller
     public function show($username)
     {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
-        return view('admin.sections.user.show', compact('user'));
+        $projects = $user->allProjects();
+        return view('admin.sections.user.show', compact('user', 'projects'));
     }
 
     public function edit($username)
