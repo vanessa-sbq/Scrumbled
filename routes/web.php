@@ -70,8 +70,8 @@ Route::controller(ProfileController::class)->group(function() {
 Route::controller(SprintController::class)->group(function () {
     Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
     Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
-    Route::get('/sprints/{id}/edit', 'edit')->name('sprints.edit');
-    Route::post('/sprints/{id}/edit', 'update')->name('sprints.update');
+    Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
+    Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprints.close');
-    Route::get('/sprints/{id}', 'show')->name('sprints.show');
+    Route::get('/sprints/{id}', 'show')->name('sprint.show');
 });

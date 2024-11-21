@@ -54,10 +54,10 @@ class SprintController extends Controller {
         public function store(Request $request, Project $project)
         {
             $request->validate([
-                'name' => 'string|max:255',
-                'start_date' => 'date',
-                'end_date' => 'date|after:start_date',
-                'is_archived' => 'boolean',
+                'name' => 'nullable|string|max:255',
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after:start_date',
+                'is_archived' => 'nullable|boolean',
             ]);
 
             $user = auth()->user();
@@ -72,6 +72,8 @@ class SprintController extends Controller {
                 $sprint->start_date = $request->input('start_date', now());
                 $sprint->end_date = $request->end_date;
                 $sprint->is_archived = $request->input('is_archived', false);
+
+                $data = $request->only('name', 'start_date', 'end_date', 'is_archived');
 
                 Log::info('Sprint attributes before saving:', $sprint->getAttributes());
 
@@ -88,5 +90,40 @@ class SprintController extends Controller {
                 }
                 return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
             }
+        }
+
+        public function edit($id)
+        {
+            $sprint = Sprint::where('id', $id)->firstOrFail();
+
+            return view('web.sections.sprint.edit', compact('sprint'));
+        }
+
+        public function update(Request $request, $id)
+        {
+            $sprint = Sprint::where('id', $id)->firstOrFail();
+
+            $user = auth()->user();
+            if(!$user) {
+                return redirect('/login')->with('error', 'Login required.');
+            }
+
+            $validated = $request->validate([
+                'name' => 'nullable|string|max:255',
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+                'is_archived' => 'nullable|boolean',
+            ]);
+
+            // Collect the validated data
+            $data = $request->only('name', 'start_date', 'end_date', 'is_archived');
+
+            $sprint->update([
+                'name' => $validated['name'] ?? $sprint->name,
+                'start_date' => $validated['start_date'] ?? $sprint->start_date,
+                'end_date' => $validated['end_date'] ?? $sprint->end_date,
+            ]);
+
+            return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
         }
 }
