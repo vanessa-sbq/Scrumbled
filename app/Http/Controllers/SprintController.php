@@ -53,17 +53,18 @@ class SprintController extends Controller {
      */
         public function store(Request $request, Project $project)
         {
+
+            $user = auth()->user();
+            if(!$user) {
+                return redirect('/login')->with('error', 'Login required.');
+            }
+
             $request->validate([
                 'name' => 'nullable|string|max:255',
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after:start_date',
                 'is_archived' => 'nullable|boolean',
             ]);
-
-            $user = auth()->user();
-            if(!$user) {
-                return redirect('/login')->with('error', 'Login required.');
-            }
 
             try{
                 $sprint  = new Sprint();
@@ -73,11 +74,9 @@ class SprintController extends Controller {
                 $sprint->end_date = $request->end_date;
                 $sprint->is_archived = $request->input('is_archived', false);
 
-                $data = $request->only('name', 'start_date', 'end_date', 'is_archived');
-
                 Log::info('Sprint attributes before saving:', $sprint->getAttributes());
 
-                $project->save();
+                $sprint->save();
 
                 Log::info('Sprint attributes after saving:', $sprint->getAttributes());
 
@@ -118,12 +117,22 @@ class SprintController extends Controller {
             // Collect the validated data
             $data = $request->only('name', 'start_date', 'end_date', 'is_archived');
 
-            $sprint->update([
-                'name' => $validated['name'] ?? $sprint->name,
-                'start_date' => $validated['start_date'] ?? $sprint->start_date,
-                'end_date' => $validated['end_date'] ?? $sprint->end_date,
-            ]);
+            $sprint->update($data);
 
             return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
         }
+
+    public function projectSprints($slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        // Fetch all sprints for this project
+        $sprints = Sprint::where('project_id', $project->id)->get();
+
+        return view('web.sections.sprint.project-sprints', [
+            'sprints' => $sprints,
+            'project' => $project,
+        ]);
+    }
+
 }

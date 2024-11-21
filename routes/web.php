@@ -74,4 +74,7 @@ Route::controller(SprintController::class)->group(function () {
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprints.close');
     Route::get('/sprints/{id}', 'show')->name('sprint.show');
+
+    Route::get('/projects/{slug}/sprints', [SprintController::class, 'projectSprints'])->name('project.sprints');
+
 });
