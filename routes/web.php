@@ -68,13 +68,11 @@ Route::controller(ProfileController::class)->group(function() {
 
 //Sprint
 Route::controller(SprintController::class)->group(function () {
+    Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
     Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
     Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
     Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
-    Route::post('sprints/{id}/close', 'close')->name('sprints.close');
-    Route::get('/sprints/{id}', 'show')->name('sprint.show');
-
-    Route::get('/projects/{slug}/sprints', [SprintController::class, 'projectSprints'])->name('project.sprints');
-
+    Route::post('sprints/{id}/close', 'close')->name('sprint.close');
+    Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
 });

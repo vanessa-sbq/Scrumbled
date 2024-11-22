@@ -77,5 +77,9 @@
                                 </div>
                         </div>
                 </div>
-        </div>
+
+                <div class="mt-8">
+                        <a href="{{ route('projects') }}" class="text-blue-500 hover:underline">Back to Projects</a>
+                </div>
+
 @endsection

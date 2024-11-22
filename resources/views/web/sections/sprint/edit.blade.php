@@ -9,9 +9,8 @@
               action="{{ route('sprint.update', $sprint->id) }}"
               method="POST">
             @csrf
-            @method('POST') <!-- For RESTful update -->
+            @method('POST')
 
-            {{-- Name --}}
             <div>
                 <label for="name" class="block text-gray-700">Name</label>
                 <input type="text" id="name" name="name"
@@ -45,7 +44,6 @@
             </div>
 
 
-            {{-- Submit Button --}}
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
                 Update Sprint
             </button>

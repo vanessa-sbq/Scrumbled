@@ -6,19 +6,22 @@ use App\Models\Project;
 use App\Models\Sprint;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SprintController extends Controller {
     /**
-     * Display sprint of the specified project.
+     * Display a specific sprint.
      *
-     * @param  string  $slug
+     * @param  string  $id
      * @return \Illuminate\View\View
      */
     public function show($id)
     {
+        //Get the current sprint
         $sprint = Sprint::where('id', $id)->firstOrFail();
 
+        //Divide the tasks in categories
         $sprintBacklogTasks = $sprint->tasks()->where('state', 'SPRINT_BACKLOG')->get();
         $inProgressTasks = $sprint->tasks()->where('state', 'IN_PROGRESS')->get();
         $doneTasks = $sprint->tasks()->where('state', 'DONE')->get();
@@ -31,6 +34,26 @@ class SprintController extends Controller {
             'doneTasks',
             'acceptedTasks'
         ));
+    }
+
+    /**
+     * Display all sprints of a specific project.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\View\View
+     */
+    public function list($slug)
+    {
+        // Get project by slug
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        // Get all sprints for this project
+        $sprints = Sprint::where('project_id', $project->id)->get();
+
+        return view('web.sections.sprint.index', compact('project', 'sprints'), [
+            'sprints' => $sprints,
+            'project' => $project,
+        ]);
     }
 
     /**
@@ -54,41 +77,6 @@ class SprintController extends Controller {
         public function store(Request $request, Project $project)
         {
 
-            $user = auth()->user();
-            if(!$user) {
-                return redirect('/login')->with('error', 'Login required.');
-            }
-
-            $request->validate([
-                'name' => 'nullable|string|max:255',
-                'start_date' => 'nullable|date',
-                'end_date' => 'nullable|date|after:start_date',
-                'is_archived' => 'nullable|boolean',
-            ]);
-
-            try{
-                $sprint  = new Sprint();
-                $sprint->project_id = $project->id;
-                $sprint->name = $request->name;
-                $sprint->start_date = $request->input('start_date', now());
-                $sprint->end_date = $request->end_date;
-                $sprint->is_archived = $request->input('is_archived', false);
-
-                Log::info('Sprint attributes before saving:', $sprint->getAttributes());
-
-                $sprint->save();
-
-                Log::info('Sprint attributes after saving:', $sprint->getAttributes());
-
-                return redirect()->route('sprint.show', $project->slug)->with('success', 'Sprint created successfully.');
-            } catch (QueryException $e) {
-                Log::error('QueryException: ', ['error' => $e->getMessage(), 'errorInfo' => $e->errorInfo]);
-
-                if($e->errorInfo[1] == 1062) {
-                    return back()->with('error', 'Sprint name already exists.')->withInput();
-                }
-                return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
-            }
         }
 
         public function edit($id)
@@ -114,25 +102,12 @@ class SprintController extends Controller {
                 'is_archived' => 'nullable|boolean',
             ]);
 
-            // Collect the validated data
-            $data = $request->only('name', 'start_date', 'end_date', 'is_archived');
-
-            $sprint->update($data);
+            $sprint->update([
+                'name' => $validated['name'] ?? $sprint->name,
+                'start_date' => $validated['start_date'] ?? $sprint->start_date,
+                'end_date' => $validated['end_date'] ?? $sprint->end_date,
+            ]);
 
             return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
         }
-
-    public function projectSprints($slug)
-    {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        // Fetch all sprints for this project
-        $sprints = Sprint::where('project_id', $project->id)->get();
-
-        return view('web.sections.sprint.project-sprints', [
-            'sprints' => $sprints,
-            'project' => $project,
-        ]);
-    }
-
 }

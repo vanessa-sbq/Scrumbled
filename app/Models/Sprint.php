@@ -16,6 +16,7 @@ class Sprint extends Model
         'name',
         'start_date',
         'end_date',
+        'is_archived'
     ];
 
     public $timestamps = false;
