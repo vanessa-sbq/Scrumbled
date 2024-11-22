@@ -16,13 +16,21 @@ class UserController extends Controller
 
     public function findUser(Request $request){
         $search = $request->input('search');
+        $status = $request->input('status');
+
         $users = AuthenticatedUser::query()
                  ->when($search, function ($query, $search) {
-                    return $query->where('username', 'like', "%{$search}%")
-                                 ->orWhere('full_name', 'like', "%{$search}%")
-                                 ->orWhere('email', 'like', "%{$search}%");
+                    return $query->where(function ($query) use ($search) { 
+                                $query->where('username', 'like', "%{$search}%") 
+                                      ->orWhere('full_name', 'like', "%{$search}%")
+                                      ->orWhere('email', 'like', "%{$search}%");
+                    });
+                 })
+                 ->when($status, function ($query, $status) {
+                    return $query->where('status', $status);
                  })
                  ->get();
+
         return view('admin.sections.user.index', compact('users'));
     }
 
