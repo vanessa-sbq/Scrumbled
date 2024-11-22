@@ -20,6 +20,7 @@ class SprintSeeder extends Seeder
             'name' => 'Scrumbled Big Bang',
             'start_date' => now(),
             'end_date' => now()->addMonth(),
+            'is_archived' => false
         ]);
 
         Sprint::create([
@@ -27,6 +28,7 @@ class SprintSeeder extends Seeder
             'name' => 'Sprint #1',
             'start_date' => now(),
             'end_date' => now()->addMonth(),
+            'is_archived' => false
         ]);
     }
 }

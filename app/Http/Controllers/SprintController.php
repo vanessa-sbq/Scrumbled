@@ -74,40 +74,62 @@ class SprintController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-        public function store(Request $request, Project $project)
-        {
+    public function store(Request $request, $slug)
+    {
+        // Get project by slug
+        $project = Project::where('slug', $slug)->firstOrFail();
 
+        // Validate the request data
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_archived' => 'nullable|boolean',
+        ]);
+
+        // Create the sprint with default values where needed
+        $sprint = Sprint::create([
+            'project_id' => $project->id,
+            'name' => $validated['name'] ?? null,
+            'start_date' => $validated['start_date'] ?? now(),
+            'end_date' => $validated['end_date'] ?? null,
+            'is_archived' => $validated['is_archived'] ?? false,
+        ]);
+
+        // Redirect to a relevant page (e.g., project or sprint list)
+        return redirect()->route('sprints', $project->slug)
+            ->with('success', 'Sprint created successfully!');
+    }
+
+    public function edit($id)
+    {
+        $sprint = Sprint::where('id', $id)->firstOrFail();
+
+        return view('web.sections.sprint.edit', compact('sprint'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $sprint = Sprint::where('id', $id)->firstOrFail();
+
+        $user = auth()->user();
+        if(!$user) {
+            return redirect('/login')->with('error', 'Login required.');
         }
 
-        public function edit($id)
-        {
-            $sprint = Sprint::where('id', $id)->firstOrFail();
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_archived' => 'nullable|boolean',
+        ]);
 
-            return view('web.sections.sprint.edit', compact('sprint'));
-        }
+        $sprint->update([
+            'name' => $validated['name'] ?? $sprint->name,
+            'start_date' => $validated['start_date'] ?? $sprint->start_date,
+            'end_date' => $validated['end_date'] ?? $sprint->end_date,
+        ]);
 
-        public function update(Request $request, $id)
-        {
-            $sprint = Sprint::where('id', $id)->firstOrFail();
-
-            $user = auth()->user();
-            if(!$user) {
-                return redirect('/login')->with('error', 'Login required.');
-            }
-
-            $validated = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'start_date' => 'nullable|date',
-                'end_date' => 'nullable|date|after_or_equal:start_date',
-                'is_archived' => 'nullable|boolean',
-            ]);
-
-            $sprint->update([
-                'name' => $validated['name'] ?? $sprint->name,
-                'start_date' => $validated['start_date'] ?? $sprint->start_date,
-                'end_date' => $validated['end_date'] ?? $sprint->end_date,
-            ]);
-
-            return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
-        }
+        return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
+    }
 }

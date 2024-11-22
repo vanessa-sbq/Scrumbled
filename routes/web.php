@@ -66,7 +66,7 @@ Route::controller(ProfileController::class)->group(function() {
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
 
-//Sprint
+//Sprints
 Route::controller(SprintController::class)->group(function () {
     Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
     Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
