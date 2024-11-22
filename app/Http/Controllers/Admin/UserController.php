@@ -14,6 +14,18 @@ class UserController extends Controller
         return view('admin.sections.user.index', compact('users'));
     }
 
+    public function findUser(Request $request){
+        $search = $request->input('search');
+        $users = AuthenticatedUser::query()
+                 ->when($search, function ($query, $search) {
+                    return $query->where('username', 'like', "%{$search}%")
+                                 ->orWhere('full_name', 'like', "%{$search}%")
+                                 ->orWhere('email', 'like', "%{$search}%");
+                 })
+                 ->get();
+        return view('admin.sections.user.index', compact('users'));
+    }
+
     public function show($username)
     {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();

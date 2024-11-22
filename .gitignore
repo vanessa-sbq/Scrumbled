@@ -21,3 +21,4 @@ yarn-error.log
 upload_image.sh
 package-lock.json
 public/mix-manifest.json
+storage/debugbar
