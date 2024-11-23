@@ -16,6 +16,7 @@ class Sprint extends Model
         'name',
         'start_date',
         'end_date',
+        'is_archived'
     ];
 
     public $timestamps = false;
@@ -24,5 +25,10 @@ class Sprint extends Model
     public function project()
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'sprint_id');
     }
 }

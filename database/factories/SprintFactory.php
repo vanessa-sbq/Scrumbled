@@ -22,6 +22,7 @@ class SprintFactory extends Factory
             'name' => $this->faker->words(3, true),
             'start_date' => now(),
             'end_date' => now()->addMonth(),
+            'is_archived' => false
         ];
     }
 }

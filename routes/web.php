@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SprintController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -64,9 +65,19 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-
-Route::controller(ProfileController::class)->group(function () {
+Route::controller(ProfileController::class)->group(function() {
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
+});
+
+//Sprints
+Route::controller(SprintController::class)->group(function () {
+    Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
+    Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
+    Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
+    Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
+    Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
+    Route::post('sprints/{id}/close', 'close')->name('sprint.close');
+    Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
 });
