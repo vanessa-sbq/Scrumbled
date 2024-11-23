@@ -5,12 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\AuthenticatedUser;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+
+    public function index()
+    {
+        $users = AuthenticatedUser::all();
+        return view('web.sections.profile.index', compact('users'));
+    }
+
+
+    public function search(Request $request){
+        $search = $request->input('search');
+
+        $users = AuthenticatedUser::query()
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($query) use ($search) {
+                    $query->where('username', 'like', "%{$search}%")
+                        ->orWhere('full_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->get();
+
+        return view('web.sections.profile.index', compact('users'));
+    }
 
     /**
      * Display the profile of a user.
@@ -48,7 +70,7 @@ class ProfileController extends Controller
             });
         }
 
-        return view('web.sections.profile.index', [
+        return view('web.sections.profile.show', [
             'user' => $user,
             'profileOwner' => $profileOwner,
             'projects' => $availableProjects

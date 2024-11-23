@@ -86,7 +86,8 @@ CREATE TABLE
         project_id BIGINT NOT NULL REFERENCES project (id) ON DELETE CASCADE ON UPDATE CASCADE,
         name VARCHAR(255),
         start_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        end_date TIMESTAMPTZ CHECK (end_date > start_date)
+        end_date TIMESTAMPTZ CHECK (end_date > start_date),
+        is_archived BOOLEAN NOT NULL DEFAULT FALSE
     );
 
 -- Type: value_level

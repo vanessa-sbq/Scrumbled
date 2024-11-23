@@ -23,7 +23,7 @@ class AuthenticatedUserFactory extends Factory
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'bio' => fake()->text(),
-            'picture' => fake()->imageUrl(),
+            'picture' => null,
             'status' => 'NEEDS_CONFIRMATION',
             'remember_token' => Str::random(10),
         ];

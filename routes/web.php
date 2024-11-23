@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SprintController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -34,7 +35,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-    
     Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
     Route::get('/users', [AdminUserController::class, 'findUser'])->name('admin.users');
     Route::get('/users/{username}', [AdminUserController::class, 'show'])->name('admin.users.show');
@@ -48,6 +48,9 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/new', 'create')->name('projects.create');
     Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
+    Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
+    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
+    Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
 });
 
 // Authentication
@@ -63,9 +66,21 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-
 Route::controller(ProfileController::class)->group(function() {
+    Route::get('/profiles', 'index')->name('profiles');
+    Route::get('/profiles', 'search')->name('profiles');
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
+});
+
+//Sprints
+Route::controller(SprintController::class)->group(function () {
+    Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
+    Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
+    Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
+    Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
+    Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
+    Route::post('sprints/{id}/close', 'close')->name('sprint.close');
+    Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
 });

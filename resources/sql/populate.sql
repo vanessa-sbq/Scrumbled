@@ -122,21 +122,23 @@ VALUES
 
 -- Populate sprint table
 INSERT INTO
-    sprint (id, project_id, name, start_date, end_date)
+    sprint (id, project_id, name, start_date, end_date, is_archived)
 VALUES
     (
         1,
         1,
         'Scrumbled Big Bang',
         NOW (),
-        NOW () + INTERVAL '1 month'
+        NOW () + INTERVAL '1 month',
+        FALSE
     ),
     (
         2,
         2,
         'Sprint #1',
         NOW (),
-        NOW () + INTERVAL '1 month'
+        NOW () + INTERVAL '1 month',
+        FALSE
     );
 
 -- Populate task table
