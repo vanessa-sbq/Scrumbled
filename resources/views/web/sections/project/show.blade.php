@@ -2,7 +2,21 @@
 
 @section('content')
     <div class="container py-8">
-        <h1 class="text-4xl font-bold mb-6 text-primary">{{ $sprint->name }} <span class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
+        <div class="flex items-center justify-between mb-6">
+            <!-- Title Section -->
+            <h1 class="text-4xl font-bold text-primary">
+                {{ $sprint->name }} <span class="text-muted-foreground">(#{{ $sprint->id }})</span>
+            </h1>
+
+            <!-- Close Sprint Button -->
+            <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
+                @csrf
+                <button type="submit"
+                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                    Close Sprint
+                </button>
+            </form>
+        </div>
 
         <!-- Sprint Backlog Table -->
         <div class="bg-card shadow-card rounded-card p-6 mb-6">

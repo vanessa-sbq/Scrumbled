@@ -132,4 +132,16 @@ class SprintController extends Controller {
 
         return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
     }
+
+    public function close($id)
+    {
+        $sprint = Sprint::where('id', $id)->firstOrFail();
+
+        $sprint->update(['is_archived' => true]);
+
+        $project = $sprint->project ;
+
+        return redirect()->route('sprints', $project->slug)
+            ->with('success', 'Sprint closed successfully!');
+    }
 }
