@@ -132,7 +132,7 @@ class ProjectController extends Controller
     public function showInviteForm($slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        $users = AuthenticatedUser::all();
+        $users = AuthenticatedUser::paginate(10);
 
         return view('web.sections.project.invite', compact('project', 'users'));
     }
