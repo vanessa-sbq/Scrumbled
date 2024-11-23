@@ -48,6 +48,7 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/new', 'create')->name('projects.create');
     Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
+    Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
     Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
 });

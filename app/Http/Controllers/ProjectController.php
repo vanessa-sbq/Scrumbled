@@ -7,6 +7,7 @@ use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -172,5 +173,13 @@ class ProjectController extends Controller
         $project->developers()->attach($user);
 
         return redirect()->route('projects.show', $project->slug)->with('success', 'Member invited successfully.');
+    }
+
+    public function backlog($slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $backlogTasks = Task::where('project_id', $project->id)->where('state', 'BACKLOG')->get();
+
+        return view('web.sections.project.backlog', compact('project', 'backlogTasks'));
     }
 }

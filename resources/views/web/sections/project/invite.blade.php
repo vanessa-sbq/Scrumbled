@@ -2,6 +2,9 @@
 
 @section('content')
     <div class="container mx-auto py-8">
+        <!-- Navbar with Breadcrumb -->
+        @include('web.sections.project.components._navbar', ['project' => $project])
+
         <h1 class="text-4xl font-bold mb-8 text-center">Invite Member to {{ $project->title }}</h1>
 
         <div class="max-w-lg mx-auto bg-white p-8 rounded-card shadow-md">
@@ -28,6 +31,13 @@
             <div class="mt-4">
                 {{ $users->links() }} <!-- Pagination links -->
             </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="{{ route('projects.show', $project->slug) }}"
+                class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 transition">
+                Back to Project
+            </a>
         </div>
     </div>
 @endsection
