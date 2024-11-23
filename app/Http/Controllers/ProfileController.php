@@ -5,20 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\AuthenticatedUser;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
 
+    public function index()
+    {
+        $users = AuthenticatedUser::all();
+        return view('web.sections.profile.index', compact('users'));
+    }
+
+
+    public function search(Request $request){
+        $search = $request->input('search');
+
+        $users = AuthenticatedUser::query()
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($query) use ($search) {
+                    $query->where('username', 'like', "%{$search}%")
+                        ->orWhere('full_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->get();
+
+        return view('web.sections.profile.index', compact('users'));
+    }
+
     /**
      * Display the profile of a user.
      *
      * @return View
      */
-    public function getProfile($username)
-    {
+    public function getProfile($username) {
 
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
 
@@ -49,15 +70,14 @@ class ProfileController extends Controller
             });
         }
 
-        return view('web.sections.profile.index', [
+        return view('web.sections.profile.show', [
             'user' => $user,
             'profileOwner' => $profileOwner,
             'projects' => $availableProjects
         ]);
     }
 
-    public function showEditProfileUI($username)
-    {
+    public function showEditProfileUI($username) {
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
 
         if ($profileOwner->isEmpty()) {
@@ -71,8 +91,7 @@ class ProfileController extends Controller
         abort(403);
     }
 
-    public function editProfile(Request $request)
-    {
+    public function editProfile(Request $request) {
 
         if (!(Auth::check() && Auth::user()->id !== $request->id)) {
             abort(403);
@@ -103,6 +122,8 @@ class ProfileController extends Controller
         $user->update($data);
 
         // Redirect to the login page with a success message
-        return redirect()->route('profiles.show', $user->username)->with('success', 'Profile edited successfully');
+        return redirect()->route('show.profile', $user->username)->with('success', 'Profile edited successfully');
     }
+
+
 }
