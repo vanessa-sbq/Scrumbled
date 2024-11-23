@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Project;
@@ -52,8 +53,22 @@ class ProjectController extends Controller
         // Find the project by slug
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        // Return the view with the project
-        return view('web.sections.project.show', compact('project'));
+        //Get the current sprint
+        $sprint = Sprint::where('project_id', $project->id)->firstOrFail();
+
+        //Divide the tasks in categories
+        $sprintBacklogTasks = $sprint->tasks()->where('state', 'SPRINT_BACKLOG')->get();
+        $inProgressTasks = $sprint->tasks()->where('state', 'IN_PROGRESS')->get();
+        $doneTasks = $sprint->tasks()->where('state', 'DONE')->get();
+        $acceptedTasks = $sprint->tasks()->where('state', 'ACCEPTED')->get();
+
+        return view('web.sections.project.show', compact(
+            'sprint',
+            'sprintBacklogTasks',
+            'inProgressTasks',
+            'doneTasks',
+            'acceptedTasks'
+        ));
     }
 
     /**
