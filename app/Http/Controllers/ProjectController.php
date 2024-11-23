@@ -63,6 +63,7 @@ class ProjectController extends Controller
         $acceptedTasks = $sprint->tasks()->where('state', 'ACCEPTED')->get();
 
         return view('web.sections.project.show', compact(
+            'project',
             'sprint',
             'sprintBacklogTasks',
             'inProgressTasks',

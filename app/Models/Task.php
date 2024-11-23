@@ -35,6 +35,6 @@ class Task extends Model
 
     public function assignedDeveloper()
     {
-        return $this->belongsTo(Developer::class, 'assigned_to');
+        return $this->belongsTo(Developer::class, 'assigned_to', 'user_id');
     }
 }
