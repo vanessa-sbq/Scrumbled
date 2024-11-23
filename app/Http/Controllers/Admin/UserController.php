@@ -41,9 +41,41 @@ class UserController extends Controller
         return view('admin.sections.user.show', compact('user', 'projects'));
     }
 
-    public function edit($username)
-    {
+    public function showEdit($username){
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
         return view('admin.sections.user.edit', compact('user'));
+    }
+
+    public function edit($username, Request $request)
+    {
+        // Find the user by username
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+
+        // Validate the request data
+        $request->validate([
+            // FIXME:  . $user->id
+            'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
+            'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
+            'full_name' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'required|in:ACTIVE,NEEDS_CONFIRMATION,BANNED'
+        ]);
+
+        // Collect the validated data
+        $data = $request->only('username', 'email', 'full_name', 'bio', 'status');
+
+        // Handle the file upload
+        if ($request->hasFile('picture')) {
+            $picturePath = $request->file('picture')->store('public/img/users', 'public');
+            $data['picture'] = $picturePath;
+        }
+
+        // Edit the user's profile
+        $user->update($data);
+
+        // Redirect to the login page with a success message
+        return redirect()->route('admin.users.show', $user->username)->with('success', 'Profile edited successfully');
+   
     }
 }

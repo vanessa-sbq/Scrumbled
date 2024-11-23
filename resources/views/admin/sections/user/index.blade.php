@@ -6,7 +6,6 @@
 
         <!-- Search Form -->
         <form method="GET" action="{{ route('admin.users') }}" class="mb-4 flex justify-end">
-            @csrf
             <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}" class="border p-2 mr-2 rounded">
             
             <!-- Status Filter Dropdown -->
@@ -27,6 +26,7 @@
                 @foreach ($users as $user)
                     <div class="bg-white shadow-md rounded-card p-6 mb-5">
                         <li class="flex items-center space-x-4"> 
+                            <!-- TODO: Add a default image -->
                             <img src="{{ $user->picture }}" alt="{{ $user->full_name }}'s profile picture" class="w-16 h-16 rounded-full">
                             <div>
                                 <a href="{{ route('admin.users.show', $user->username) }}" class="font-bold hover:underline">{{ $user->username }}</a><br>
