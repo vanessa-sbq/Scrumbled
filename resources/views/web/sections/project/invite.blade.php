@@ -7,7 +7,7 @@
         <div class="max-w-lg mx-auto bg-white p-8 rounded-card shadow-md">
             @foreach ($users as $user)
                 @php
-                    $imagePath = $user->image_path ? 'storage/' . $user->image_path : 'img/users/default.png';
+                    $imagePath = $user->picture ? 'storage/' . $user->picture : 'img/users/default.png';
                 @endphp
                 <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
                     <div class="flex items-center space-x-3">
