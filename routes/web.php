@@ -35,7 +35,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-    Route::get('/users', [AdminUserController::class,'list'])->name('admin.users');
+    Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
 
     Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
     Route::get('/users/{username}', [AdminUserController::class, 'show'])->name('admin.users.show');
@@ -48,6 +48,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/new', 'create')->name('projects.create');
     Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
+    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
+    Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
 });
 
 // Authentication
