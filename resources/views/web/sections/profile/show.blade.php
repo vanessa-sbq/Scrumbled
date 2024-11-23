@@ -15,7 +15,7 @@
 
             @if (Auth::check())
                 @if ($user->username === $profileOwner->username)
-                    <a href="{{route('edit.profile.ui', ['username' => $user->username])}}" class="ml-auto place-self-start bg-primary text-white p-3 rounded">
+                    <a href="{{route('edit.profile.ui', ['username' => $user->username])}}" class="ml-auto place-self-start bg-primary text-white p-3 rounded hover:bg-blue-600">
                         Edit Profile
                     </a>
                 @endif
