@@ -13,12 +13,13 @@ class ProfileController extends Controller
 
     public function index()
     {
-        $users = AuthenticatedUser::all();
+        $users = AuthenticatedUser::paginate(10);
         return view('web.sections.profile.index', compact('users'));
     }
 
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $search = $request->input('search');
 
         $users = AuthenticatedUser::query()
@@ -29,7 +30,7 @@ class ProfileController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->get();
+            ->paginate(10);
 
         return view('web.sections.profile.index', compact('users'));
     }
@@ -39,7 +40,8 @@ class ProfileController extends Controller
      *
      * @return View
      */
-    public function getProfile($username) {
+    public function getProfile($username)
+    {
 
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
 
@@ -77,7 +79,8 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function showEditProfileUI($username) {
+    public function showEditProfileUI($username)
+    {
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
 
         if ($profileOwner->isEmpty()) {
@@ -91,7 +94,8 @@ class ProfileController extends Controller
         abort(403);
     }
 
-    public function editProfile(Request $request) {
+    public function editProfile(Request $request)
+    {
 
         if (!(Auth::check() && Auth::user()->id !== $request->id)) {
             abort(403);
@@ -124,6 +128,4 @@ class ProfileController extends Controller
         // Redirect to the login page with a success message
         return redirect()->route('show.profile', $user->username)->with('success', 'Profile edited successfully');
     }
-
-
 }
