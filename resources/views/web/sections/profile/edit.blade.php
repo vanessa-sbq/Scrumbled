@@ -72,7 +72,7 @@
             {{-- Submit Button --}}
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Submit</button>
             <a class="px-4 py-2 bg-red-600 text-white hover:bg-red-800 rounded text-center"
-                href="{{ route('profiles.show', $user->username) }}">Cancel</a>
+                href="{{ route('show.profile', $user->username) }}">Cancel</a>
         </form>
     </div>
 @endsection

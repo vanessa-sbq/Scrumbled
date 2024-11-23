@@ -65,7 +65,9 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-Route::controller(ProfileController::class)->group(function () {
+Route::controller(ProfileController::class)->group(function() {
+    Route::get('/profiles', 'index')->name('profiles');
+    Route::get('/profiles', 'search')->name('profiles');
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
