@@ -1,19 +1,9 @@
 @extends('web.layout')
 
 @section('content')
-    <div class="container py-8 p-4">
+    <div class="container py-8">
         <!-- Navbar with Breadcrumb -->
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center space-x-2 text-gray-600">
-                <a href="{{ route('projects') }}" class="hover:underline">{{ Auth::user()->name }}</a>
-                <span>/</span>
-                <a href="{{ route('projects.show', $project->slug) }}" class="hover:underline">{{ $project->slug }}</a>
-            </div>
-            <div class="flex space-x-4">
-                <a href="{{ route('projects', $project->slug) }}" class="text-blue-500 hover:underline">Backlog</a>
-                <a href="{{ route('projects', $project->slug) }}" class="text-blue-500 hover:underline">Settings</a>
-            </div>
-        </div>
+        @include('web.sections.project.components._navbar', ['project' => $project])
 
         <!-- Title Section -->
         <div class="flex items-center justify-between mb-6">
