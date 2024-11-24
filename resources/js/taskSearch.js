@@ -1,7 +1,4 @@
 function searchHelper(savedContainer) {
-    console.log('taskSearch.js loaded');
-
-
     let container = document.querySelector('#results-container');
     const searchInput = document.querySelector('#search-input');
     const resultContainer = document.querySelector('#results-container');
@@ -24,7 +21,7 @@ function searchHelper(savedContainer) {
                 pagination.remove();
                 paginationRemoved = true;
             }
-            let url = `/api/profiles/search?search=${query}`;
+            let url = `/api/projects/{slug}/tasks/search?search=${query}`;
             if (status) {
                 url += `&status=${status}`;
             }

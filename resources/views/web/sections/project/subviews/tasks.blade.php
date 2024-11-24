@@ -46,41 +46,7 @@
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($tasks as $task)
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">{{ $task->title }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
-                        <span
-                            class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                            {{ $task->effort }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
-                        <span
-                            class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                            {{ $task->value }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                    @if($task->assignedDeveloper && $task->assignedDeveloper->user)
-                        <x-user :user="$task->assignedDeveloper->user" />
-                    @else
-                        <p>No user assigned.</p>
-                    @endif 
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                        @if ($task->state == "BACKLOG")
-                            <p> - </p>
-                        @else
-                            <p>{{ $task->sprint->name ?? '-' }}</p>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                        <p>{{ strtolower(str_replace('_', ' ', $task->state)) }}</p>
-                    </td>
-                </tr>
-            @endforeach
+            @include('web.sections.project.subviews.components._task', ['tasks' => $tasks])
         </tbody>
     </table>
     </div>

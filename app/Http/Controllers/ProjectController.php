@@ -80,7 +80,7 @@ class ProjectController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         $tasks = Task::where('project_id', $project->id)->get();
 
-        return view('web.sections.project.tasks', compact('project', 'tasks'));
+        return view('web.sections.project.subviews.tasks', compact('project', 'tasks'));
     }
 
     /**
@@ -229,17 +229,18 @@ class ProjectController extends Controller
         $search = $request->input('search');
 
         // FIXME: Implement FTS with AJAX instead
-        $tasks = Task::where('project_id', $project->id)
+        /* $tasks = Task::where('project_id', $project->id)
                 ->where(function($query) use ($search) {
                     $query->where('title', 'LIKE', "%{$search}%");
                                 })
-                ->get();
+                ->get(); */
 
-        /* $tasks = Task::where('project_id', $project->id)
-            ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$search])
-            ->get(); */
+        $tasks = Task::where('project_id', $project->id)
+            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
+            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
+            ->get();
 
-        return view('web.sections.project.tasks', compact('project', 'tasks'));
+        return view('web.sections.project.subviews.tasks', compact('project', 'tasks'));
     }
 
 }

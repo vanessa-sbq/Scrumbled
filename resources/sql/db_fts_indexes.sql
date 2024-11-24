@@ -40,26 +40,24 @@ CREATE INDEX idx_project_search ON project USING GIN (tsvectors);
 -- FTS INDEXES
 -----------------------------------------
 
--- Add column to authenticated_user to store computed ts_vectors.
-ALTER TABLE authenticated_user
+-- Add column to task to store computed ts_vectors.
+ALTER TABLE task
 ADD COLUMN tsvectors TSVECTOR;
 
 -- Create a function to automatically update ts_vectors.
-CREATE FUNCTION authenticated_user_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION task_search_update() RETURNS TRIGGER AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
     NEW.tsvectors = (
-      setweight(to_tsvector('english', NEW.username), 'A') ||
-      setweight(to_tsvector('english', NEW.full_name), 'B') ||
-      setweight(to_tsvector('english', NEW.bio), 'C')
+      setweight(to_tsvector('english', NEW.title), 'A') ||
+      setweight(to_tsvector('english', NEW.description), 'B')
     );
   END IF;
   IF TG_OP = 'UPDATE' THEN
-    IF ((NEW.username <> OLD.username) OR (NEW.full_name <> OLD.full_name) OR (NEW.bio <> OLD.bio)) THEN
+    IF ((NEW.title <> OLD.title) OR (NEW.description <> OLD.description)) THEN
       NEW.tsvectors = (
-        setweight(to_tsvector('english', NEW.username), 'A') ||
-        setweight(to_tsvector('english', NEW.full_name), 'B') ||
-        setweight(to_tsvector('english', NEW.bio), 'C')
+        setweight(to_tsvector('english', NEW.title), 'A') ||
+        setweight(to_tsvector('english', NEW.description), 'B')
       );
     END IF;
   END IF;
@@ -67,11 +65,11 @@ BEGIN
 END $$
 LANGUAGE plpgsql;
 
--- Create a trigger before insert or update on authenticated_user.
-CREATE TRIGGER authenticated_user_search_update
-  BEFORE INSERT OR UPDATE ON authenticated_user
+-- Create a trigger before insert or update on task.
+CREATE TRIGGER task_search_update
+  BEFORE INSERT OR UPDATE ON task
   FOR EACH ROW
-  EXECUTE PROCEDURE authenticated_user_search_update();
+  EXECUTE PROCEDURE task_search_update();
 
 -- Finally, create a GIN index for ts_vectors.
-CREATE INDEX idx_authenticated_user_search ON authenticated_user USING GIN (tsvectors);
+CREATE INDEX idx_task_search ON task USING GIN (tsvectors);
