@@ -8,6 +8,18 @@
               class="max-w-lg mx-auto bg-white p-8 rounded-card shadow-md">
             @csrf
 
+            @if ($errors->has('error'))
+                <div class="bg-red-100 text-red-600 p-2 mb-4 rounded-md flex items-center justify-between">
+                    <span class="flex-grow">{{ $errors->first('error') }}</span>
+
+                    <!-- Button to Navigate to the Active Sprint Page -->
+                    <a href="{{ route('projects.show', $project->slug) }}"
+                       class="bg-red-500 text-white px-2 py-1 text-sm rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ml-4">
+                        Close Active Sprint
+                    </a>
+                </div>
+            @endif
+
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-muted-foreground">Name</label>
                 <input id="name" type="text" name="name" value="{{ old('name') }}" autofocus
