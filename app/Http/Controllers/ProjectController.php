@@ -51,18 +51,17 @@ class ProjectController extends Controller
      */
     public function show($slug)
     {
-        // Find the project by slug
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        //Get the current sprint
-        $sprint = Sprint::where('project_id', $project->id)->firstOrFail();
+        $sprint = Sprint::where('project_id', $project->id)
+            ->where('is_archived', false)
+            ->first();
 
-        //Divide the tasks in categories
-        $sprintBacklogTasks = $sprint->tasks()->where('state', 'SPRINT_BACKLOG')->get();
-        $inProgressTasks = $sprint->tasks()->where('state', 'IN_PROGRESS')->get();
-        $doneTasks = $sprint->tasks()->where('state', 'DONE')->get();
-        $acceptedTasks = $sprint->tasks()->where('state', 'ACCEPTED')->get();
-
+        $sprintBacklogTasks = $sprint ? $sprint->tasks()->where('state', 'SPRINT_BACKLOG')->get() : collect();
+        $inProgressTasks = $sprint ? $sprint->tasks()->where('state', 'IN_PROGRESS')->get() : collect();
+        $doneTasks = $sprint ? $sprint->tasks()->where('state', 'DONE')->get() : collect();
+        $acceptedTasks = $sprint ? $sprint->tasks()->where('state', 'ACCEPTED')->get() : collect();
+        
         return view('web.sections.project.show', compact(
             'project',
             'sprint',
@@ -72,6 +71,7 @@ class ProjectController extends Controller
             'acceptedTasks'
         ));
     }
+
 
     /**
      * Show the form for creating a new project.

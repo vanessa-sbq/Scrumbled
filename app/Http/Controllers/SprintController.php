@@ -97,7 +97,7 @@ class SprintController extends Controller {
         ]);
 
         // Redirect to a relevant page (e.g., project or sprint list)
-        return redirect()->route('sprints', $project->slug)
+        return redirect()->route('projects.show', $project->slug)
             ->with('success', 'Sprint created successfully!');
     }
 
@@ -141,7 +141,6 @@ class SprintController extends Controller {
 
         $project = $sprint->project ;
 
-        return redirect()->route('sprints', $project->slug)
-            ->with('success', 'Sprint closed successfully!');
+        return redirect()->back()->with('success', 'Sprint closed successfully!');
     }
 }

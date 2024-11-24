@@ -7,11 +7,22 @@
         @if($sprints->isNotEmpty())
             <ul class="space-y-4">
                 @foreach ($sprints as $sprint)
-                    <li class="p-4 bg-white shadow-md rounded-lg border border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">{{ $sprint->name }}</h2>
-                        <p class="text-sm text-gray-500">
-                            ({{ \Carbon\Carbon::parse($sprint->start_date)->format('m/d/Y') }} - {{ \Carbon\Carbon::parse($sprint->end_date)->format('m/d/Y') }})
-                        </p>
+                    <li class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800">{{ $sprint->name }}</h2>
+                            <p class="text-sm text-gray-500">
+                                ({{ \Carbon\Carbon::parse($sprint->start_date)->format('m/d/Y') }} - {{ \Carbon\Carbon::parse($sprint->end_date)->format('m/d/Y') }})
+                            </p>
+                        </div>
+                        <div>
+                            @if ($sprint->is_archived)
+                                <span class="bg-yellow-100 text-yellow-600 text-xs font-semibold px-3 py-1 rounded-full">
+                                    Archived
+                                </span>
+                            @else
+                                <span class="bg-green-100 text-green-600 text-xs font-semibold px-3 py-1 rounded-full"> Active </span>
+                            @endif
+                        </div>
                     </li>
                 @endforeach
             </ul>
