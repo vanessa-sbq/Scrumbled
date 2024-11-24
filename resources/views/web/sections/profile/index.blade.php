@@ -6,8 +6,8 @@
 
         <div class="max-w-xl mx-auto bg-white p-8 rounded-card shadow-md" id="profileList">
             <input type="text" id="search-input"
-                   class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                   placeholder="Search users...">
+                class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="Search users...">
 
             <div id="results-container" class="space-y-4">
                 @include('web.sections.profile.components._user', ['users' => $users])
@@ -17,4 +17,8 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/search.js') }}"></script>
 @endsection

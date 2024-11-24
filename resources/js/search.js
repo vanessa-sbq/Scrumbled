@@ -6,7 +6,7 @@ function searchHelper(savedContainer) {
     const filterInput = document.querySelector('#filter-input');
 
     let debounceTimer;
-    
+
     let paginationRemoved = false;
     const query = searchInput.value;
     const status = filterInput ? filterInput.value : '';

@@ -118,7 +118,7 @@ class ProfileController extends Controller
 
         // Handle the file upload
         if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('public/img/users', 'public');
+            $picturePath = $request->file('picture')->store('images/users', 'public');
             $data['picture'] = $picturePath;
         }
 

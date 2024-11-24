@@ -3,7 +3,7 @@ const dropdownButton = document.getElementById('trigger');
 const dropdownMenu = document.getElementById('dropdown');
 
 // Toggle the dropdown visibility when the button is clicked
-dropdownButton.addEventListener('click', function(event) {
+dropdownButton.addEventListener('click', function (event) {
     event.preventDefault();
 
     // Toggle the "hidden" class and trigger transition
@@ -22,7 +22,7 @@ dropdownButton.addEventListener('click', function(event) {
 });
 
 // Close the dropdown if the user clicks outside of it
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
         dropdownMenu.classList.remove('opacity-100', 'scale-100');
         dropdownMenu.classList.add('opacity-0', 'scale-95');

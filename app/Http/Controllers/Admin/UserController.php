@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AuthenticatedUser; 
+use App\Models\AuthenticatedUser;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -21,7 +21,8 @@ class UserController extends Controller
         return view('admin.sections.user.show', compact('user', 'projects'));
     }
 
-    public function showEdit($username){
+    public function showEdit($username)
+    {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
         return view('admin.sections.user.edit', compact('user'));
     }
@@ -47,7 +48,7 @@ class UserController extends Controller
 
         // Handle the file upload
         if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('public/img/users', 'public');
+            $picturePath = $request->file('picture')->store('images/users', 'public');
             $data['picture'] = $picturePath;
         }
 
@@ -56,17 +57,17 @@ class UserController extends Controller
 
         // Redirect to the login page with a success message
         return redirect()->route('admin.users.show', $user->username)->with('success', 'Profile edited successfully');
-   
     }
 
-    public function ban($userId) {
+    public function ban($userId)
+    {
         $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
         $user->update(['status' => 'BANNED']);
         return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
-
     }
 
-    public function unban($userId) {
+    public function unban($userId)
+    {
         $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
         $user->update(['status' => 'ACTIVE']);
         return redirect()->route('admin.users')->with('success', 'Profile edited successfully');

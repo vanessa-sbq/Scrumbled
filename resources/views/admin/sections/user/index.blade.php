@@ -6,8 +6,8 @@
 
         <div class="mx-auto bg-white p-8 rounded-card shadow-md">
             <input type="text" id="search-input"
-                   class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                   placeholder="Search users...">
+                class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                placeholder="Search users...">
             <select id="filter-input" name="status" class="border p-2 rounded mr-2">
                 <option value="ANY">Any Status</option>
                 <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
@@ -18,25 +18,30 @@
             <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-white border-b border-black rounded-t-lg">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
-                            Full Name
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Account Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Actions</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">Profile</th>
-                    </tr>
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                                Full Name
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                                Email</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                                Account Status</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                                Actions</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                                Profile</th>
+                        </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200" id="results-container">
-                    @include('admin.components._user', ['users' => $users])
+                        @include('admin.components._user', ['users' => $users])
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script src="{{ mix('js/search.js') }}"></script>
 @endsection
