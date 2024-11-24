@@ -23,7 +23,15 @@ mix.copyDirectory('resources/assets/images', 'public/images')
     .browserSync('localhost:8000'); // Add BrowserSync for live reloading
 
 mix.webpackConfig({
-    plugins: [new LiveReloadPlugin({
-        liveCSS: false
-    })]
+    devServer: {
+        hot: true,
+        host: 'localhost',
+        port: 8080,
+        proxy: {
+            '*': 'http://localhost:8000'
+        },
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
 });
