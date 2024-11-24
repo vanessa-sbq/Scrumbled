@@ -6,3 +6,5 @@ if (!window.location.pathname.startsWith('/admin')) {
 if (window.location.pathname === '/profiles' || window.location.pathname === '/admin/users') {
     import('./search');
 }
+
+import('./task')

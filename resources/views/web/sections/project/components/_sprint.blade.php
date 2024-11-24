@@ -20,8 +20,8 @@
         <tbody class="bg-white divide-y divide-gray-200">
             @foreach ($tasks as $task)
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">{{ $task->title }}
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
+                        {{ $task->title }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
                         <span
                             class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -38,9 +38,24 @@
                         <x-user :user="$task->assignedDeveloper->user" />
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                        <button class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
-                            Start
-                        </button>
+                        @if ($task->assigned_to === null)
+                            <form method="POST" action="{{ route('tasks.assign', $task->id) }}">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                                <button type="submit"
+                                    class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                    Assign
+                                </button>
+                            </form>
+                        @elseif ($task->assigned_to === Auth::id())
+                            <form method="POST" action="{{ route('tasks.start', $task->id) }}">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                    Start
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

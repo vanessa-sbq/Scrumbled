@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProfileController as ProfileController;
+use App\Http\Controllers\TaskController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -91,4 +93,12 @@ Route::controller(SprintController::class)->group(function () {
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprint.close');
     Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
+});
+
+//Tasks
+Route::controller(TaskController::class)->group(function () {
+    Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
+    Route::post('/tasks/{id}/start', 'start')->name('tasks.start');
+    Route::post('/tasks/{id}/complete', 'complete')->name('tasks.complete');
+    Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
 });
