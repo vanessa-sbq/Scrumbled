@@ -82,5 +82,5 @@ Route::controller(SprintController::class)->group(function () {
     Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprint.close');
-    Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
+    Route::get('/sprints/{id}', 'show')->name('sprint.show');
 });
