@@ -15,7 +15,7 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 mix.options({ publicPath: 'public' });
 mix.copyDirectory('resources/assets/images', 'public/images')
     .copyDirectory('resources/assets/fonts', 'public/fonts')
-    .js('resources/assets/js/app.js', 'public/js')
+    .js('resources/js/app.js', 'public/js')
     .postCss('resources/assets/css/app.css', 'public/css', [
         require('tailwindcss'),
         require('autoprefixer')
@@ -23,7 +23,15 @@ mix.copyDirectory('resources/assets/images', 'public/images')
     .browserSync('localhost:8000'); // Add BrowserSync for live reloading
 
 mix.webpackConfig({
-    plugins: [new LiveReloadPlugin({
-        liveCSS: false
-    })]
+    devServer: {
+        hot: true,
+        host: 'localhost',
+        port: 8080,
+        proxy: {
+            '*': 'http://localhost:8000'
+        },
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
 });

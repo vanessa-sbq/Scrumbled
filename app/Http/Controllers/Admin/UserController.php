@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AuthenticatedUser; 
+use App\Models\AuthenticatedUser;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,26 +14,6 @@ class UserController extends Controller
         return view('admin.sections.user.index', compact('users'));
     }
 
-    public function findUser(Request $request){
-        $search = $request->input('search');
-        $status = $request->input('status');
-
-        $users = AuthenticatedUser::query()
-                 ->when($search, function ($query, $search) {
-                    return $query->where(function ($query) use ($search) { 
-                                $query->where('username', 'like', "%{$search}%") 
-                                      ->orWhere('full_name', 'like', "%{$search}%")
-                                      ->orWhere('email', 'like', "%{$search}%");
-                    });
-                 })
-                 ->when($status, function ($query, $status) {
-                    return $query->where('status', $status);
-                 })
-                 ->get();
-
-        return view('admin.sections.user.index', compact('users'));
-    }
-
     public function show($username)
     {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
@@ -41,7 +21,8 @@ class UserController extends Controller
         return view('admin.sections.user.show', compact('user', 'projects'));
     }
 
-    public function showEdit($username){
+    public function showEdit($username)
+    {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
         return view('admin.sections.user.edit', compact('user'));
     }
@@ -67,7 +48,7 @@ class UserController extends Controller
 
         // Handle the file upload
         if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('public/img/users', 'public');
+            $picturePath = $request->file('picture')->store('images/users', 'public');
             $data['picture'] = $picturePath;
         }
 
@@ -76,6 +57,19 @@ class UserController extends Controller
 
         // Redirect to the login page with a success message
         return redirect()->route('admin.users.show', $user->username)->with('success', 'Profile edited successfully');
-   
+    }
+
+    public function ban($userId)
+    {
+        $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
+        $user->update(['status' => 'BANNED']);
+        return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
+    }
+
+    public function unban($userId)
+    {
+        $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
+        $user->update(['status' => 'ACTIVE']);
+        return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
     }
 }

@@ -12,6 +12,17 @@
                 {{ $task->value }}
             </span>
         </div>
-
     </div>
+    @if ($task->assigned_to === Auth::id())
+        <div class="mt-4 flex gap-2">
+            @if ($task->state == 'IN_PROGRESS')
+                <button class="arrow-button" data-url="{{ route('tasks.complete', $task->id) }}">➡️</button>
+            @elseif ($task->state == 'DONE')
+                <button class="arrow-button" data-url="{{ route('tasks.start', $task->id) }}">⬅️</button>
+                <button class="arrow-button" data-url="{{ route('tasks.accept', $task->id) }}">➡️</button>
+            @elseif ($task->state == 'ACCEPTED')
+                <button class="arrow-button" data-url="{{ route('tasks.complete', $task->id) }}">⬅️</button>
+            @endif
+        </div>
+    @endif
 </div>

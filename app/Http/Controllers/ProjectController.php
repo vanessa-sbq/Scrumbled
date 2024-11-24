@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Developer;
+use App\Models\DeveloperProject;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,6 +142,12 @@ class ProjectController extends Controller
         }
     }
 
+    public function showTeam($slug)
+    {
+        $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
+        return view('web.sections.project.team', compact('project'));
+    }
+
     /**
      * Show the form for inviting a member to the project.
      *
@@ -149,7 +157,15 @@ class ProjectController extends Controller
     public function showInviteForm($slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        $users = AuthenticatedUser::paginate(10);
+
+        // Get the IDs of users who are already in the project
+        $existingUserIds = DeveloperProject::where('project_id', $project->id)
+            ->pluck('developer_id')
+            ->toArray();
+        $existingUserIds[] = $project->product_owner_id;
+
+        // Get all users that are not already in the project
+        $users = AuthenticatedUser::whereNotIn('id', $existingUserIds)->paginate(10);
 
         return view('web.sections.project.invite', compact('project', 'users'));
     }
@@ -164,15 +180,32 @@ class ProjectController extends Controller
     public function inviteMember(Request $request, $slug)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:authenticated_user,id',
         ]);
 
         $project = Project::where('slug', $slug)->firstOrFail();
         $user = AuthenticatedUser::findOrFail($request->user_id);
 
+        // Check if the user is already in the project
+        $isUserInProject = DeveloperProject::where('project_id', $project->id)
+            ->where('developer_id', $user->id)
+            ->exists() || $project->product_owner_id == $user->id;
+
+        if ($isUserInProject) {
+            return redirect()->route('projects.show', $project->slug)->with('error', 'User is already in the project.');
+        }
+
+        // Add user to the developer table if not already present
+        if (!Developer::where('user_id', $user->id)->exists()) {
+            Developer::create([
+                'user_id' => $user->id,
+            ]);
+        }
+
+        // Attach the user to the project
         $project->developers()->attach($user);
 
-        return redirect()->route('projects.show', $project->slug)->with('success', 'Member invited successfully.');
+        return redirect()->route('projects.team', $project->slug)->with('success', 'Member invited successfully.');
     }
 
     public function backlog($slug)
