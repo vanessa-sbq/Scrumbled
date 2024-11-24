@@ -1,4 +1,5 @@
 import('./bootstrap');
+
 if (!window.location.pathname.startsWith('/admin')) {
     import('./dropdown');
 }
