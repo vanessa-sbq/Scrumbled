@@ -10,6 +10,9 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/assets/js/bootstrap.js");
+/* harmony import */ var _taskSearch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./taskSearch */ "./resources/assets/js/taskSearch.js");
+/* harmony import */ var _taskSearch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_taskSearch__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 /***/ }),
@@ -54,6 +57,73 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+/***/ }),
+
+/***/ "./resources/assets/js/taskSearch.js":
+/*!*******************************************!*\
+  !*** ./resources/assets/js/taskSearch.js ***!
+  \*******************************************/
+/***/ (() => {
+
+function searchHelper(savedContainer) {
+  console.log('taskSearch.js loaded');
+  var container = document.querySelector('#results-container');
+  var searchInput = document.querySelector('#search-input');
+  var resultContainer = document.querySelector('#results-container');
+  var pagination = document.querySelector('#pagination-container');
+  var filterInput = document.querySelector('#filter-input');
+  var debounceTimer;
+  var paginationRemoved = false;
+  var query = searchInput.value;
+  var status = filterInput ? filterInput.value : '';
+
+  // Clear the previous timeout if the user is still typing
+  clearTimeout(debounceTimer);
+
+  // Set a new timeout to delay the fetch call
+  debounceTimer = setTimeout(function () {
+    if (query || filterInput !== null && filterInput !== '') {
+      if (pagination) {
+        pagination.remove();
+        paginationRemoved = true;
+      }
+      var url = "/api/profiles/search?search=".concat(query);
+      if (status) {
+        url += "&status=".concat(status);
+      }
+      fetch(url).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        // Update the results container with the fetched data
+        resultContainer.innerHTML = data;
+      })["catch"](function (error) {
+        console.error('Error fetching data:', error);
+      });
+    } else {
+      container.innerHTML = savedContainer;
+      if (paginationRemoved) {
+        container.appendChild(pagination);
+        paginationRemoved = false;
+      }
+      //resultContainer.innerHTML = '';
+      //window.location.href = '/profiles';;
+    }
+  }, 200);
+}
+window.onload = function () {
+  var savedContainer = document.querySelector('#results-container').innerHTML;
+  var searchInput = document.querySelector('#search-input');
+  var filterInput = document.querySelector('#filter-input');
+  if (filterInput) {
+    filterInput.addEventListener('input', function () {
+      return searchHelper(savedContainer);
+    });
+  }
+  searchInput.addEventListener('input', function () {
+    return searchHelper(savedContainer);
+  });
+};
 
 /***/ }),
 
@@ -7185,6 +7255,18 @@ const asap = typeof queueMicrotask !== 'undefined' ?
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	

@@ -202,6 +202,10 @@ class ProjectController extends Controller
                                 })
                 ->get();
 
+        /* $tasks = Task::where('project_id', $project->id)
+            ->whereRaw("ts_vector @@ plainto_tsquery('english', ?)", [$search])
+            ->get(); */
+
         return view('web.sections.project.tasks', compact('project', 'tasks'));
     }
 

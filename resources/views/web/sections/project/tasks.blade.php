@@ -17,6 +17,10 @@
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Search</button>
         </form> 
 
+        <input type="text" id="search-input" class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="Search tasks...">
+        <p class="bg-white divide-y divide-gray-200" id="results-container">
+        </p>
+
         <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white border-b border-black rounded-t-lg">
             <tr>
