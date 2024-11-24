@@ -73,6 +73,14 @@ class ProjectController extends Controller
         ));
     }
 
+    public function showTasks($slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $tasks = Task::where('project_id', $project->id)->get();
+
+        return view('web.sections.project.tasks', compact('project', 'tasks'));
+    }
+
     /**
      * Show the form for creating a new project.
      *
@@ -182,4 +190,19 @@ class ProjectController extends Controller
 
         return view('web.sections.project.backlog', compact('project', 'backlogTasks'));
     }
+
+    public function searchTasks(Request $request, $slug) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $search = $request->input('search');
+
+        // FIXME: Implement FTS with AJAX instead
+        $tasks = Task::where('project_id', $project->id)
+                ->where(function($query) use ($search) {
+                    $query->where('title', 'LIKE', "%{$search}%");
+                                })
+                ->get();
+
+        return view('web.sections.project.tasks', compact('project', 'tasks'));
+    }
+
 }

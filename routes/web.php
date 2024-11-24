@@ -51,6 +51,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
     Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
+    Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
+    Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
 });
 
 // Authentication
