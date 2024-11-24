@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ProfileController as ProfileController;
+use App\Http\Controllers\TaskController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,12 +36,15 @@ Route::redirect('/profiles', '/');
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminLoginController::class, 'login']);
-    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-    Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
-    Route::get('/users', [AdminUserController::class, 'findUser'])->name('admin.users');
-    Route::get('/users/{username}', [AdminUserController::class, 'show'])->name('admin.users.show');
-    Route::get('/users/{username}/edit', [AdminUserController::class, 'showEdit'])->name('admin.users.showEdit');
-    Route::post('/users/{username}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+        Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
+        Route::get('/users/{username}', [AdminUserController::class, 'show'])->name('admin.users.show');
+        Route::get('/users/{username}/edit', [AdminUserController::class, 'showEdit'])->name('admin.users.showEdit');
+        Route::post('/users/{username}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+        Route::post('/users/{username}/ban', [AdminUserController::class, 'ban'])->name('admin.users.ban');
+        Route::post('/users/{username}/unban', [AdminUserController::class, 'unban'])->name('admin.users.unban');
+    });
 });
 
 // Projects
@@ -49,7 +54,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
-    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
+    Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
     Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
 });
 
@@ -57,7 +63,7 @@ Route::controller(ProjectController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+    Route::get('/logout', 'logout')->name('logout')->middleware(['auth:web']);
 });
 
 Route::controller(RegisterController::class)->group(function () {
@@ -66,12 +72,16 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-Route::controller(ProfileController::class)->group(function() {
+Route::controller(ProfileController::class)->group(function () {
     Route::get('/profiles', 'index')->name('profiles');
-    Route::get('/profiles', 'search')->name('profiles');
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
+});
+
+// API
+Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
+    Route::get('/api/profiles/search', 'search');
 });
 
 //Sprints
@@ -83,4 +93,12 @@ Route::controller(SprintController::class)->group(function () {
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprint.close');
     Route::get('/sprints/{id}', 'show')->name('sprint.show');
+});
+
+//Tasks
+Route::controller(TaskController::class)->group(function () {
+    Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
+    Route::post('/tasks/{id}/start', 'start')->name('tasks.start');
+    Route::post('/tasks/{id}/complete', 'complete')->name('tasks.complete');
+    Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
 });

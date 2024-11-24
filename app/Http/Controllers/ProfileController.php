@@ -30,7 +30,7 @@ class ProfileController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->paginate(10);
+            ->paginate(2);
 
         return view('web.sections.profile.index', compact('users'));
     }
@@ -118,7 +118,7 @@ class ProfileController extends Controller
 
         // Handle the file upload
         if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('public/img/users', 'public');
+            $picturePath = $request->file('picture')->store('images/users', 'public');
             $data['picture'] = $picturePath;
         }
 
