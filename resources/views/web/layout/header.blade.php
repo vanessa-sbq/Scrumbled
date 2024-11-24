@@ -13,9 +13,9 @@
             <div>
                 <button type="button" class="inline-flex items-center w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="trigger" aria-expanded="true" aria-haspopup="true">
                     @if (Auth::user()->picture)
-                        <img class="h-12 w-12 rounded" src="{{ asset(Auth::user()->picture ? 'storage/' . Auth::user()->picture : 'img/users/default.png') }}" alt="Profile Picture">
+                        <img class="h-12 w-12 rounded-full" src="{{ asset(Auth::user()->picture ? 'storage/' . Auth::user()->picture : 'img/users/default.png') }}" alt="Profile Picture">
                     @else
-                        <img class="h-12 w-12 rounded" src="{{ asset('img/users/default.png') }}" alt="Profile Picture">
+                        <img class="h-12 w-12 rounded-full" src="{{ asset('img/users/default.png') }}" alt="Profile Picture">
                     @endif
                     <span class="text-center pr-1">{{ Auth::user()->full_name }}</span>
                 </button>

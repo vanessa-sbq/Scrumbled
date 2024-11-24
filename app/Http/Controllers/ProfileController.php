@@ -30,7 +30,7 @@ class ProfileController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->paginate(10);
+            ->paginate(2);
 
         return view('web.sections.profile.index', compact('users'));
     }

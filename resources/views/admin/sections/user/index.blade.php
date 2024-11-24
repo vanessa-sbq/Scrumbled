@@ -1,50 +1,42 @@
 @extends('admin.layout')
 
 @section('content')
-    <section class="container p-4 md:py-16 max-w-2xl">
-        <h1 class="text-4xl font-bold text-center mb-8">Users</h1>
+    <div class="container mx-auto py-8">
+        <h1 class="text-4xl font-bold mb-8 text-center">User Profiles</h1>
 
-        <!-- Search Form -->
-        <form method="GET" action="{{ route('admin.users') }}" class="mb-4 flex justify-end">
-            <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}"
-                class="border p-2 mr-2 rounded">
-
-            <!-- Status Filter Dropdown -->
-            <select name="status" class="border p-2 rounded mr-2">
-                <option value="">Any Status</option>
+        <div class="mx-auto bg-white p-8 rounded-card shadow-md">
+            <input type="text" id="search-input"
+                   class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                   placeholder="Search users...">
+            <select id="filter-input" name="status" class="border p-2 rounded mr-2">
+                <option value="ANY">Any Status</option>
                 <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
                 <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>Needs
                     Confirmation</option>
                 <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
             </select>
-            <button type="submit"
-                class="bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">Search</button>
-        </form>
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-white border-b border-black rounded-t-lg">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                            Full Name
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Account Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Actions</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">Profile</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="results-container">
+                    @include('admin.components._user', ['users' => $users])
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+@endsection
 
-        <!-- Users List -->
-        @if ($users->isEmpty())
-            <p class="text-xl text-center mt-10 mb-20">No users found.</p>
-        @else
-            <ul>
-                @foreach ($users as $user)
-                    <div class="bg-white shadow-md rounded-card p-6 mb-5">
-                        <li class="flex items-center space-x-4">
-                            <!-- TODO: Add a default image -->
-                            <img src="{{ asset($user->picture ? 'storage/' . $user->picture : 'img/users/default.png') }}"
-                                alt="{{ $user->full_name }}'s profile picture" class="w-16 h-16 rounded-full">
-                            <div>
-                                <a href="{{ route('admin.users.show', $user->username) }}"
-                                    class="font-bold hover:underline">{{ $user->username }}</a><br>
-                                <a href="{{ route('admin.users.show', $user->username) }}"
-                                    class="hover:underline">{{ $user->full_name }}</a> (<a>{{ $user->email }}</a>)
-                                <p class="text-primary font-bold">Status:
-                                    {{ strtolower(str_replace('_', ' ', $user->status)) }}</p>
-                            </div>
-                        </li>
-                    </div>
-                @endforeach
-            </ul>
-        @endif
-    </section>
-
+@section('scripts')
+    <script src="{{ mix('js/search.js') }}"></script>
 @endsection

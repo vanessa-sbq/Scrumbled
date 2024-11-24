@@ -14,26 +14,6 @@ class UserController extends Controller
         return view('admin.sections.user.index', compact('users'));
     }
 
-    public function findUser(Request $request){
-        $search = $request->input('search');
-        $status = $request->input('status');
-
-        $users = AuthenticatedUser::query()
-                 ->when($search, function ($query, $search) {
-                    return $query->where(function ($query) use ($search) { 
-                                $query->where('username', 'like', "%{$search}%") 
-                                      ->orWhere('full_name', 'like', "%{$search}%")
-                                      ->orWhere('email', 'like', "%{$search}%");
-                    });
-                 })
-                 ->when($status, function ($query, $status) {
-                    return $query->where('status', $status);
-                 })
-                 ->get();
-
-        return view('admin.sections.user.index', compact('users'));
-    }
-
     public function show($username)
     {
         $user = AuthenticatedUser::where('username', $username)->firstOrFail();
@@ -77,5 +57,18 @@ class UserController extends Controller
         // Redirect to the login page with a success message
         return redirect()->route('admin.users.show', $user->username)->with('success', 'Profile edited successfully');
    
+    }
+
+    public function ban($userId) {
+        $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
+        $user->update(['status' => 'BANNED']);
+        return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
+
+    }
+
+    public function unban($userId) {
+        $user = AuthenticatedUser::where('id', $userId)->firstOrFail();
+        $user->update(['status' => 'ACTIVE']);
+        return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
     }
 }

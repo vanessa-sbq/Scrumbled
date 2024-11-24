@@ -10,11 +10,15 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'session' => 'web_session',
+            'cookie' => 'web_cookie'
         ],
 
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
+            'session' => 'admin_session',
+            'cookie' => 'admin_cookie'
         ],
     ],
 

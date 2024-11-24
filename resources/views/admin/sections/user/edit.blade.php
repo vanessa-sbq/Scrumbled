@@ -12,11 +12,15 @@
                 <input type="hidden" name="id" value="{{ $user->id }}">
             @endif
 
+            @php
+                $imagePath = $user->picture ? 'storage/' . $user->picture : 'img/users/default.png';
+            @endphp
+
             {{-- Picture --}}
             <div class="flex flex-col gap-4">
                 <div class="space-y-2 place">
                     <label for="old_picture" class="block text-gray-700 place-self-center">Current Picture</label>
-                    <img class="h-24 w-24 rounded mx-auto" id="old_picture" src="{{ $user->picture }}" alt="Profile Picture">
+                    <img class="h-24 w-24 rounded mx-auto" id="old_picture" src="{{ asset($imagePath) }}" alt="Profile Picture">
                 </div>
                 <div>
                     <input type="file" id="picture" name="picture" class="w-full px-3 py-2 border rounded">

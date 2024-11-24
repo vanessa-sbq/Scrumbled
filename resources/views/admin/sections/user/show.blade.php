@@ -3,11 +3,7 @@
 @section('content')
     <section class="container p-4 md:py-16 flex flex-col gap-2">
         <div class="flex gap-2">
-            @if ($user->picture)
-                <img src="{{ $user->picture }}" alt="{{ $user->full_name }}'s profile picture" class="h-24 w-24 rounded">
-            @else
-                <img class="h-24 w-24 rounded" src="{{asset('img/users/default.png')}}" alt="Profile Picture">
-            @endif
+            <img src="{{ $user->picture ? asset('storage/' . $user->picture) : asset('img/users/default.png') }}" alt="{{ $user->full_name }}'s profile picture" class="h-24 w-24 rounded">
             <div>
                 <h2 class="text-2xl font-bold">{{$user->full_name}}</h2>
                 <h5>{{$user->username}}</h5>

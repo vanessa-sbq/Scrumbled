@@ -4,9 +4,9 @@
     <div class="container p-4 md:py-16 flex flex-col gap-2">
         <div class="flex gap-2">
             @if ($profileOwner->picture)
-                <img class="h-24 w-24 rounded" src="{{asset('storage/' . $profileOwner->picture)}}" alt="Profile Picture">
+                <img class="h-24 w-24 rounded-full" src="{{asset('storage/' . $profileOwner->picture)}}" alt="Profile Picture">
             @else
-                <img class="h-24 w-24 rounded" src="{{asset('img/users/default.png')}}" alt="Profile Picture">
+                <img class="h-24 w-24 rounded-full" src="{{asset('img/users/default.png')}}" alt="Profile Picture">
             @endif
             <div>
                 <h2 class="text-2xl font-bold">{{$profileOwner->full_name}}</h2>
