@@ -52,7 +52,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::post('/projects/new', 'store')->name('projects.store');
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
-    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.invite');
+    Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+    Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
     Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
 });
 
@@ -69,7 +70,7 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 // Profile
-Route::controller(ProfileController::class)->group(function() {
+Route::controller(ProfileController::class)->group(function () {
     Route::get('/profiles', 'index')->name('profiles');
     Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
     Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
@@ -77,7 +78,7 @@ Route::controller(ProfileController::class)->group(function() {
 });
 
 // API
-Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function() {
+Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
 });
 
