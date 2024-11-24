@@ -7,4 +7,8 @@ if (window.location.pathname === '/profiles' || window.location.pathname === '/a
     import('./search');
 }
 
+if (window.location.pathname === '/tasks') {
+    import('./taskSearch');
+}
+
 import('./task')
