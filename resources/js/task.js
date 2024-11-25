@@ -94,14 +94,16 @@ document.querySelectorAll('.arrow-button').forEach(button => {
 const showMyTasksCheckbox = document.getElementById('showMyTasks');
 const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
 
-showMyTasksCheckbox.addEventListener('change', function () {
-    const showMyTasks = this.checked;
-    document.querySelectorAll('.task-card').forEach(taskCard => {
-        const assignedTo = taskCard.getAttribute('data-assigned-to');
-        if (showMyTasks && assignedTo != userId) {
-            taskCard.style.display = 'none';
-        } else {
-            taskCard.style.display = 'block';
-        }
+if (showMyTasksCheckbox) {
+    showMyTasksCheckbox.addEventListener('change', function () {
+        const showMyTasks = this.checked;
+        document.querySelectorAll('.task-card').forEach(taskCard => {
+            const assignedTo = taskCard.getAttribute('data-assigned-to');
+            if (showMyTasks && assignedTo != userId) {
+                taskCard.style.display = 'none';
+            } else {
+                taskCard.style.display = 'block';
+            }
+        });
     });
-});
+}

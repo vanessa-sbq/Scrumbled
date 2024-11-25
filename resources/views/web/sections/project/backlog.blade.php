@@ -48,7 +48,11 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                                <x-user :user="$task->assignedDeveloper->user" />
+                                @if ($task->assignedDeveloper)
+                                    <x-user :user="$task->assignedDeveloper->user" />
+                                @else
+                                    <span class="text-red-500">Not Assigned</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
                                 <button class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
