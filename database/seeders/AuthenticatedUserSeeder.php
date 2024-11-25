@@ -42,6 +42,5 @@ class AuthenticatedUserSeeder extends Seeder
             'email' => 'up202206370@up.pt',
         ]);
 
-        AuthenticatedUser::factory()->count(20)->create();
     }
 }

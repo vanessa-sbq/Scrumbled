@@ -29,7 +29,7 @@ class TaskController extends Controller
         
             
 
-        $v = view('web.sections.project.subviews.components._task', ['tasks' => $tasks])->render();
+        $v = view('web.sections.task.components._task', ['tasks' => $tasks])->render();
         return response()->json($v);
     }
 }

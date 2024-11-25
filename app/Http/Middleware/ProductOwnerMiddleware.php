@@ -19,7 +19,7 @@ class ProductOwnerMiddleware
         $project = Project::where('slug', $request->route('slug'))->firstOrFail();
 
         if ($request->user()->id !== $project->product_owner_id) {
-            return redirect()->route('home')->with('error', 'You are not authorized to access this page.');
+            abort(403, 'You are not authorized to access this page.');
         }
 
         return $next($request);

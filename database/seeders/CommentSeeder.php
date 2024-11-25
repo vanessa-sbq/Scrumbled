@@ -31,7 +31,7 @@ class CommentSeeder extends Seeder
         ]);
 
         // Create random comments for the tasks
-        Comment::factory()->count(5)->create([
+        /*Comment::factory()->count(5)->create([
             'task_id' => $task1->id,
             'user_id' => $antonio->id,
         ]);
@@ -39,6 +39,6 @@ class CommentSeeder extends Seeder
         Comment::factory()->count(5)->create([
             'task_id' => $task2->id,
             'user_id' => $vanessa->id,
-        ]);
+        ]);*/
     }
 }

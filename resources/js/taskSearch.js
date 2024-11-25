@@ -60,7 +60,7 @@ function searchHelper(savedContainer) {
             //resultContainer.innerHTML = '';
             //window.location.href = '/profiles';;
         }
-    }, 200);
+    }, 500);
 }
 
 window.onload = () => {

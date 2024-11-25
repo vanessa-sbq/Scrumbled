@@ -6,8 +6,8 @@ info:
   description: 'Web Resources Specification (A7) for Scrumbled'
 
 servers:
-- url: http://lbaw.fe.up.pt
-  description: Production server
+  - url: http://lbaw.fe.up.pt
+    description: Production server
 
 externalDocs:
   description: Find more info here.
@@ -64,9 +64,9 @@ paths:
                   description: 'Successful authentication. Redirect to user profile.'
                   value: '/users/{username}'
         '401':
-              description: 'Failed authentication, incorrect password.'
+          description: 'Failed authentication, incorrect password.'
         '404':
-              description: 'Failed, user not found.'
+          description: 'Failed, user not found.'
   /register:
     get:
       operationId: R103
@@ -235,7 +235,7 @@ paths:
           description: Access Denied
         '404':
           description: 'User was not found.'
-          
+
   /api/profiles/search:
     get:
       operationId: R204
@@ -554,7 +554,7 @@ paths:
                   value: '/login'
         '403':
           description: Access Denied
-        
+
     post:
       operationId: R402
       summary: 'R402: Create a new Sprint'
@@ -606,11 +606,10 @@ paths:
                 302Error:
                   description: 'Failure while creating a sprint.'
                   value: '/project/{slug}/backlog'
-  
   /sprints/{id}/edit:
     get:
-      operationId: R404
-      summary: 'R404: Edit sprint UI'
+      operationId: R403
+      summary: 'R403: Edit sprint UI'
       description: 'Get the Edit Sprint form. Access: USR'
       tags:
         - 'M04 - Sprint'
@@ -618,9 +617,9 @@ paths:
         '200':
           description: 'Ok. Show Edit Sprint UI'
     post:
-      operationId: R405
-      summary: 'R405: Edit sprint details'
-      description: 'Edits the details of a sprint.'
+      operationId: R404
+      summary: 'R404: Edit sprint details'
+      description: 'Edits the details of a sprint. Access: USR'
       tags:
         - 'M04 - Sprint'
       parameters:
@@ -652,9 +651,9 @@ paths:
           description: 'Access denied.'
   /sprints/{id}/close:
     post:
-      operationId: R406
-      summary: 'R406 - Close a sprint'
-      description: 'Mark the sprint as closed.'
+      operationId: R405
+      summary: 'R405 - Close a sprint'
+      description: 'Mark the sprint as closed. Access: USR'
       tags:
         - 'M04 - Sprint'
       parameters:
@@ -669,12 +668,12 @@ paths:
         '403':
           description: Access denied.
         '404':
-          description: Task not found. 
-          
+          description: Task not found.
+
   /api/projects/{slug}/sprint:
     get:
-      operationId: R308
-      summary: 'R407: Get open sprint'
+      operationId: R406
+      summary: 'R406: Get open sprint'
       description: 'Gets the open sprint of a project. Access: PUB'
       tags:
         - 'M04 - Sprint'
@@ -708,16 +707,10 @@ paths:
           description: Access Denied
         '404':
           description: 'Project was not found.'
-        
-  
-
-
-
-
   /projects/{slug}/tasks/new:
     get:
-      operationId: R401
-      summary: 'R401: Create task UI'
+      operationId: R501
+      summary: 'R501: Create task UI'
       description: 'Get the Create Task form. Access: USR'
       tags:
         - 'M05 - Task'
@@ -743,10 +736,10 @@ paths:
                   value: '/login'
         '403':
           description: Access Denied
-        
+
     post:
-      operationId: R402
-      summary: 'R402: Create a new Task'
+      operationId: R502
+      summary: 'R502: Create a new Task'
       description: 'Creates a new task with the specified details. Access: USR'
       tags:
         - 'M05 - Task'
@@ -796,11 +789,11 @@ paths:
                 302Error:
                   description: 'Failure while creating a task.'
                   value: '/project/{slug}/backlog'
-                  
+
   /tasks/{id}:
     get:
-      operationId: R403
-      summary: 'R403: View task details'
+      operationId: R503
+      summary: 'R503: View task details'
       description: 'Show the task details. Access: PUB'
       tags:
         - 'M05 - Task'
@@ -818,11 +811,11 @@ paths:
           description: 'Access Denied'
         '404':
           description: 'Task not found.'
-          
+
   /tasks/{id}/edit:
     get:
-      operationId: R404
-      summary: 'R404: Edit task UI'
+      operationId: R504
+      summary: 'R504: Edit task UI'
       description: 'Get the Edit Task form. Access: USR'
       tags:
         - 'M05 - Task'
@@ -830,8 +823,8 @@ paths:
         '200':
           description: 'Ok. Show Edit Task UI'
     post:
-      operationId: R405
-      summary: 'R405: Edit task (in backlog) details'
+      operationId: R505
+      summary: 'R505: Edit task (in backlog) details'
       description: 'Edits the details of a task.'
       tags:
         - 'M05 - Task'
@@ -874,12 +867,11 @@ paths:
           description: 'Task not found.'
         '403':
           description: 'Access denied.'
-  
-  /tasks/{id}/assign:
+  /tasks/{id}/state:
     post:
-      operationId: R406
-      summary: 'R406 - Assign myself to a task'
-      description: 'Assign myself to a task. Access: USR'
+      operationId: R506
+      summary: 'R506 - Update task state'
+      description: 'Update the task state. Access: USR'
       tags:
         - 'M05 - Task'
       parameters:
@@ -889,7 +881,7 @@ paths:
             type: integer
           required: true
       requestBody:
-        description: The task to be assigned.
+        description: The task to be updated.
         required: true
         content:
           application/x-www-form-urlencoded:
@@ -898,8 +890,12 @@ paths:
               properties:
                 id:
                   type: integer
+                state:
+                  type: string
+                  enum: [backlog, sprint-backlog, in-progress, done, accepted]
               required:
                 - id
+                - state
       responses:
         '200':
           description: Successfully assigned to task.
@@ -907,111 +903,11 @@ paths:
           description: Access denied.
         '404':
           description: Task not found.
-
-  /tasks/{id}/start:
-    post:
-      operationId: R406
-      summary: 'R406 - Start a task.'
-      description: 'Start a task; make it be in progress.'
-      tags:
-        - 'M05 - Task'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-      
-        description: The task to be marked as in-progress.
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required:
-                - id
-      responses:
-        '200':
-          description: Task successfully started.
-        '403':
-          description: Access denied.
-        '404':
-          description: Task not found.
-
-  /tasks/{id}/complete:
-    post:
-      operationId: R406
-      summary: 'R406 - Complete a task'
-      description: 'Complete a task and mark it as done. Access: '
-      tags:
-        - 'M05 - Task'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        description: The task to be marked as done.
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required:
-                - id
-      responses:
-        '200':
-          description: Task successfully marked as done.
-        '403':
-          description: Access denied.
-        '404':
-          description: Task not found.
-
-  /tasks/{id}/accept:
-    post:
-      operationId: R406
-      summary: 'R406 - Accept a task'
-      description: 'Mark the task as accepted.'
-      tags:
-        - 'M05 - Task'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        description: The task to be marked as accepted.
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-              required:
-                - id
-      responses:
-        '200':
-          description: Task successfully accepted.
-        '403':
-          description: Access denied.
-        '404':
-          description: Task not found. 
   /admin/users:
     get:
-      operationId: R501
-      summary: 'R501: Search user accounts'
-      description: 'Retrieve list of user accounts with filtering.'
+      operationId: R601
+      summary: 'R601: Search user accounts'
+      description: 'Retrieve list of user accounts with filtering. Access: ADM'
       tags:
         - 'M06 - Admin'
       parameters:
@@ -1052,9 +948,9 @@ paths:
           description: 'User account not found.'
   /admin/users/{username}/edit:
     get:
-      operationId: R502
-      summary: 'R502: View user account details for editing'
-      description: 'Gets the deetails of the user account to be edited.'
+      operationId: R602
+      summary: 'R602: View user account details for editing'
+      description: 'Gets the deetails of the user account to be edited. Access: ADM'
       tags:
         - 'M06 - Admin'
       parameters:
@@ -1087,9 +983,9 @@ paths:
         '400':
           description: 'User account not found.'
     post:
-      operationId: R503
-      summary: 'R503 - Edit user account'
-      description: 'Edits a user account.'
+      operationId: R603
+      summary: 'R603 - Edit user account'
+      description: 'Edits a user account. Access: ADM'
       tags:
         - 'M06 - Admin'
       parameters:

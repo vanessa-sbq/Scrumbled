@@ -86,6 +86,10 @@ class TaskController extends Controller
         $task = Task::findOrFail($taskId);
         $newState = $request->input('state');
 
+        if($newState === 'ACCEPTED') {
+            $this->authorize('manage', $task->project);
+        }
+
         // Validate state input
         $validStates = ['BACKLOG', 'SPRINT_BACKLOG', 'IN_PROGRESS', 'DONE', 'ACCEPTED'];
         if (!in_array($newState, $validStates)) {
@@ -110,7 +114,7 @@ class TaskController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         $tasks = Task::where('project_id', $project->id)->get();
 
-        return view('web.sections.project.subviews.newTask', ['slug' => $slug]);
+        return view('web.sections.task.create', ['slug' => $slug]);
     }
 
     public function createNew(Request $request)
@@ -129,7 +133,7 @@ class TaskController extends Controller
 
     public function showEdit($slug, $task_id){
         $task = Task::findOrFail($task_id);
-        return view('web.sections.project.subviews.editTask', ['slug' => $slug, 'task' => $task]);
+        return view('web.sections.task.edit', ['slug' => $slug, 'task' => $task]);
     }
 
     public function editTask(Request $request, $slug, $taskId){
