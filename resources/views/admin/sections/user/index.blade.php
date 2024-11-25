@@ -4,7 +4,7 @@
     <div class="container mx-auto py-8">
         <h1 class="text-4xl font-bold mb-8 text-center">User Profiles</h1>
 
-        <div class="mx-auto bg-white p-8 rounded-card shadow-md">
+        <div class="mx-auto bg-white p-8 rounded-card shadow-md" id="profileList">
             <input type="text" id="search-input"
                 class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="Search users...">
