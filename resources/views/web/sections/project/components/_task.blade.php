@@ -1,32 +1,52 @@
-<div class="p-4 bg-gray-100 rounded-md shadow-sm">
-    <h4 class="text-lg font-semibold text-gray-800">{{ $task->title }}</h4>
-    <div class="text-sm text-gray-600 flex items-center gap-2 mt-2 justify-between flex-wrap">
-    @if($task->assignedDeveloper && $task->assignedDeveloper->user)
-        <x-user :user="$task->assignedDeveloper->user" />
-    @else
-        <p>No user assigned.</p>
-    @endif    
-        <div class="space-y-2">
-            <span
-                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                {{ $task->effort }}
-            </span>
-            <span
-                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                {{ $task->value }}
-            </span>
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
+            class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
+    <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
+        @csrf
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Close
+            Sprint</button>
+    </form>
+</div>
+
+<!-- Sprint Backlog -->
+@include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
+
+<div class="mb-6 mt-4 flex items-center">
+    <label class="inline-flex items-center">
+        <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
+        <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
+    </label>
+</div>
+
+<!-- Other Cards (In Progress, Done, Accepted) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- In Progress -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h3 class="text-xl font-bold text-primary mb-4">In Progress</h3>
+        <div class="space-y-4" id="inProgressTasks">
+            @foreach ($inProgressTasks as $task)
+                @include('web.sections.project.components._task', ['task' => $task])
+            @endforeach
         </div>
     </div>
-    @if ($task->assigned_to === Auth::id())
-        <div class="mt-4 flex gap-2">
-            @if ($task->state == 'IN_PROGRESS')
-                <button class="arrow-button" data-url="{{ route('tasks.complete', $task->id) }}">➡️</button>
-            @elseif ($task->state == 'DONE')
-                <button class="arrow-button" data-url="{{ route('tasks.start', $task->id) }}">⬅️</button>
-                <button class="arrow-button" data-url="{{ route('tasks.accept', $task->id) }}">➡️</button>
-            @elseif ($task->state == 'ACCEPTED')
-                <button class="arrow-button" data-url="{{ route('tasks.complete', $task->id) }}">⬅️</button>
-            @endif
+
+    <!-- Done -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h3 class="text-xl font-bold text-primary mb-4">Done</h3>
+        <div class="space-y-4" id="doneTasks">
+            @foreach ($doneTasks as $task)
+                @include('web.sections.project.components._task', ['task' => $task])
+            @endforeach
         </div>
-    @endif
+    </div>
+
+    <!-- Accepted -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h3 class="text-xl font-bold text-primary mb-4">Accepted</h3>
+        <div class="space-y-4" id="acceptedTasks">
+            @foreach ($acceptedTasks as $task)
+                @include('web.sections.project.components._task', ['task' => $task])
+            @endforeach
+        </div>
+    </div>
 </div>

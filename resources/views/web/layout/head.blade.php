@@ -4,7 +4,7 @@
 
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<meta name="user-id" content="{{ Auth::id() }}">
 <title>{{ config('app.name', 'Laravel') }}</title>
 
 @include('web.layout.links')
