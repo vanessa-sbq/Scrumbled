@@ -132,7 +132,7 @@ class TaskController extends Controller
         $task->effort = $request->effort;
         $task->save();
 
-        return redirect()->back();
+        return redirect()->route('projects.backlog', $project->slug)->with('success', 'Task created successfully!');
     }
 
     public function showEdit($slug, $task_id){
