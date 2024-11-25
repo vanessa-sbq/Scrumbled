@@ -148,4 +148,20 @@ class TaskController extends Controller
         
         return redirect()->back();
     }
+
+    public function showEdit($slug, $task_id){
+        $task = Task::findOrFail($task_id);
+        return view('web.sections.project.subviews.editTask', ['slug' => $slug, 'task' => $task]);
+    }
+
+    public function editTask(Request $request, $slug, $taskId){
+        $task = Task::findOrFail($taskId);
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->value = $request->value;
+        $task->effort = $request->effort;
+        $task->save();
+        
+        return redirect()->back();
+    }
 }
