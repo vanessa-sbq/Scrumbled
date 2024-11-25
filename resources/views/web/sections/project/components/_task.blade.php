@@ -18,7 +18,7 @@
         </div>
     </div>
     @if ($task->assigned_to === Auth::id())
-        <div class="mt-4 flex gap-2">
+        <div class="mt-4 flex gap-2" id="buttons">
             @if ($task->state == 'IN_PROGRESS')
                 <button class="arrow-button" data-url="{{ route('tasks.complete', $task->id) }}">➡️</button>
             @elseif ($task->state == 'DONE')
