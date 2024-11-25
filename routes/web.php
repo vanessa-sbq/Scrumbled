@@ -108,4 +108,6 @@ Route::controller(TaskController::class)->group(function () {
     Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
     Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
     Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
+    Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
+    Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
 });
