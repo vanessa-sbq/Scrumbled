@@ -89,3 +89,19 @@ function buttonListener() {
 document.querySelectorAll('.arrow-button').forEach(button => {
     button.addEventListener('click', buttonListener);
 });
+
+// Handle "Show only my tasks" checkbox
+const showMyTasksCheckbox = document.getElementById('showMyTasks');
+const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
+
+showMyTasksCheckbox.addEventListener('change', function () {
+    const showMyTasks = this.checked;
+    document.querySelectorAll('.task-card').forEach(taskCard => {
+        const assignedTo = taskCard.getAttribute('data-assigned-to');
+        if (showMyTasks && assignedTo != userId) {
+            taskCard.style.display = 'none';
+        } else {
+            taskCard.style.display = 'block';
+        }
+    });
+});
