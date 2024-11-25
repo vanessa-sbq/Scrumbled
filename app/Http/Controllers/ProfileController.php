@@ -17,7 +17,6 @@ class ProfileController extends Controller
         return view('web.sections.profile.index', compact('users'));
     }
 
-
     public function search(Request $request)
     {
         $search = $request->input('search');
