@@ -53,7 +53,7 @@
                             @if ($task->assignedDeveloper)
                                 <x-user :user="$task->assignedDeveloper->user" />
                             @else
-                                <span class="text-gray-400 italic">Unassigned</span>
+                                <span class="text-red-500">Not Assigned</span>
                             @endif
                         </td>
 

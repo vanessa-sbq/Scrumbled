@@ -29,7 +29,9 @@
             @endif
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-            <p>{{ strtolower(str_replace('_', ' ', $task->state)) }}</p>
+            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                <p>{{ strtolower(str_replace('_', ' ', $task->state)) }}</p>
+            </span>
         </td>
     </tr>
 @endforeach

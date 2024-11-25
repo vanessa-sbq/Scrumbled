@@ -226,23 +226,6 @@ class ProjectController extends Controller
         return view('web.sections.project.backlog', compact('project', 'backlogTasks', 'currentSprint', 'sprintBacklogTasks'));
     }
 
-    public function searchTasks(Request $request, $slug) {
-        $project = Project::where('slug', $slug)->firstOrFail();
-        $search = $request->input('search');
 
-        // FIXME: Implement FTS with AJAX instead
-        /* $tasks = Task::where('project_id', $project->id)
-                ->where(function($query) use ($search) {
-                    $query->where('title', 'LIKE', "%{$search}%");
-                                })
-                ->get(); */
-
-        $tasks = Task::where('project_id', $project->id)
-            ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
-            ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
-            ->get();
-
-        return view('web.sections.project.subviews.tasks', compact('project', 'tasks'));
-    }
 
 }

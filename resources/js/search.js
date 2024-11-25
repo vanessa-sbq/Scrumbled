@@ -1,5 +1,6 @@
+let paginationRemoved = false;
+
 function searchHelper(savedContainer) {
-    let container = document.querySelector('#results-container');
     const searchInput = document.querySelector('#search-input');
     const resultContainer = document.querySelector('#results-container');
     const pagination = document.querySelector('#pagination-container');
@@ -7,7 +8,6 @@ function searchHelper(savedContainer) {
 
     let debounceTimer;
 
-    let paginationRemoved = false;
     const query = searchInput.value;
     const status = filterInput ? filterInput.value : '';
 
@@ -19,7 +19,6 @@ function searchHelper(savedContainer) {
         if (query || (filterInput !== null && filterInput !== '')) {
             if (pagination) {
                 pagination.remove();
-                paginationRemoved = true;
             }
             let url = `/api/profiles/search?search=${query}`;
             if (status) {
@@ -35,19 +34,29 @@ function searchHelper(savedContainer) {
                     console.error('Error fetching data:', error);
                 });
         } else {
-            container.innerHTML = savedContainer;
-            if (paginationRemoved) {
-                container.appendChild(pagination);
-                paginationRemoved = false;
-            }
-            //resultContainer.innerHTML = '';
-            //window.location.href = '/profiles';;
+            resultContainer.innerHTML = '';
+
+            savedContainer.childNodes.forEach( childNode => {
+                if (childNode.id === 'results-container') {
+                    childNode.childNodes.forEach(child => {
+                        resultContainer.appendChild(child.cloneNode(true));
+                    });
+                }
+
+                if (childNode.id === 'pagination-container') {
+                    childNode.childNodes.forEach(child => {
+                        resultContainer.appendChild(child.cloneNode(true));
+                    });
+                }
+
+
+            })
         }
     }, 200);
 }
 
 window.onload = () => {
-    let savedContainer = document.querySelector('#results-container').innerHTML;
+    let savedContainer = document.querySelector('#profileList').cloneNode(true);
 
     const searchInput = document.querySelector('#search-input');
     const filterInput = document.querySelector('#filter-input');
