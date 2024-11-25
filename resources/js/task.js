@@ -1,12 +1,9 @@
 console.log('task.js loaded');
 
-function placeTask(taskElement, url) {
-    let task_in_progress = document.querySelector('#in-progress');
-    let task_done = document.querySelector('#done');
-    let task_accepted = document.querySelector('#accepted');
-    let urlObject = new URL(url);
-    let pathSegments = urlObject.pathname.split('/').filter(segment => segment);
-    const lastPathSegment = pathSegments[pathSegments.length - 1]; // Get the actual last segment
+function placeTask(taskElement, url, state) {
+    let inProgressContainer = document.querySelector('#in-progress');
+    let doneContainer = document.querySelector('#done');
+    let acceptedContainer = document.querySelector('#accepted');
 
     taskElement.parentNode.removeChild(taskElement);
 
@@ -17,44 +14,36 @@ function placeTask(taskElement, url) {
     let rightArrow = document.createElement("button");
     rightArrow.innerText = "➡️";
     rightArrow.className = "arrow-button";
+    rightArrow.setAttribute('data-url', url);
 
     let leftArrow = document.createElement("button");
     leftArrow.innerText = "⬅️";
     leftArrow.className = "arrow-button";
+    leftArrow.setAttribute('data-url', url);
 
-    console.log(pathSegments);
-
-    switch (lastPathSegment) {
-        case 'start':
-            pathSegments[pathSegments.length - 1] = 'complete';
-            urlObject.pathname = '/' + pathSegments.join('/');
-            rightArrow.setAttribute('data-url', urlObject.toString());
+    switch (state) {
+        case 'IN_PROGRESS':
+            rightArrow.setAttribute('data-state', 'DONE');
             rightArrow.addEventListener('click', buttonListener);
             buttons.appendChild(rightArrow); // Append the right button
-            task_in_progress.appendChild(taskElement); // Append to the right table.
+            inProgressContainer.appendChild(taskElement); // Append to the right table.
             break;
-        case 'complete':
-            pathSegments[pathSegments.length - 1] = 'start';
-            urlObject.pathname = '/' + pathSegments.join('/');
-            leftArrow.setAttribute('data-url', urlObject.toString());
+        case 'DONE':
+            leftArrow.setAttribute('data-state', 'IN_PROGRESS');
             leftArrow.addEventListener('click', buttonListener);
             buttons.appendChild(leftArrow); // Append the left button
 
-            pathSegments[pathSegments.length - 1] = 'accept';
-            urlObject.pathname = '/' + pathSegments.join('/');
-            rightArrow.setAttribute('data-url', urlObject.toString());
+            rightArrow.setAttribute('data-state', 'ACCEPTED');
             rightArrow.addEventListener('click', buttonListener);
             buttons.appendChild(rightArrow); // Append the right button
 
-            task_done.appendChild(taskElement);
+            doneContainer.appendChild(taskElement);
             break;
-        case 'accept':
-            pathSegments[pathSegments.length - 1] = 'complete';
-            urlObject.pathname = '/' + pathSegments.join('/');
-            leftArrow.setAttribute('data-url', urlObject.toString());
+        case 'ACCEPTED':
+            leftArrow.setAttribute('data-state', 'DONE');
             leftArrow.addEventListener('click', buttonListener);
             buttons.appendChild(leftArrow); // Append the left button
-            task_accepted.appendChild(taskElement);
+            acceptedContainer.appendChild(taskElement);
             break;
         default:
             alert('An error occurred.');
@@ -65,15 +54,17 @@ function placeTask(taskElement, url) {
 
 function buttonListener() {
     const url = this.getAttribute('data-url');
+    const state = this.getAttribute('data-state');
 
-    placeTask(this.parentElement.parentElement, url);
+    placeTask(this.parentElement.parentElement, url, state);
 
     fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
+        },
+        body: JSON.stringify({ state })
     })
         .then(response => response.json())
         .then(data => {

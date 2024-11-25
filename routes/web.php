@@ -103,9 +103,6 @@ Route::controller(SprintController::class)->group(function () {
 //Tasks
 Route::controller(TaskController::class)->group(function () {
     Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
-    Route::post('/tasks/{id}/start', 'start')->name('tasks.start');
-    Route::post('/tasks/{id}/complete', 'complete')->name('tasks.complete');
-    Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
     Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
     Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
     Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
