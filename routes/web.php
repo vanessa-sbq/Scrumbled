@@ -111,4 +111,5 @@ Route::controller(TaskController::class)->group(function () {
     Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
     Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
     Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
+    Route::get('/tasks/{id}', 'show')->name('task.show');
 });

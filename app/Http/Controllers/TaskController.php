@@ -34,14 +34,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Task $task)
@@ -150,4 +142,16 @@ class TaskController extends Controller
 
         return redirect()->back();
     }
+
+    public function show($id)
+    {
+        $task = Task::where('id', $id)->firstOrFail();
+
+        $sprint = $task->sprint;
+
+        $project = $task->project;
+
+        return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project,]);
+    }
+
 }

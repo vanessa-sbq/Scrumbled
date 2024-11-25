@@ -21,7 +21,11 @@
             @foreach ($tasks as $task)
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
-                        {{ $task->title }}</td>
+                        <a href="{{ route('task.show', $task->id) }}"
+                           class="text-lg font-semibold text-gray-800 hover:text-blue-500 transition">
+                            {{ $task->title }}
+                        </a>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
                         <span
                             class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
