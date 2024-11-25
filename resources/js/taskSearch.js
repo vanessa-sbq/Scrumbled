@@ -1,18 +1,45 @@
-function searchHelper(savedContainer) {
-    let container = document.querySelector('#results-container');
-    const searchInput = document.querySelector('#search-input');
-    const resultContainer = document.querySelector('#results-container');
-    const pagination = document.querySelector('#pagination-container');
-    const filterInput = document.querySelector('#filter-input');
+function fetchTasks(url) {
+    const resultContainer = document.querySelector('#task-results-container');
+    fetch(url)
+    .then(response => {
+        const contentType = response.headers.get('content-type');
+        if (!response.ok) {
+            console.error('Fetch error:', response.status, response.statusText);
+            return response.text().then(text => { throw new Error(text); });
+        }
+        if (contentType && contentType.indexOf('application/json') !== -1) {
+            return response.json();
+        } else {
+            return response.text().then(text => { throw new Error('Expected JSON, got: ' + text); });
+        }
+    })
+    .then(data => {
+        console.log('Fetch response data:', data); // Debugging statement
+        // Update the results container with the fetched data
+        resultContainer.innerHTML = data;
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+}
 
+function searchHelper(savedContainer) {
+    let container = document.querySelector('#task-results-container')
+    const searchInput = document.querySelector('#task-search-input');
+    const pagination = document.querySelector('#task-pagination-container');
+    const filterInput = document.querySelector('#task-filter-input');
+    
     let debounceTimer;
     
     let paginationRemoved = false;
     const query = searchInput.value;
-    const status = filterInput ? filterInput.value : '';
 
     // Clear the previous timeout if the user is still typing
     clearTimeout(debounceTimer);
+
+    // Extract the slug from the URL
+    const pathMatch = window.location.pathname.match(/^\/projects\/([^\/]+)\/tasks$/);
+    const slug = pathMatch[1];
 
     // Set a new timeout to delay the fetch call
     debounceTimer = setTimeout(() => {
@@ -21,19 +48,9 @@ function searchHelper(savedContainer) {
                 pagination.remove();
                 paginationRemoved = true;
             }
-            let url = `/api/projects/{slug}/tasks/search?search=${query}`;
-            if (status) {
-                url += `&status=${status}`;
-            }
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    // Update the results container with the fetched data
-                    resultContainer.innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+            let url = `/api/projects/${slug}/tasks/search?search=${query}`;
+            console.log(url);
+            fetchTasks(url)
         } else {
             container.innerHTML = savedContainer;
             if (paginationRemoved) {
@@ -47,15 +64,14 @@ function searchHelper(savedContainer) {
 }
 
 window.onload = () => {
+    const searchInput = document.querySelector('#task-search-input');
+    const filterInput = document.querySelector('#task-filter-input');
 
-    let savedContainer = document.querySelector('#results-container').innerHTML;
-
-    const searchInput = document.querySelector('#search-input');
-    const filterInput = document.querySelector('#filter-input');
-
+    fetchTasks(`/api/projects/${window.location.pathname.match(/^\/projects\/([^\/]+)\/tasks$/)[1]}/tasks/search?search=${''}`)
+    let savedContainer = document.querySelector('#task-results-container').innerHTML;
     if (filterInput) {
         filterInput.addEventListener('input', () => searchHelper(savedContainer))
     }
-
     searchInput.addEventListener('input', () => searchHelper(savedContainer));
+    
 };
