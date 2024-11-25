@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -125,5 +126,26 @@ class TaskController extends Controller
 
         $task->update(['state' => 'ACCEPTED']);
         return response()->json(['status' => 'success']);
+    }
+
+    public function showNew($slug){
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $tasks = Task::where('project_id', $project->id)->get();
+
+        return view('web.sections.project.subviews.newTask', ['slug' => $slug]);
+    }
+
+    public function createNew(Request $request)
+    {
+        $project = Project::where('slug', $request->slug)->firstOrFail();
+        $task = new Task();
+        $task->project_id = $project->id;
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->value = $request->value;
+        $task->effort = $request->effort;
+        $task->save();
+        
+        return redirect()->back();
     }
 }
