@@ -6,18 +6,21 @@
         @include('web.sections.project.components._navbar', ['project' => $project])
 
         <!-- Title Section -->
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
-                    class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
-            <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
-                @csrf
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">Close
-                    Sprint</button>
-            </form>
-        </div>
+        @if ($sprint && !$sprint->is_archived)
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
+                            class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
+                <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
+                    @csrf
+                    <button type="submit"
+                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                        Close Sprint
+                    </button>
+                </form>
+            </div>
 
-        <!-- Sprint Backlog -->
-        @include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
+            <!-- Sprint Backlog -->
+            @include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
 
         <div class="mb-6 mt-4 flex items-center">
             <label class="inline-flex items-center">
@@ -57,10 +60,23 @@
                     @endforeach
                 </div>
             </div>
-        </div>
+        @else
+            <!-- No Active Sprint Message -->
+            <div class="text-center py-16">
+                <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
+                <a href="{{ route('sprint.create', $project->slug) }}"
+                   class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                    Create Sprint
+                </a>
+            </div>
+        @endif
 
         <div class="mt-8">
             <a href="{{ route('projects') }}" class="text-blue-500 hover:underline">Back to Projects</a>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src=" {{ asset('js/task.js') }} "></script>
 @endsection

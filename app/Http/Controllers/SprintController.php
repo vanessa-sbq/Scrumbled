@@ -79,6 +79,12 @@ class SprintController extends Controller {
         // Get project by slug
         $project = Project::where('slug', $slug)->firstOrFail();
 
+        $openSprint = Sprint::where('project_id', $project->id)->where('is_archived', false)->first();
+
+        if($openSprint){
+            return redirect()->back()->withErrors(['error'=> 'There is already an active sprint!'])->withInput();
+        }
+
         // Validate the request data
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
@@ -97,7 +103,7 @@ class SprintController extends Controller {
         ]);
 
         // Redirect to a relevant page (e.g., project or sprint list)
-        return redirect()->route('sprints', $project->slug)
+        return redirect()->route('projects.show', $project->slug)
             ->with('success', 'Sprint created successfully!');
     }
 
@@ -139,9 +145,6 @@ class SprintController extends Controller {
 
         $sprint->update(['is_archived' => true]);
 
-        $project = $sprint->project ;
-
-        return redirect()->route('sprints', $project->slug)
-            ->with('success', 'Sprint closed successfully!');
+        return redirect()->back()->with('success', 'Sprint closed successfully!');
     }
 }

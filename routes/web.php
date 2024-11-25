@@ -97,17 +97,16 @@ Route::controller(SprintController::class)->group(function () {
     Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
     Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
     Route::post('sprints/{id}/close', 'close')->name('sprint.close');
-    Route::get('/sprints/{id}', 'show')->name('sprint.show'); //For info about all sprints(Past, Present, Future)??
+    Route::get('/sprints/{id}', 'show')->name('sprint.show');
 });
 
 //Tasks
 Route::controller(TaskController::class)->group(function () {
     Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
-    Route::post('/tasks/{id}/start', 'start')->name('tasks.start');
-    Route::post('/tasks/{id}/complete', 'complete')->name('tasks.complete');
-    Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
     Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
     Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
     Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
     Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
+    Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
+    Route::get('/tasks/{id}', 'show')->name('task.show');
 });
