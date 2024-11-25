@@ -14,51 +14,115 @@
         <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-white border-b border-black rounded-t-lg">
+                <tr>
+                    <th
+                            class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                        To Do ({{ count($backlogTasks) }})
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                        Effort</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                        Value</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                        Assigned To</th>
+                    <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                        Add to Sprint</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                @foreach ($backlogTasks as $task)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
+                            {{ $task->title }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
+                                <span
+                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    {{ $task->effort }}
+                                </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
+                                <span
+                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    {{ $task->value }}
+                                </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                            @if ($task->assignedDeveloper)
+                                <x-user :user="$task->assignedDeveloper->user" />
+                            @else
+                                <span class="text-gray-400 italic">Unassigned</span>
+                            @endif
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                            <button class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                Add to Sprint
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        @if ($sprintBacklogTasks->isEmpty())
+            <!-- No Active Sprint Message -->
+            <div class="text-center py-16">
+                <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
+                <a href="{{ route('sprint.create', $project->slug) }}"
+                   class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                    Create Sprint
+                </a>
+            </div>
+        @else
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-white border-b border-black rounded-t-lg">
                     <tr>
                         <th
-                            class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
-                            To Do ({{ count($backlogTasks) }})
+                                class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                            Sprint Backlog ({{ count($sprintBacklogTasks) }})
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
                             Effort</th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
                             Value</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
-                            Assigned To</th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
-                            Add to Sprint</th>
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell rounded-tr-lg">
+                            Assigned To</th>
                     </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach ($backlogTasks as $task)
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($sprintBacklogTasks as $task)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
                                 {{ $task->title }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
-                                <span
-                                    class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                    {{ $task->effort }}
-                                </span>
+                <span
+                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    {{ $task->effort }}
+                </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
-                                <span
-                                    class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                                    {{ $task->value }}
-                                </span>
+                <span
+                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    {{ $task->value }}
+                </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                                <x-user :user="$task->assignedDeveloper->user" />
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                                <button class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
-                                    Add to Sprint
-                                </button>
+                                @if ($task->assignedDeveloper)
+                                    <x-user :user="$task->assignedDeveloper->user" />
+                                @else
+                                    <span class="text-gray-400 italic">Unassigned</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
     </div>
 @endsection

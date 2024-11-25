@@ -219,8 +219,11 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
         $backlogTasks = Task::where('project_id', $project->id)->where('state', 'BACKLOG')->get();
+        $currentSprint = Sprint::where('project_id', $project->id)->where('is_archived', false)->first();
 
-        return view('web.sections.project.backlog', compact('project', 'backlogTasks'));
+        $sprintBacklogTasks = $currentSprint ? $currentSprint->tasks()->where('state', 'SPRINT_BACKLOG')->get() : collect();
+
+        return view('web.sections.project.backlog', compact('project', 'backlogTasks', 'sprintBacklogTasks'));
     }
 
     public function searchTasks(Request $request, $slug) {
