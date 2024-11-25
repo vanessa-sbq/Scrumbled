@@ -86,6 +86,10 @@ class TaskController extends Controller
         $task = Task::findOrFail($taskId);
         $newState = $request->input('state');
 
+        if($newState === 'ACCEPTED') {
+            $this->authorize('manage', $task->project);
+        }
+
         // Validate state input
         $validStates = ['BACKLOG', 'SPRINT_BACKLOG', 'IN_PROGRESS', 'DONE', 'ACCEPTED'];
         if (!in_array($newState, $validStates)) {

@@ -45,7 +45,7 @@ class TaskSeeder extends Seeder
             'effort' => 13,
         ]);
 
-        Task::factory()->create([
+        /*Task::factory()->create([
             'project_id' => $project2->id,
             'sprint_id' => null,
             'title' => 'Delete Database',
@@ -65,19 +65,6 @@ class TaskSeeder extends Seeder
             'value' => 'MUST_HAVE',
             'state' => 'ACCEPTED',
             'effort' => 13,
-        ]);
-
-        // Create random tasks for the projects
-        Task::factory()->count(5)->create([
-            'project_id' => $project1->id,
-            'sprint_id' => $sprint1->id,
-            'assigned_to' => $joao->user_id,
-        ]);
-
-        Task::factory()->count(5)->create([
-            'project_id' => $project2->id,
-            'sprint_id' => $sprint2->id,
-            'assigned_to' => $simao->user_id,
-        ]);
+        ]);*/
     }
 }

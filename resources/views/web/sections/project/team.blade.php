@@ -43,12 +43,14 @@
                 <div class="mb-4 p-4 border border-gray-300 rounded-md shadow-sm">No Developers assigned.</div>
             @endif
 
+            @can('manage', $project)
             <div class="mt-8 text-center">
                 <a href="{{ route('projects.inviteForm', $project->slug) }}"
                     class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 transition">
                     Invite Members
                 </a>
             </div>
+            @endcan
         </div>
     </div>
 @endsection

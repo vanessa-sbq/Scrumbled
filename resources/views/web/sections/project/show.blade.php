@@ -10,6 +10,7 @@
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
                             class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
+                @can('manage', $project)
                 <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
                     @csrf
                     <button type="submit"
@@ -17,6 +18,7 @@
                         Close Sprint
                     </button>
                 </form>
+                @endcan
             </div>
 
             <!-- Sprint Backlog -->
