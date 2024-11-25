@@ -7,7 +7,8 @@ if (window.location.pathname === '/profiles' || window.location.pathname === '/a
     import('./search');
 }
 
-const pathMatch = window.location.pathname.match(/\^\/projects\/([\^\/]+)\/tasks$/);
+const pathMatch = window.location.pathname.match(/^\/projects\/([^\/]+)\/tasks$/);
+
 console.log(pathMatch);
 if (pathMatch) {
     const slug = pathMatch[1];

@@ -58,7 +58,7 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
     Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
     Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
-    Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
+    //Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
 });
 
 // Authentication
@@ -84,6 +84,9 @@ Route::controller(ProfileController::class)->group(function () {
 // API
 Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
+});
+Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
+    Route::get('/api/projects/{slug}/tasks/search', 'search');
 });
 
 //Sprints
