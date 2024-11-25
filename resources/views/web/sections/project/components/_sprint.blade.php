@@ -52,13 +52,9 @@
                                 </button>
                             </form>
                         @elseif ($task->assigned_to === Auth::id())
-                            <form method="POST" action="{{ route('tasks.start', $task->id) }}">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
-                                    Start
-                                </button>
-                            </form>
+                            <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS" class="state-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                Start
+                            </button>
                         @endif
                     </td>
                 </tr>

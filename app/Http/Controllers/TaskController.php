@@ -110,7 +110,7 @@ class TaskController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         $tasks = Task::where('project_id', $project->id)->get();
 
-        return view('web.sections.project.subviews.newTask', ['slug' => $slug]);
+        return view('web.sections.task.create', ['slug' => $slug]);
     }
 
     public function createNew(Request $request)
@@ -129,7 +129,7 @@ class TaskController extends Controller
 
     public function showEdit($slug, $task_id){
         $task = Task::findOrFail($task_id);
-        return view('web.sections.project.subviews.editTask', ['slug' => $slug, 'task' => $task]);
+        return view('web.sections.task.edit', ['slug' => $slug, 'task' => $task]);
     }
 
     public function editTask(Request $request, $slug, $taskId){

@@ -1,4 +1,18 @@
-console.log('task.js loaded');
+function sendStateChange(url, state) {
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ state })
+    })
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error:', error);
+            return { status: 'error', message: 'Network error occurred.' };
+        });
+}
 
 function placeTask(taskElement, url, state) {
     let inProgressContainer = document.querySelector('#in-progress');
@@ -56,30 +70,39 @@ function buttonListener() {
     const url = this.getAttribute('data-url');
     const state = this.getAttribute('data-state');
 
+    sendStateChange(url, state)
+        .then(data => {
+            if (data.status !== 'success') {
+                alert(data.message || 'An error occurred.');
+            }
+        })
+        .finally(() => location.reload());
+}
+
+function arrowListener() {
+    const url = this.getAttribute('data-url');
+    const state = this.getAttribute('data-state');
+
     placeTask(this.parentElement.parentElement, url, state);
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ state })
-    })
-        .then(response => response.json())
+    sendStateChange(url, state)
         .then(data => {
             if (data.status !== 'success') {
                 alert(data.message || 'An error occurred.');
                 location.reload();
             }
-        })
-        .catch(error => console.error('Error:', error));
+        });
 }
 
 
 document.querySelectorAll('.arrow-button').forEach(button => {
+    button.addEventListener('click', arrowListener);
+});
+
+document.querySelectorAll('.state-button').forEach(button => {
     button.addEventListener('click', buttonListener);
 });
+
 
 // Handle "Show only my tasks" checkbox
 const showMyTasksCheckbox = document.getElementById('showMyTasks');

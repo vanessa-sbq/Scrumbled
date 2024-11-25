@@ -79,7 +79,7 @@ class ProjectController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         $tasks = Task::where('project_id', $project->id)->get();
 
-        return view('web.sections.project.subviews.tasks', compact('project', 'tasks'));
+        return view('web.sections.task.index', compact('project', 'tasks'));
     }
 
     /**

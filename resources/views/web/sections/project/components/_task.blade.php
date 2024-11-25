@@ -24,8 +24,9 @@
         </div>
     </div>
     @if ($task->assigned_to === Auth::id())
-        <div class="mt-4 flex gap-2" id="buttons">
+        <div class="mt-4 flex gap-2 justify-between" id="buttons">
             @if ($task->state == 'IN_PROGRESS')
+                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="SPRINT_BACKLOG" class="state-button text-red-500 hover:text-red-700 hover:underline transition">Cancel</button>
                 <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="DONE">➡️</button>
             @elseif ($task->state == 'DONE')
                 <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS">⬅️</button>
