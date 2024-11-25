@@ -7,10 +7,8 @@ if (window.location.pathname === '/profiles' || window.location.pathname === '/a
     import('./search');
 }
 
-/* if (window.location.pathname === '/projects/jira/tasks') {
-    import('./taskSearch');
-} */
 const pathMatch = window.location.pathname.match(/^\/projects\/([^\/]+)\/tasks$/);
+
 console.log(pathMatch);
 if (pathMatch) {
     const slug = pathMatch[1];

@@ -19,12 +19,19 @@
         <!-- Sprint Backlog -->
         @include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
 
+        <div class="mb-6 mt-4 flex items-center">
+            <label class="inline-flex items-center">
+                <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
+                <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
+            </label>
+        </div>
+
         <!-- Other Cards (In Progress, Done, Accepted) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- In Progress -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-xl font-bold text-primary mb-4">In Progress</h3>
-                <div class="space-y-4">
+                <div class="space-y-4" id="in-progress">
                     @foreach ($inProgressTasks as $task)
                         @include('web.sections.project.components._task', ['task' => $task])
                     @endforeach
@@ -34,7 +41,7 @@
             <!-- Done -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-xl font-bold text-primary mb-4">Done</h3>
-                <div class="space-y-4">
+                <div class="space-y-4" id="done">
                     @foreach ($doneTasks as $task)
                         @include('web.sections.project.components._task', ['task' => $task])
                     @endforeach
@@ -44,7 +51,7 @@
             <!-- Accepted -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-xl font-bold text-primary mb-4">Accepted</h3>
-                <div class="space-y-4">
+                <div class="space-y-4" id="accepted">
                     @foreach ($acceptedTasks as $task)
                         @include('web.sections.project.components._task', ['task' => $task])
                     @endforeach
