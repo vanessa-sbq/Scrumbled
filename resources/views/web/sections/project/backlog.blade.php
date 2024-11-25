@@ -23,14 +23,16 @@
                         Effort</th>
                     <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
                         Value</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell whitespace-nowrap">
                         Assigned To</th>
+                    @if ($currentSprint) <!-- Only show the Add to Sprint column if there is an active sprint -->
                     <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
-                        Add to Sprint</th>
+                        Actions</th>
+                    @endif
                 </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody id="backlog-tasks" class="bg-white divide-y divide-gray-200">
                 @foreach ($backlogTasks as $task)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
@@ -55,19 +57,21 @@
                             @endif
                         </td>
 
+                        @if ($currentSprint) <!-- Only show the Add to Sprint button if there is an active sprint -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                            <button class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                            <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="BACKLOG" class="add-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                                 Add to Sprint
                             </button>
                         </td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
 
-        @if ($sprintBacklogTasks->isEmpty())
-            <!-- No Active Sprint Message -->
+        @if (!$currentSprint)
+            <!-- No Active Sprint -->
             <div class="text-center py-16">
                 <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
                 <a href="{{ route('sprint.create', $project->slug) }}"
@@ -76,6 +80,7 @@
                 </a>
             </div>
         @else
+            <!-- Sprint Exists with Tasks -->
             <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-white border-b border-black rounded-t-lg">
@@ -89,11 +94,14 @@
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
                             Value</th>
                         <th
-                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell rounded-tr-lg">
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell rounded-tr-lg whitespace-nowrap">
                             Assigned To</th>
+                        <th
+                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell rounded-tr-lg">
+                            Actions</th>
                     </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody id="sprint-tasks" class="bg-white divide-y divide-gray-200">
                     @foreach ($sprintBacklogTasks as $task)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
@@ -117,12 +125,21 @@
                                     <span class="text-gray-400 italic">Unassigned</span>
                                 @endif
                             </td>
+
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="SPRINT_BACKLOG" class="remove-button  bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                    Remove
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             </div>
         @endif
-
     </div>
+@endsection
+
+@section('scripts')
+    <script src=" {{ asset('js/backlog.js') }} "></script>
 @endsection

@@ -103,4 +103,5 @@ Route::controller(TaskController::class)->group(function () {
     Route::post('/tasks/{id}/start', 'start')->name('tasks.start');
     Route::post('/tasks/{id}/complete', 'complete')->name('tasks.complete');
     Route::post('/tasks/{id}/accept', 'accept')->name('tasks.accept');
+    Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
 });

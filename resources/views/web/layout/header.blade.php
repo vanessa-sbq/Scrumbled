@@ -39,3 +39,7 @@
         </div>
     @endif
 </header>
+
+@section('scripts')
+    <script src=" {{ asset('js/dropdown.js') }} "></script>
+@endsection

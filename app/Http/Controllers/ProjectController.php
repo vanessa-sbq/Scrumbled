@@ -223,7 +223,7 @@ class ProjectController extends Controller
 
         $sprintBacklogTasks = $currentSprint ? $currentSprint->tasks()->where('state', 'SPRINT_BACKLOG')->get() : collect();
 
-        return view('web.sections.project.backlog', compact('project', 'backlogTasks', 'sprintBacklogTasks'));
+        return view('web.sections.project.backlog', compact('project', 'backlogTasks', 'currentSprint', 'sprintBacklogTasks'));
     }
 
     public function searchTasks(Request $request, $slug) {

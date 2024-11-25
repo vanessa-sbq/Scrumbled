@@ -88,42 +88,28 @@ class TaskController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function start($taskId)
+    public function updateState(Request $request, $taskId)
     {
         $task = Task::findOrFail($taskId);
+        $newState = $request->input('state');
 
-        // Ensure the authenticated user is the one assigned to the task
-        if ($task->assigned_to !== Auth::id()) {
-            return response()->json(['status' => 'error', 'message' => 'You are not authorized to start this task.'], 403);
+        // Validate state input
+        $validStates = ['BACKLOG', 'SPRINT_BACKLOG', 'IN_PROGRESS', 'DONE', 'ACCEPTED'];
+        if (!in_array($newState, $validStates)) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid task state.'], 400);
         }
 
-        $task->update(['state' => 'IN_PROGRESS']);
-        return response()->json(['status' => 'success']);
-    }
+        // Authorization checks
+        $userId = Auth::id();
 
-    public function complete($taskId)
-    {
-        $task = Task::findOrFail($taskId);
-
-        // Ensure the authenticated user is the one assigned to the task
-        if ($task->assigned_to !== Auth::id()) {
-            return response()->json(['status' => 'error', 'message' => 'You are not authorized to complete this task.'], 403);
+        if (in_array($newState, ['IN_PROGRESS', 'DONE', 'ACCEPTED']) && $task->assigned_to !== $userId) {
+            return response()->json(['status' => 'error', 'message' => 'You are not authorized to modify this task.'], 403);
         }
 
-        $task->update(['state' => 'DONE']);
-        return response()->json(['status' => 'success']);
+        // Update the task state
+        $task->update(['state' => $newState]);
+
+        return response()->json(['status' => 'success', 'message' => "Task state updated to $newState."]);
     }
 
-    public function accept($taskId)
-    {
-        $task = Task::findOrFail($taskId);
-
-        // Ensure the authenticated user is the one assigned to the task
-        if ($task->assigned_to !== Auth::id()) {
-            return response()->json(['status' => 'error', 'message' => 'You are not authorized to accept this task.'], 403);
-        }
-
-        $task->update(['state' => 'ACCEPTED']);
-        return response()->json(['status' => 'success']);
-    }
 }

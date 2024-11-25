@@ -18,6 +18,7 @@
 
     <!-- Scripts -->
     @include('web.layout.scripts')
+    @yield('scripts')
 </body>
 
 </html>
