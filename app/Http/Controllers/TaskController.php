@@ -103,8 +103,14 @@ class TaskController extends Controller
             return response()->json(['status' => 'error', 'message' => 'You are not authorized to modify this task.'], 403);
         }
 
+        $sprintID = $request->input('sprintID');
+
         // Update the task state
-        $task->update(['state' => $newState]);
+        if (isset($sprintID)) {
+            $task->update(['state' => $newState, 'sprint_id' => $sprintID]);
+        } else {
+            $task->update(['state' => $newState]);
+        }
 
         return response()->json(['status' => 'success', 'message' => "Task state updated to $newState."]);
     }

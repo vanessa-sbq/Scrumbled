@@ -27,6 +27,7 @@ function handleTaskStateChange(event) {
     const taskButton = event.currentTarget; // The clicked button
     const state = taskButton.getAttribute('data-state'); // Current state
     const url = taskButton.getAttribute('data-url'); // API endpoint
+    const sprint_id = taskButton.getAttribute('id'); // Fetch the current sprint_id
 
     // Determine target container based on the current state
     const targetContainerId = state === 'BACKLOG' ? 'sprint-tasks' : 'backlog-tasks';
@@ -41,7 +42,7 @@ function handleTaskStateChange(event) {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ state : newState })
+        body: JSON.stringify({ state : newState, sprintID : sprint_id })
     })
         .then(response => response.json())
         .then(data => {

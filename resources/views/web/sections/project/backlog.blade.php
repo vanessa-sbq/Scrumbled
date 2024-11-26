@@ -69,7 +69,7 @@
 
                         @if ($currentSprint)
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="BACKLOG" class="add-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="BACKLOG" id="{{$currentSprint->id}}" class="add-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                                     Add to Sprint
                                 </button>
                             </td>
@@ -155,4 +155,5 @@
 
 @section('scripts')
     <script src="{{ asset('js/backlog.js') }}"></script>
+    <script src="{{ asset('js/dropdown.js') }}"></script>
 @endsection

@@ -10,7 +10,7 @@ function sendStateChange(url, state) {
         .then(response => response.json())
         .catch(error => {
             console.error('Error:', error);
-            return { status: 'error', message: 'Network error occurred.' };
+            return { status: 'error', message: 'Not allowed. Are you a Product Owner?' };
         });
 }
 

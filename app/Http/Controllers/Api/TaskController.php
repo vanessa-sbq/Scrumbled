@@ -15,10 +15,8 @@ class TaskController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         
         $search = $request->input('search');
-        //dd($project);
-        // FIXME: slug passing as parameter gives error
 
-        $tasks = Task::all();
+        $tasks = Task::where('project_id', $project->id)->get();
 
         if (isset($search) && $search !== '') {
             $tasks = Task::where('project_id',  $project->id)

@@ -81,4 +81,5 @@
 
 @section('scripts')
     <script src=" {{ asset('js/task.js') }} "></script>
+    <script src="{{ asset('js/dropdown.js') }}"></script>
 @endsection
