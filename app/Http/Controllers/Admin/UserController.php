@@ -72,4 +72,37 @@ class UserController extends Controller
         $user->update(['status' => 'ACTIVE']);
         return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
     }
+
+    public function showCreate(){
+        return view('admin.sections.user.create');
+    }
+
+    public function createUser(Request $request){
+        // Validate the request data
+        $request->validate([
+            'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user',
+            'email' => 'required|email|max:250|unique:authenticated_user',
+            'password' => 'required|string|min:8',
+            'full_name' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'required|in:ACTIVE,NEEDS_CONFIRMATION,BANNED'
+        ]);
+
+        // Collect the validated data
+        $data = $request->only('username', 'email', 'password', 'full_name', 'bio', 'status');
+
+        // Handle the file upload
+        if ($request->hasFile('picture')) {
+            $picturePath = $request->file('picture')->store('images/users', 'public');
+            $data['picture'] = $picturePath;
+        }
+
+        // Create the user
+        $user = AuthenticatedUser::create($data);
+
+        // Redirect to the user's profile page with a success message
+        return redirect()->route('admin.users.show', $user->username)->with('success', 'User created successfully');
+    }
+    
 }

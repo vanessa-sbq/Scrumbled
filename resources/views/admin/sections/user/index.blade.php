@@ -5,16 +5,22 @@
         <h1 class="text-4xl font-bold mb-8 text-center">User Profiles</h1>
 
         <div class="mx-auto bg-white p-8 rounded-card shadow-md" id="profileList">
+
             <input type="text" id="search-input"
                 class="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="Search users...">
-            <select id="filter-input" name="status" class="border p-2 rounded mr-2">
-                <option value="ANY">Any Status</option>
-                <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
-                <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>Needs
-                    Confirmation</option>
-                <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
-            </select>
+            <div class="flex items-center justify-between">
+                <select id="filter-input" name="status" class="border p-2 rounded mr-2">
+                    <option value="ANY">Any Status</option>
+                    <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
+                    <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>Needs
+                        Confirmation</option>
+                    <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
+                </select>
+                <a href="{{ route('admin.users.showCreate') }}" class="inline-block px-4 py-2 mb-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-primary border border-transparent rounded-md shadow-md hover:bg-primary-dark focus:outline-none focus:ring-primary focus:border-primary-dark">
+                    Create User
+                </a>
+            </div>
             <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-white border-b border-black rounded-t-lg">

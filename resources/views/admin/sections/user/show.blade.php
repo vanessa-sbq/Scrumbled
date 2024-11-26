@@ -4,7 +4,7 @@
     <section class="container p-4 md:py-16 flex flex-col gap-2">
         <div class="flex gap-2">
             <img src="{{ $user->picture ? asset('storage/' . $user->picture) : asset('images/users/default.png') }}"
-                alt="{{ $user->full_name }}'s profile picture" class="h-24 w-24 rounded">
+                alt="{{ $user->full_name }}'s profile picture" class="h-24 w-24 h-24 w-24 rounded-full">
             <div>
                 <h2 class="text-2xl font-bold">{{ $user->full_name }}</h2>
                 <h5>{{ $user->username }}</h5>

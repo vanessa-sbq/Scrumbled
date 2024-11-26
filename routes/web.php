@@ -36,6 +36,8 @@ Route::redirect('/profiles', '/');
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminLoginController::class, 'login']);
+    Route::get('/users/create', [AdminUserController::class, 'showCreate'])->name('admin.users.showCreate');
+    Route::post('/users/create', [AdminUserController::class, 'createUser'])->name('admin.users.createUser');
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
         Route::get('/users', [AdminUserController::class, 'list'])->name('admin.users');
