@@ -14,4 +14,4 @@ COPY .env.production /var/www/.env
 COPY docker_run.sh /docker_run.sh
 
 # Start command
-CMD sh /docker_run.sh
+CMD ["sh", "/docker_run.sh"]
