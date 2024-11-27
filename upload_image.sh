@@ -4,10 +4,11 @@
 set -e
 
 # Replace with your group's image name
-IMAGE_NAME=lbaw24113
+IMAGE_NAME=gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113
 
-# Ensure that dependencies are available
 composer install
+npm install --legacy-peer-deps
+npm run production
 php artisan config:clear
 php artisan clear-compiled
 php artisan optimize

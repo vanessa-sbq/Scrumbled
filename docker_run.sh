@@ -3,18 +3,9 @@
 # Stop execution if a step fails
 set -e
 
-# Replace with your group's image name
-IMAGE_NAME=gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113
+cd /var/www
 
-# Ensure that dependencies are available
-composer install
-npm install --legacy-peer-deps
-npm run production
-php artisan config:clear
-php artisan clear-compiled
-php artisan optimize
+ln -sf /proc/$$/fd/1 /var/log/nginx/access.log
+ln -sf /proc/$$/fd/2 /var/log/nginx/error.log
 
-#docker build --platform linux/amd64 -t $IMAGE_NAME .
-#docker buildx build --push --platform linux/amd64 -t $IMAGE_NAME .
-docker build -t $IMAGE_NAME .
-docker push $IMAGE_NAME
+env >> /var/www/.env
