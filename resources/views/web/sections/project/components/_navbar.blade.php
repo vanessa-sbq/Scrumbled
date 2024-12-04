@@ -8,7 +8,7 @@
         <a href="{{ route('projects.show', $project->slug) }}"
             class="{{ request()->routeIs('projects.show') ? 'text-blue-500 font-bold' : 'text-blue-500 hover:underline' }}">Board</a>
         <a href="{{ route('projects.tasks', $project->slug) }}"
-           class="{{ request()->routeIs('projects.tasks') ? 'text-blue-500 font-bold' : 'text-blue-500 hover:underline' }}">Tasks</a>
+           class="{{ (request()->routeIs('projects.tasks') || request()->routeIs('projects.tasks.search')) ? 'text-blue-500 font-bold' : 'text-blue-500 hover:underline' }}">Tasks</a>
         <a href="{{ route('projects.backlog', $project->slug) }}"
             class="{{ request()->routeIs('projects.backlog') ? 'text-blue-500 font-bold' : 'text-blue-500 hover:underline' }}">Backlog</a>
         <a href="{{ route('projects.team', $project->slug) }}"

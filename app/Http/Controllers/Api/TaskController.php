@@ -24,8 +24,6 @@ class TaskController extends Controller
                     ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
                     ->get();
         }
-        
-            
 
         $v = view('web.sections.task.components._task', ['tasks' => $tasks])->render();
         return response()->json($v);
