@@ -226,6 +226,31 @@ class ProjectController extends Controller
         return view('web.sections.project.backlog', compact('project', 'backlogTasks', 'currentSprint', 'sprintBacklogTasks'));
     }
 
+    public function searchTasks(Request $request)
+    {        
+        $url = $request->url();
+        
+        $slug = explode('/', $url)[4];
+
+
+        $project = Project::where('slug', $slug)->firstOrFail();
+        
+        $search = $request->input('query');
+
+        //dd($request);
+
+        $tasks = Task::where('project_id', $project->id)->get();
+
+        if (isset($search) && $search !== '') {
+            $tasks = Task::where('project_id',  $project->id)
+                    ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
+                    ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
+                    ->get();
+        }
+   
+
+        return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
+    }
 
 
 }
