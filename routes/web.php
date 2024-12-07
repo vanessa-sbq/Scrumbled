@@ -54,6 +54,7 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+    Route::post('project/{slug}/leave', 'leave')->name('projects.leave');
     Route::middleware(['auth', 'product.owner'])->group(function () {
         Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
         Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');

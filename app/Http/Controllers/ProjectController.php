@@ -252,5 +252,21 @@ class ProjectController extends Controller
         return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
     }
 
+    public function leave(Request $request, $slug) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
 
+        // Check if the user is part of the project
+        if ($project->developers()->where('developer_id', $user->id)->exists()) {
+            // Detach the user from the project
+            $project->developers()->detach($user->id);
+
+            return redirect()->route('projects', $project->slug)
+                ->with('success', 'You have left the project!');
+        }
+
+        // If user is not in the project
+        return redirect()->route('projects.show', $project->slug)
+            ->with('error', 'An error occurred while leaving the project.');
+    }
 }
