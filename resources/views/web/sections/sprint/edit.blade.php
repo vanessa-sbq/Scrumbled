@@ -15,7 +15,8 @@
                 <label for="name" class="block text-gray-700">Name</label>
                 <input type="text" id="name" name="name"
                        class="w-full px-3 py-2 border rounded"
-                       value="{{ old('name', $sprint->name) }}">
+                       value="{{ old('name', $sprint->name) }}"
+                       placeholder="Enter the sprint name">
                 @error('name')
                 <div class="text-red-500 mt-2">{{ $message }}</div>
                 @enderror
@@ -26,7 +27,8 @@
                 <label for="start_date" class="block text-gray-700">Start Date</label>
                 <input type="date" id="start_date" name="start_date"
                        class="w-full px-3 py-2 border rounded"
-                       value="{{ old('start_date', $sprint->start_date ? \Illuminate\Support\Carbon::parse($sprint->start_date)->format('Y-m-d') : '') }}">
+                       value="{{ old('start_date', $sprint->start_date ? \Illuminate\Support\Carbon::parse($sprint->start_date)->format('Y-m-d') : '') }}"
+                       placeholder="Select start date">
                 @error('start_date')
                 <div class="text-red-500 mt-2">{{ $message }}</div>
                 @enderror
@@ -37,7 +39,8 @@
                 <label for="end_date" class="block text-gray-700">End Date</label>
                 <input type="date" id="end_date" name="end_date"
                        class="w-full px-3 py-2 border rounded"
-                       value="{{ old('end_date', $sprint->end_date ? \Illuminate\Support\Carbon::parse($sprint->end_date)->format('Y-m-d') : '') }}">
+                       value="{{ old('end_date', $sprint->end_date ? \Illuminate\Support\Carbon::parse($sprint->end_date)->format('Y-m-d') : '') }}"
+                       placeholder="Select end date">
                 @error('end_date')
                 <div class="text-red-500 mt-2">{{ $message }}</div>
                 @enderror
