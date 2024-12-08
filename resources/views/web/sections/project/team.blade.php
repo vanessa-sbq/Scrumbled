@@ -31,7 +31,17 @@
                              alt="{{ $project->scrumMaster->full_name }}" class="w-10 h-10 rounded-full mr-3">
                         <span class="font-medium">{{ $project->scrumMaster->full_name }}</span> (Scrum Master)
                     </div>
-                    @if (auth()->id() === $project->scrumMaster->id)
+
+                    @if (auth()->id() === $project->product_owner_id)
+                        <!-- Show 'Remove Member' button for the Product Owner -->
+                        <form action="{{ route('projects.remove', [$project->slug, $project->scrumMaster->username]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
+                                Remove Member
+                            </button>
+                        </form>
+                    @elseif (auth()->id() === $project->scrumMaster->id)
+                        <!-- Show 'Leave Project' button for the Scrum Master -->
                         <form action="{{ route('projects.leave', $project->slug) }}" method="POST">
                             @csrf
                             <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
@@ -54,7 +64,17 @@
                                  alt="{{ $developer->full_name }}" class="w-10 h-10 rounded-full mr-3">
                             <span class="font-medium">{{ $developer->full_name }}</span> (Developer)
                         </div>
-                        @if (auth()->id() === $developer->id)
+
+                        @if (auth()->id() === $project->product_owner_id)
+                            <!-- Show 'Remove Member' button for the Product Owner -->
+                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
+                                    Remove Member
+                                </button>
+                            </form>
+                        @elseif (auth()->id() === $developer->id)
+                            <!-- Show 'Leave Project' button for the Developer -->
                             <form action="{{ route('projects.leave', $project->slug) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">

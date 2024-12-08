@@ -252,7 +252,7 @@ class ProjectController extends Controller
         return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
     }
 
-    public function leave(Request $request, $slug) {
+    public function leave($slug) {
         $project = Project::where('slug', $slug)->firstOrFail();
         $user = auth()->user();
 
@@ -261,6 +261,10 @@ class ProjectController extends Controller
             // Detach the user from the project
             $project->developers()->detach($user->id);
 
+            if ($project->scrum_master_id === $user->id) {
+                $project->update(['scrum_master_id' => null]);
+            }
+
             return redirect()->route('projects', $project->slug)
                 ->with('success', 'You have left the project!');
         }
@@ -268,5 +272,24 @@ class ProjectController extends Controller
         // If user is not in the project
         return redirect()->route('projects.show', $project->slug)
             ->with('error', 'An error occurred while leaving the project.');
+    }
+
+    public function remove($slug, $username) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+
+        if ($project->product_owner_id === $user->id) {
+            return redirect()->route('projects.show', $project->slug)
+                ->with('error', 'You cannot remove the Product Owner.');
+        }
+
+        $project->developers()->detach($user->id);
+
+        if ($project->scrum_master_id === $user->id) {
+            $project->update(['scrum_master_id' => null]);
+        }
+
+        return redirect()->route('projects.team', $project->slug)
+            ->with('success', 'Member has been removed successfully.');
     }
 }

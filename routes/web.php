@@ -58,6 +58,7 @@ Route::controller(ProjectController::class)->group(function () {
     Route::middleware(['auth', 'product.owner'])->group(function () {
         Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
         Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
+        Route::post('/projects/{slug}/remove/{username}', 'remove')->name('projects.remove');
     });
     Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
     Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
