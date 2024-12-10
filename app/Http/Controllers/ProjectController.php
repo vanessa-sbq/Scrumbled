@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AuthenticatedUser;
 use App\Models\Developer;
 use App\Models\DeveloperProject;
+use App\Models\Favorite;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -291,5 +292,29 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.team', $project->slug)
             ->with('success', 'Member has been removed successfully.');
+    }
+
+    public function updateFavorite($slug) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+
+        $favorite = Favorite::where('user_id', $user->id)
+            ->where('project_id', $project->id)
+            ->first();
+
+        if ($favorite) {
+            Favorite::where('user_id', $user->id)
+                ->where('project_id', $project->id)
+                ->delete();
+
+            return response()->json(['status' => 'success', 'message' => "Unfavorited!"]);
+        } else {
+            // Favorite logic
+            Favorite::create([
+                'user_id' => $user->id,
+                'project_id' => $project->id,
+            ]);
+            return response()->json(['status' => 'success', 'message' => "Favorited!"]);
+        }
     }
 }

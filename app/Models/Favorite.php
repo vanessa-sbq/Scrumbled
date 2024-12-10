@@ -11,8 +11,6 @@ class Favorite extends Model
 
     protected $table = 'favorite';
 
-    protected $primaryKey = ['user_id', 'project_id']; // Specify the composite primary key
-
     protected $fillable = [
         'user_id',
         'project_id',
