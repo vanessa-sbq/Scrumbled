@@ -10,7 +10,7 @@
     <ul
         class='lg:flex gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
         <li class='mb-6 hidden max-lg:block'>
-            <a href="{{ url('/') }}"><img src="{{ asset('images/logo.svg') }}" alt="logo" class='w-36' /></a>
+            <a href="{{ url('/') }}"><img src="{{ asset('svg/logo.svg') }}" alt="logo" class='w-36' /></a>
         </li>
         @php
             $links = [

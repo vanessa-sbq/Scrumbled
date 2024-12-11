@@ -14,6 +14,7 @@ const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 mix.options({ publicPath: 'public' });
 mix.copyDirectory('resources/assets/images', 'public/images')
+mix.copyDirectory('resources/assets/svg', 'public/svg')
     .copyDirectory('resources/assets/fonts', 'public/fonts')
     .copyDirectory('resources/js', 'public/js')
     .postCss('resources/assets/css/app.css', 'public/css', [
