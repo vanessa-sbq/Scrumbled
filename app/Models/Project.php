@@ -40,4 +40,15 @@ class Project extends Model
     {
         return $this->belongsToMany(AuthenticatedUser::class, 'developer_project', 'project_id', 'developer_id');
     }
+
+    /**
+     * Returns true if the project is a favorite of "user", otherwise returns falsez
+     */
+    public function isFavoritedBy($userId)
+    {
+        return Favorite::where('user_id', $userId)
+            ->where('project_id', $this->id)
+            ->exists();
+    }
+
 }

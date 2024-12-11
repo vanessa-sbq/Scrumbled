@@ -54,9 +54,14 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+
+    Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
+    Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite');
+
     Route::middleware(['auth', 'product.owner'])->group(function () {
         Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
         Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
+        Route::post('/projects/{slug}/remove/{username}', 'remove')->name('projects.remove');
     });
     Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
     Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');

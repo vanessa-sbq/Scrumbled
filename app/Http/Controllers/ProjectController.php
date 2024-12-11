@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AuthenticatedUser;
 use App\Models\Developer;
 use App\Models\DeveloperProject;
+use App\Models\Favorite;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -252,5 +253,68 @@ class ProjectController extends Controller
         return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
     }
 
+    public function leave($slug) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
 
+        // Check if the user is part of the project
+        if ($project->developers()->where('developer_id', $user->id)->exists()) {
+            // Detach the user from the project
+            $project->developers()->detach($user->id);
+
+            if ($project->scrum_master_id === $user->id) {
+                $project->update(['scrum_master_id' => null]);
+            }
+
+            return redirect()->route('projects', $project->slug)
+                ->with('success', 'You have left the project!');
+        }
+
+        // If user is not in the project
+        return redirect()->route('projects.show', $project->slug)
+            ->with('error', 'An error occurred while leaving the project.');
+    }
+
+    public function remove($slug, $username) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+
+        if ($project->product_owner_id === $user->id) {
+            return redirect()->route('projects.show', $project->slug)
+                ->with('error', 'You cannot remove the Product Owner.');
+        }
+
+        $project->developers()->detach($user->id);
+
+        if ($project->scrum_master_id === $user->id) {
+            $project->update(['scrum_master_id' => null]);
+        }
+
+        return redirect()->route('projects.team', $project->slug)
+            ->with('success', 'Member has been removed successfully.');
+    }
+
+    public function updateFavorite($slug) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+
+        $favorite = Favorite::where('user_id', $user->id)
+            ->where('project_id', $project->id)
+            ->first();
+
+        if ($favorite) {
+            Favorite::where('user_id', $user->id)
+                ->where('project_id', $project->id)
+                ->delete();
+
+            return response()->json(['status' => 'success', 'message' => "Unfavorited!"]);
+        } else {
+            // Favorite logic
+            Favorite::create([
+                'user_id' => $user->id,
+                'project_id' => $project->id,
+            ]);
+            return response()->json(['status' => 'success', 'message' => "Favorited!"]);
+        }
+    }
 }
