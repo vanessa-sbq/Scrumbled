@@ -18,7 +18,7 @@
 
     <!-- Scripts -->
     @include('web.layout.scripts')
-    @yield('scripts')
+    @stack('scripts')
 </body>
 
 </html>

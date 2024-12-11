@@ -19,7 +19,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script src="{{ asset('js/search.js') }}"></script>
     <script src="{{ asset('js/dropdown.js') }}"></script>
-@endsection
+@endpush

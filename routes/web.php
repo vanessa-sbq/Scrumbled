@@ -24,7 +24,12 @@ use App\Http\Controllers\TaskController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::view("/", 'web.sections.static.home');
+
+// Static routes
+Route::view('/about', 'web.sections.static.about')->name('about');
+Route::view('/contact', 'web.sections.static.contact')->name('contact');
+Route::view('/faq', 'web.sections.static.faq')->name('faq');
 
 Route::redirect('/admin', '/admin/login');
 
