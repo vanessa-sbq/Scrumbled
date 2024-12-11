@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@components {
+  .card {
+    @apply bg-white p-8 rounded-card shadow-md;
+  }
+}
+
 @layer base {
   * {
     @apply border-muted-foreground;

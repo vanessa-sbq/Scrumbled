@@ -7,7 +7,7 @@
 
         <h1 class="text-4xl font-bold mb-8 text-center">Invite Member to {{ $project->title }}</h1>
 
-        <div class="max-w-lg mx-auto bg-white p-8 rounded-card shadow-md">
+        <div class="max-w-lg mx-auto card">
             @foreach ($users as $user)
                 @php
                     $imagePath = $user->picture ? 'storage/' . $user->picture : 'images/users/default.png';
