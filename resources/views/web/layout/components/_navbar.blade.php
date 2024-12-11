@@ -39,31 +39,20 @@
 
 <div class='flex max-lg:ml-auto space-x-4'>
     @if (Auth::check())
-        <div class="relative inline-block text-left">
-            <div id="trigger"
-                class="flex flex-wrap items-center justify-center gap-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md transition"
-                aria-expanded="true" aria-haspopup="true">
-                <img src="{{ Auth::user()->picture ? asset('storage/' . Auth::user()->picture) : asset('images/users/default.png') }}"
-                    class="w-12 h-12 rounded-full" alt="Profile Picture" />
-                <div>
-                    <p class="text-[15px] text-gray-800 font-bold">{{ Auth::user()->full_name }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">{{ Auth::user()->email }}</p>
-                </div>
+        @php
+            $dropdownLinks = [
+                ['url' => route('show.profile', Auth::user()->username), 'label' => 'My Profile'],
+                ['url' => url('/logout'), 'label' => 'Logout'],
+            ];
+        @endphp
+        <x-dropdown :links="$dropdownLinks">
+            <img src="{{ Auth::user()->picture ? asset('storage/' . Auth::user()->picture) : asset('images/users/default.png') }}"
+                class="w-12 h-12 rounded-full" alt="Profile Picture" />
+            <div>
+                <p class="text-[15px] text-gray-800 font-bold">{{ Auth::user()->full_name }}</p>
+                <p class="text-xs text-gray-500 mt-0.5">{{ Auth::user()->email }}</p>
             </div>
-
-            <!-- Dropdown menu -->
-            <div id="dropdown"
-                class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none transform transition ease-in duration-75 opacity-0 scale-95 hidden"
-                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                <a href="{{ route('show.profile', Auth::user()->username) }}"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors" role="menuitem"
-                    tabindex="-1" id="menu-item-0">My
-                    Profile</a>
-                <a href="{{ url('/logout') }}"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors" role="menuitem"
-                    tabindex="-1" id="menu-item-1">Logout</a>
-            </div>
-        </div>
+        </x-dropdown>
     @else
         <div class="flex space-x-4">
             <a href="/login"
@@ -84,3 +73,7 @@
         </svg>
     </button>
 </div>
+
+@push('scripts')
+    <script src="{{ asset('js/navbar.js') }}"></script>
+@endpush
