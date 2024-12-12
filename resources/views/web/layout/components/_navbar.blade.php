@@ -24,7 +24,9 @@
         @foreach ($links as $link)
             <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
                 <a href="{{ route($link['route']) }}"
-                    class="{{ request()->routeIs($link['route']) ? 'font-bold' : 'hover:underline' }}">{{ $link['label'] }}</a>
+                    class="{{ request()->routeIs($link['route']) ? 'text-primary font-bold' : 'text-gray-600' }} hover:text-primary transition-colors duration-300">
+                    {{ $link['label'] }}
+                </a>
             </li>
         @endforeach
     </ul>
@@ -47,14 +49,14 @@
             </div>
         </x-dropdown>
     @else
-        <div class="flex space-x-4">
-            <a href="/login"
-                class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hidden sm:block hover:bg-gray-300 transition-colors">
+        <div class="flex flex-wrap space-x-4">
+            <x-button variant="secondary" size="md" href="/login">
                 <i class="fas fa-sign-in-alt"></i> Login
-            </a>
-            <a href="/register"
-                class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors">Get
-                Started</a>
+            </x-button>
+            <x-button variant="primary" size="md" href="/register">
+                Get Started
+            </x-button>
+
         </div>
     @endif
 

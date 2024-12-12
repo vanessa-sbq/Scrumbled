@@ -2,31 +2,32 @@
 
 @section('content')
     <div class="container p-4 md:py-16">
-        <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center space-x-4">
-                <h1 class="text-4xl font-bold">Projects</h1>
-                <div class="flex space-x-4">
-                    <a href="{{ route('projects', ['type' => 'my_projects']) }}"
-                        class="{{ $type === 'my_projects' ? 'text-primary font-bold' : 'text-gray-600' }}">
-                        My Projects
+        <h1 class="text-4xl font-bold">Projects List</h1>
+        <div
+            class="flex flex-wrap gap-4 min-h-14 justify-between items-center my-8 bg-white rounded-md py-2 px-8 border border-muted shadow-sm">
+            @php
+                $projectLinks = [
+                    ['type' => 'my_projects', 'label' => 'My Projects'],
+                    ['type' => 'public', 'label' => 'Public'],
+                ];
+
+                if (auth()->check()) {
+                    $projectLinks[] = ['type' => 'favorites', 'label' => 'Favorites'];
+                }
+            @endphp
+
+            <div class="flex flex-wrap items-center gap-4">
+                @foreach ($projectLinks as $link)
+                    <a href="{{ route('projects', ['type' => $link['type']]) }}"
+                        class="{{ $type === $link['type'] ? 'text-primary font-bold' : 'text-gray-600' }} hover:text-primary transition-colors duration-300">
+                        {{ $link['label'] }}
                     </a>
-                    <a href="{{ route('projects', ['type' => 'public']) }}"
-                        class="{{ $type === 'public' ? 'text-primary font-bold' : 'text-gray-600' }}">
-                        Public
-                    </a>
-                    @auth
-                        <a href="{{ route('projects', ['type' => 'favorites']) }}"
-                            class="{{ $type === 'favorites' ? 'text-primary font-bold' : 'text-gray-600' }}">
-                            Favorites
-                        </a>
-                    @endauth
-                </div>
+                @endforeach
             </div>
             @auth
-                <a href="{{ route('projects.create') }}"
-                    class="bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                <x-button variant="primary" size="md" href="{{ route('projects.create') }}" extraClasses="shadow-lg">
                     Create Project
-                </a>
+                </x-button>
             @endauth
         </div>
 
