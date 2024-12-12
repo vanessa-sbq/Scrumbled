@@ -1,5 +1,5 @@
 <footer class="p-4">
-    <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+    <div class="w-full container p-4 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between">
             <a href="/" class="mb-4 sm:mb-0 space-x-3">
                 <img src="{{ asset('svg/logo.svg') }}" class="h-8" alt="Scrumbled Logo" />

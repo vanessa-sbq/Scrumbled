@@ -1,12 +1,12 @@
 function toggleFavorite(favoriteButton, newState, url) {
+    const icon = favoriteButton.querySelector('svg');
+
     if (newState === 'Favorited') {
-        favoriteButton.innerText = '★';
-        favoriteButton.classList.remove('text-gray-400');
-        favoriteButton.classList.add('text-yellow-400');
+        icon.classList.remove('text-gray-400');
+        icon.classList.add('text-yellow-400');
     } else {
-        favoriteButton.innerText = '☆';
-        favoriteButton.classList.remove('text-yellow-400');
-        favoriteButton.classList.add('text-gray-400');
+        icon.classList.remove('text-yellow-400');
+        icon.classList.add('text-gray-400');
     }
 
     favoriteButton.setAttribute('data-state', newState);
