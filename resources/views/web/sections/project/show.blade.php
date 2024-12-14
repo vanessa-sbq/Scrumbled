@@ -1,7 +1,7 @@
 @extends('web.layout')
 
 @section('content')
-    <div class="container py-8">
+    <div class="container py-8 p-4">
         <!-- Navbar with Breadcrumb -->
         @include('web.sections.project.components._navbar', ['project' => $project])
 
@@ -66,14 +66,14 @@
                 <div class="text-center py-16">
                     <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
                     <a href="{{ route('sprint.create', $project->slug) }}"
-                        class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                        class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
                         Create Sprint
                     </a>
                 </div>
         @endif
 
         <div class="mt-8">
-            <a href="{{ route('projects') }}" class="text-blue-500 hover:underline">Back to Projects</a>
+            <a href="{{ route('projects') }}" class="text-primary hover:underline">Back to Projects</a>
         </div>
     </div>
 @endsection

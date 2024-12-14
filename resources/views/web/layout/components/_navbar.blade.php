@@ -48,7 +48,7 @@
                     <x-lucide-user class="w-5 h-5" />
                 </div>
                 <div class="block">
-                    <div class="text-blue-500 font-normal mb-1">{{ Auth::user()->full_name }}</div>
+                    <div class="text-primary font-normal mb-1">{{ Auth::user()->full_name }}</div>
                     <div class="text-sm text-gray-500 font-medium truncate">{{ Auth::user()->email }}</div>
                 </div>
             </div>

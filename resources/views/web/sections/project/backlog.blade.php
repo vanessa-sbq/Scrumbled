@@ -1,7 +1,7 @@
 @extends('web.layout')
 
 @section('content')
-    <div class="container py-8">
+    <div class="container py-8 p-4">
         <!-- Navbar with Breadcrumb -->
         @include('web.sections.project.components._navbar', ['project' => $project])
 
@@ -11,7 +11,7 @@
 
             <!-- Create Task Button -->
             <a href="{{ route('tasks.createNew', $project->slug) }}"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                 Create Task
             </a>
         </div>
@@ -44,7 +44,7 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
                                 <a href="{{ route('task.show', $task->id) }}"
-                                    class="text-lg font-semibold text-gray-800 hover:text-blue-500 transition">
+                                    class="text-lg font-semibold text-gray-800 hover:text-primary transition">
                                     {{ $task->title }}
                                 </a>
                             </td>
@@ -88,7 +88,7 @@
             <div class="text-center py-16">
                 <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
                 <a href="{{ route('sprint.create', $project->slug) }}"
-                    class="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                    class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
                     Create Sprint
                 </a>
             </div>
@@ -121,7 +121,7 @@
                             <tr>
                                 <td class="px-5 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                                     <a href="{{ route('task.show', $task->id) }}"
-                                        class="text-lg font-semibold text-gray-800 hover:text-blue-500 transition">
+                                        class="text-lg font-semibold text-gray-800 hover:text-primary transition">
                                         {{ $task->title }}
                                     </a>
                                 </td>
