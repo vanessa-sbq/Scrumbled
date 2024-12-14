@@ -1,8 +1,7 @@
-<tr>
-    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
         @if ($notification->type == "INVITE")
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 gap-3">
+                    <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
                     <?php  
                         $project = \App\Models\Project::find($notification->project_id);
                         $po_id = \App\Models\Project::find($notification->project_id)->product_owner_id;

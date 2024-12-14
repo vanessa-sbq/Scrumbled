@@ -60,4 +60,14 @@ class InboxController extends Controller
         return redirect()->back()->with('success', 'Invitation declined successfully.');
     }    
 
+    public function delete(Request $request) {
+        $validated = $request->validate([
+            'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected
+        ]);
+
+        Notification::whereIn('id', $request->selected_notifications)->delete();
+
+        return redirect()->back()->with('success', 'Notifications deleted successfully.');
+    }
+
 }

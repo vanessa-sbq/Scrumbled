@@ -11,25 +11,30 @@
                 </div>
             @else
                 <div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-white border-b border-black rounded-t-lg">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
-                                    Notification
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200" id="results-container">
-                            @foreach ($notifications as $notification)
-                                @include('web.sections.inbox.components._notification', ['$notifications' => $notifications])
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <form id="delete-selected-form" action="{{ route('inbox.delete') }}" method="POST" class="mb-4">
+                        @csrf
+                        <button type="submit" class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">Delete Selected</button>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-white border-b border-black rounded-t-lg">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                                        Notification
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="results-container">
+                                @foreach ($notifications as $notification)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
+                                            @include('web.sections.inbox.components._notification', ['$notifications' => $notifications])
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             @endif
         </div>
     </div>
-
-    
 @endsection
-

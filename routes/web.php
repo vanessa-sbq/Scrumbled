@@ -98,6 +98,7 @@ Route::controller(InboxController::class)->group(function () {
     Route::get('/inbox', 'index')->name('inbox');
     Route::post('/inbox/acceptInvitation', 'acceptInvitation')->name('inbox.acceptInvitation');
     Route::post('/inbox/declineInvitation', 'declineInvitation')->name('inbox.declineInvitation');
+    Route::post('/inbox/delete', 'delete')->name('inbox.delete');
 });
 
 // API
