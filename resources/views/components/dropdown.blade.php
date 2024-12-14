@@ -12,6 +12,8 @@
     </div>
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/dropdown.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/dropdown.js') }}"></script>
+    @endpush
+@endonce
