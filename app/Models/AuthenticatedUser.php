@@ -56,4 +56,12 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'favorite', 'user_id', 'project_id');
     }
+    
+    /**
+     * Get the notifications for the user.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }
