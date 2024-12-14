@@ -34,12 +34,17 @@
 
 <div class='flex max-lg:ml-auto space-x-4'>
     @if (Auth::check())
-        @php
-            $dropdownLinks = [
-                ['url' => route('show.profile', Auth::user()->username), 'label' => 'My Profile'],
-                ['url' => url('/logout'), 'label' => 'Logout'],
-            ];
-        @endphp
+    <div class='max-lg:py-3 px-3 flex items-center'>
+        <a href="{{ route('inbox') }}" class="no-underline">
+            <x-lucide-inbox class="text-gray-600 hover:text-primary transition-colors duration-300" width="20" height="20"/>
+        </a>
+    </div>
+    @php
+        $dropdownLinks = [
+            ['url' => route('show.profile', Auth::user()->username), 'label' => 'My Profile'],
+            ['url' => url('/logout'), 'label' => 'Logout'],
+        ];
+    @endphp
         <x-dropdown :links="$dropdownLinks">
             <img src="{{ Auth::user()->picture ? asset('storage/' . Auth::user()->picture) : asset('images/users/default.png') }}"
                 class="w-12 h-12 rounded-full" alt="Profile Picture" />

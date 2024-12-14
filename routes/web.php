@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
+use App\Http\Controllers\InboxController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -92,10 +93,16 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
 
+// Inbox
+Route::controller(InboxController::class)->group(function () {
+    Route::get('/inbox', 'index')->name('inbox');
+});
+
 // API
 Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
 });
+
 
 // TODO: Remove
 /* Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
