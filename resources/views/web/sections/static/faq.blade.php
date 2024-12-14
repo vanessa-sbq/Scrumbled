@@ -78,6 +78,8 @@
     </section>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('js/faq.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/faq.js') }}"></script>
+    @endpush
+@endonce

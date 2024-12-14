@@ -19,6 +19,8 @@
     <p class="text-gray-700 mb-4">{{ $project->description }}</p>
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/favorite.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/favorite.js') }}"></script>
+    @endpush
+@endonce

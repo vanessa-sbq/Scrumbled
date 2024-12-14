@@ -32,6 +32,8 @@
     {{ $trigger }}
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/modal.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/modal.js') }}"></script>
+    @endpush
+@endonce

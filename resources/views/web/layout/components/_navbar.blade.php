@@ -84,6 +84,8 @@
     </button>
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/navbar.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/navbar.js') }}"></script>
+    @endpush
+@endonce
