@@ -58,31 +58,38 @@
             <h2 class="text-2xl font-semibold mb-4">Developers</h2>
             @if ($project->developers->isNotEmpty())
                 @foreach ($project->developers as $developer)
-                    <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
-                        <div class="flex items-center">
-                            <img src="{{ $developer->picture ? asset('storage/' . $developer->picture) : asset('images/users/default.png') }}"
-                                 alt="{{ $developer->full_name }}" class="w-10 h-10 rounded-full mr-3">
-                            <span class="font-medium">{{ $developer->full_name }}</span> (Developer)
-                        </div>
+                    <?php 
+                            $developer_project = \App\Models\DeveloperProject::where('project_id', $project->id)
+                                ->where('developer_id', $developer->id)
+                                ->first(); 
+                    ?>
+                    @if (!$developer_project->is_pending)
+                        <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
+                            <div class="flex items-center">
+                                <img src="{{ $developer->picture ? asset('storage/' . $developer->picture) : asset('images/users/default.png') }}"
+                                    alt="{{ $developer->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                                <span class="font-medium">{{ $developer->full_name }}</span> (Developer)
+                            </div>
 
-                        @if (auth()->id() === $project->product_owner_id)
-                            <!-- Show 'Remove Member' button for the Product Owner -->
-                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
-                                    Remove Member
-                                </button>
-                            </form>
-                        @elseif (auth()->id() === $developer->id)
-                            <!-- Show 'Leave Project' button for the Developer -->
-                            <form action="{{ route('projects.leave', $project->slug) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
-                                    Leave Project
-                                </button>
-                            </form>
-                        @endif
-                    </div>
+                            @if (auth()->id() === $project->product_owner_id)
+                                <!-- Show 'Remove Member' button for the Product Owner -->
+                                <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
+                                        Remove Member
+                                    </button>
+                                </form>
+                            @elseif (auth()->id() === $developer->id)
+                                <!-- Show 'Leave Project' button for the Developer -->
+                                <form action="{{ route('projects.leave', $project->slug) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
+                                        Leave Project
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    @endif
                 @endforeach
             @else
                 <div class="mb-4 p-4 border border-gray-300 rounded-md shadow-sm">No Developers assigned.</div>

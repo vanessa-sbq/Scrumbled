@@ -96,6 +96,7 @@ Route::controller(ProfileController::class)->group(function () {
 // Inbox
 Route::controller(InboxController::class)->group(function () {
     Route::get('/inbox', 'index')->name('inbox');
+    Route::post('/inbox/acceptInvitation', 'acceptInvitation')->name('inbox.acceptInvitation');
 });
 
 // API

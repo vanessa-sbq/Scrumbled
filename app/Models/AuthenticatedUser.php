@@ -41,7 +41,8 @@ class AuthenticatedUser extends Authenticatable
      */
     public function developerProjects()
     {
-        return $this->belongsToMany(Project::class, 'developer_project', 'developer_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'developer_project', 'developer_id', 'project_id')
+            ->where('developer_project.is_pending', false);
     }
 
     /**
