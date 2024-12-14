@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\PusherController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -66,7 +67,7 @@ Route::controller(ProjectController::class)->group(function () {
 
     Route::middleware(['auth', 'product.owner'])->group(function () {
         Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
-        Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
+        //Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
         Route::post('/projects/{slug}/remove/{username}', 'remove')->name('projects.remove');
     });
     Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
@@ -98,16 +99,21 @@ Route::controller(InboxController::class)->group(function () {
     Route::get('/inbox', 'index')->name('inbox');
 });
 
+// Notifications
+Route::controller(PusherController::class)->group(function () {
+    Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
+});
+Route::post('/broadcast', 'App\Http\Controllers\PusherController@broadcast'); // TODO: Is this needed?
+Route::post('/receive', 'App\Http\Controllers\PusherController@receive'); // TODO: Is this needed?
+
+Route::get('/pusher', function () { // TODO: Remove (DEBUG)
+    return view('pusher/pusher');
+});
+
 // API
 Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
 });
-
-
-// TODO: Remove
-/* Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
-    Route::get('/api/projects/{slug}/tasks/search', 'search');
-}); */
 
 //Sprints
 Route::controller(SprintController::class)->group(function () {

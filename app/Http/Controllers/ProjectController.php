@@ -178,14 +178,15 @@ class ProjectController extends Controller
         return view('web.sections.project.invite', compact('project', 'users'));
     }
 
-    /**
+    // TODO: Remove?
+    /** 
      * Invite a member to the project.
      *
      * @param \Illuminate\Http\Request $request
      * @param string $slug
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function inviteMember(Request $request, $slug)
+/*     public function inviteMember(Request $request, $slug)
     {
         $request->validate([
             'user_id' => 'required|exists:authenticated_user,id',
@@ -214,7 +215,7 @@ class ProjectController extends Controller
         $project->developers()->attach($user);
 
         return redirect()->route('projects.team', $project->slug)->with('success', 'Member invited successfully.');
-    }
+    } */
 
     public function backlog($slug)
     {
