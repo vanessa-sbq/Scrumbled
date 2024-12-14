@@ -6,16 +6,22 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Dropdown extends Component
+class DropdownItem extends Component
 {
+    public $to;
+    public $class;
+
     /**
      * Create a new component instance.
      *
+     * @param string $to
+     * @param string $class
      * @return void
      */
-    public function __construct()
+    public function __construct($to, $class = '')
     {
-        //
+        $this->to = $to;
+        $this->class = $class;
     }
 
     /**
@@ -23,6 +29,6 @@ class Dropdown extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.dropdown');
+        return view('components.dropdown-item');
     }
 }
