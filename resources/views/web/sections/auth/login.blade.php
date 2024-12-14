@@ -4,57 +4,21 @@
     <div class="container mx-auto py-8">
         <h1 class="text-4xl font-bold mb-8 text-center">Login</h1>
 
-        <form method="POST" action="{{ route('login') }}" class="max-w-lg mx-auto card">
-            {{ csrf_field() }}
-
+        <x-form :action="route('login')" method="POST" label="Login">
             {{-- Email Field --}}
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-muted-foreground">E-Mail</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Enter your email"
-                    required autofocus
-                    class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
-                @if ($errors->has('email'))
-                    <span class="text-red-500 text-sm">{{ $errors->first('email') }}</span>
-                @endif
-            </div>
+            <x-input type="email" name="email" label="E-Mail" placeholder="Enter your email" required autofocus />
 
             {{-- Password Field --}}
-            <div class="mb-4">
-                <label for="password" class="block text-sm font-medium text-muted-foreground">Password</label>
-                <input id="password" type="password" name="password" placeholder="Enter your password" required
-                    class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
-                @if ($errors->has('password'))
-                    <span class="text-red-500 text-sm">{{ $errors->first('password') }}</span>
-                @endif
-            </div>
+            <x-input type="password" name="password" label="Password" placeholder="Enter your password" required />
 
             {{-- Remember Me --}}
-            <div class="mb-4 flex items-center">
-                <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}
-                    class="h-4 w-4 text-blue-600 focus:ring-primary border-muted rounded">
-                <label for="remember" class="ml-2 block text-sm ">Remember Me</label>
+            <div class="mb-4">
+                <label for="remember" class="inline-flex items-center">
+                    <input type="checkbox" name="remember" id="remember"
+                        class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                    <span class="ml-2 text-sm text-muted-foreground">Remember Me</span>
+                </label>
             </div>
-
-            {{-- Submit Button --}}
-            <div class="flex items-center justify-between">
-                <button type="submit"
-                    class="w-full bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                    Login
-                </button>
-            </div>
-
-            {{-- Register Link --}}
-            <div class="mt-4 text-center">
-                <a class="text-primary hover:underline" href="{{ route('register') }}">Don't have an account yet?
-                    Register</a>
-            </div>
-
-            {{-- Success Message --}}
-            @if (session('success'))
-                <p class="text-green-500 text-sm mt-4">
-                    {{ session('success') }}
-                </p>
-            @endif
-        </form>
+        </x-form>
     </div>
 @endsection

@@ -14,7 +14,7 @@
                 <div
                     class="accordion border border-solid border-gray-300 p-4 rounded-xl transition duration-500 mb-8 lg:p-4">
                     <button
-                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-blue-500">
+                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-primary">
                         <h5>How can I reset my password?</h5>
                         <x-lucide-chevron-down class="chevron w-4 h-4 transition-transform duration-500" />
                     </button>
@@ -30,7 +30,7 @@
                 <div
                     class="accordion border border-solid border-gray-300 p-4 rounded-xl transition duration-500 mb-8 lg:p-4">
                     <button
-                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-blue-500">
+                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-primary">
                         <h5>How do I update my billing information?</h5>
                         <x-lucide-chevron-down class="chevron w-4 h-4 transition-transform duration-500" />
                     </button>
@@ -46,7 +46,7 @@
                 <div
                     class="accordion border border-solid border-gray-300 p-4 rounded-xl transition duration-500 mb-8 lg:p-4">
                     <button
-                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-blue-500">
+                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-primary">
                         <h5>How can I contact customer support?</h5>
                         <x-lucide-chevron-down class="chevron w-4 h-4 transition-transform duration-500" />
                     </button>
@@ -62,7 +62,7 @@
                 <div
                     class="accordion border border-solid border-gray-300 p-4 rounded-xl transition duration-500 mb-8 lg:p-4">
                     <button
-                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-blue-500">
+                        class="accordion-toggle group inline-flex items-center justify-between text-left text-lg font-normal leading-8 text-gray-900 w-full transition duration-500 hover:text-primary">
                         <h5>How do I delete my account?</h5>
                         <x-lucide-chevron-down class="chevron w-4 h-4 transition-transform duration-500" />
                     </button>

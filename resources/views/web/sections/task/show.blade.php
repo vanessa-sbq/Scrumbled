@@ -83,7 +83,7 @@
             <!-- Action Buttons -->
             <footer class="flex justify-end space-x-4">
                 <a href="{{ route('tasks.showEdit', ['slug' => $project->slug, 'id' => $task->id]) }}"
-                   class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                     Edit Task
                 </a>
             </footer>

@@ -1,8 +1,7 @@
 @foreach ($tasks as $task)
     <tr>
         <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 w-full">
-            <a href="{{ route('task.show', $task->id) }}"
-               class="text-gray-800 hover:text-blue-500 transition">
+            <a href="{{ route('task.show', $task->id) }}" class="text-gray-800 hover:text-primary transition">
                 {{ $task->title }}
             </a>
         </td>
@@ -19,21 +18,22 @@
             </span>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-        @if($task->assignedDeveloper && $task->assignedDeveloper->user)
-            <x-user :user="$task->assignedDeveloper->user" />
-        @else
-            <p>No user assigned.</p>
-        @endif 
+            @if ($task->assignedDeveloper && $task->assignedDeveloper->user)
+                <x-user :user="$task->assignedDeveloper->user" />
+            @else
+                <p>No user assigned.</p>
+            @endif
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-            @if ($task->state == "BACKLOG")
+            @if ($task->state == 'BACKLOG')
                 <p> - </p>
             @else
                 <p>{{ $task->sprint->name ?? '-' }}</p>
             @endif
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+            <span
+                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                 <p>{{ strtolower(str_replace('_', ' ', $task->state)) }}</p>
             </span>
         </td>

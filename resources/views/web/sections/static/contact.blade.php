@@ -6,7 +6,7 @@
             <div class="grid lg:grid-cols-2 grid-cols-1 gap-x-24">
                 <div class="flex items-center lg:mb-0 mb-10">
                     <div class="">
-                        <h4 class="text-blue-500 text-base font-medium leading-6 mb-4 lg:text-left text-center">Contact Us
+                        <h4 class="text-primary text-base font-medium leading-6 mb-4 lg:text-left text-center">Contact Us
                         </h4>
                         <h2
                             class="text-gray-900 font-manrope text-4xl font-semibold leading-10 mb-9 lg:text-left text-center">
@@ -22,7 +22,7 @@
                                 class="w-full h-48 shadow-sm resize-none text-gray-600 placeholder-text-400 text-lg font-normal leading-7 rounded-md border border-gray-200 focus:outline-none px-4 py-4 mb-8"
                                 placeholder="Message"></textarea>
                             <button
-                                class="w-full h-12 text-center text-white text-base font-semibold leading-6 rounded-md bg-blue-500 shadow transition-all duration-700 hover:bg-blue-600">Submit</button>
+                                class="w-full h-12 text-center text-white text-base font-semibold leading-6 rounded-md bg-primary shadow transition-all duration-700 hover:bg-primary/90">Submit</button>
                         </form>
                     </div>
                 </div>

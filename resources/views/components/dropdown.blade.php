@@ -1,21 +1,14 @@
-<!-- resources/views/components/user-dropdown.blade.php -->
+<!-- resources/views/components/dropdown.blade.php -->
 
 <div class="relative inline-block text-left">
-    <div id="trigger"
-        class="flex flex-wrap items-center justify-center gap-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md transition"
-        aria-expanded="true" aria-haspopup="true">
-        {{ $slot }}
+    <div id="dropdown-trigger">
+        {{ $trigger }}
     </div>
 
-    <!-- Dropdown menu -->
-    <div id="dropdown"
-        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none transform transition ease-in duration-75 opacity-0 scale-95 hidden"
-        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-        @foreach ($links as $link)
-            <a href="{{ $link['url'] }}"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors" role="menuitem"
-                tabindex="-1">{{ $link['label'] }}</a>
-        @endforeach
+    <div id="dropdown-menu"
+        class="dropdown-menu py-2 rounded-xl shadow-lg border border-muted bg-white absolute right-0 top-full w-72 space-y-2 hidden opacity-0 scale-95 transition-all duration-200"
+        aria-labelledby="dropdown-trigger">
+        {{ $slot }}
     </div>
 </div>
 

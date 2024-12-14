@@ -2,7 +2,7 @@
     data-assigned-to="{{ $task->assigned_to }}">
     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
         <a href="{{ route('task.show', $task->id) }}"
-           class="text-lg font-semibold text-gray-800 hover:text-blue-500 transition">
+            class="text-lg font-semibold text-gray-800 hover:text-primary transition">
             {{ $task->title }}
         </a>
     </td>
@@ -26,13 +26,18 @@
     @if ($task->assigned_to === Auth::id())
         <div class="mt-4 flex gap-2 justify-between" id="buttons">
             @if ($task->state == 'IN_PROGRESS')
-                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="SPRINT_BACKLOG" class="state-button text-red-500 hover:text-red-700 hover:underline transition">Cancel</button>
-                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="DONE">➡️</button>
+                <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="SPRINT_BACKLOG"
+                    class="state-button text-red-500 hover:text-red-700 hover:underline transition">Cancel</button>
+                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}"
+                    data-state="DONE">➡️</button>
             @elseif ($task->state == 'DONE')
-                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS">⬅️</button>
-                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="ACCEPTED">➡️</button>
+                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}"
+                    data-state="IN_PROGRESS">⬅️</button>
+                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}"
+                    data-state="ACCEPTED">➡️</button>
             @elseif ($task->state == 'ACCEPTED')
-                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}" data-state="DONE">⬅️</button>
+                <button class="arrow-button" data-url="{{ route('tasks.updateState', $task->id) }}"
+                    data-state="DONE">⬅️</button>
             @endif
         </div>
     @endif

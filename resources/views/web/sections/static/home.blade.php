@@ -25,18 +25,16 @@
             <div class="mx-auto max-w-2xl text-center">
                 <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                     Master Agile: <br>
-                    <span class="text-blue-500">Scrumbled
+                    <span class="text-primary">Scrumbled
                     </span>
                 </h1>
                 <h2 class="mt-6 text-lg leading-8 text-muted-foreground">
                     Scrumbled fosters an environment where agile project management is approachable and straightforward.
 
                 </h2>
-                <div class="mt-10 flex items-center justify-center gap-x-6">
-                    <a href="/register"
-                        class="px-6 py-2 inline-flex bg-primary text-white rounded-md hover:bg-primary/90 transition-colors items-center justify-center gap-2">Get
-                        Started <x-lucide-chevron-right class="w-3.5" /></a>
-                </div>
+                <x-button variant="primary" size="md" href="/register" class="mt-8">
+                    Get Started <x-lucide-chevron-right class="w-3.5" />
+                </x-button>
             </div>
             <div class="relative mt-10 container">
                 <img class="w-full rounded-2xl border border-gray-100 shadow" src="{{ asset('images/hero.png') }}"
@@ -48,7 +46,7 @@
     <section class="bg-white py-24 sm:py-32 shadow-sm">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-2xl lg:text-center">
-                <h2 class="text-base/7 font-semibold text-blue-500">Streamline Scrum</h2>
+                <h2 class="text-base/7 font-semibold text-primary">Streamline Scrum</h2>
                 <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl lg:text-balance">
                     Everything you need to manage your Scrum projects</p>
                 <p class="mt-6 text-lg/8 text-gray-600">Scrumbled simplifies Scrum processes, providing an intuitive and
@@ -59,7 +57,7 @@
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
-                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-blue-500">
+                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
                                 <x-lucide-share-2 class="size-5 text-white" />
                             </div>
                             Create Projects & Invite Members
@@ -70,7 +68,7 @@
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
-                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-blue-500">
+                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
                                 <x-lucide-calendar-plus class="size-5 text-white" />
                             </div>
                             Create Sprints
@@ -81,7 +79,7 @@
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
-                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-blue-500">
+                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
                                 <x-lucide-pencil class="size-5 text-white" />
                             </div>
                             Add Tasks to Backlog & Sprints
@@ -92,7 +90,7 @@
                     <div class="relative pl-16">
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
-                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-blue-500">
+                                class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
                                 <x-lucide-message-square class="size-5 text-white" />
                             </div>
                             Comment on Tasks
