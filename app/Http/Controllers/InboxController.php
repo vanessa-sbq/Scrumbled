@@ -41,4 +41,23 @@ class InboxController extends Controller
         }
         return redirect()->back()->with('success', 'Invitation accepted successfully.');
     }
+    
+    public function declineInvitation(Request $request)
+    {
+        $project_id = $request->input('project_id');
+        $developer_id = $request->input('developer_id');
+        $id = $request->input('id');
+
+        $deleted = DB::table('developer_project')
+            ->where('developer_id', $developer_id)
+            ->where('project_id', $project_id)
+            ->delete();
+
+        if (!$deleted) {
+            return redirect()->back()->with('error', 'Failed to decline the invitation.');
+        }
+        Notification::where('id', $id)->delete(); // Delete the corresponding notification
+        return redirect()->back()->with('success', 'Invitation declined successfully.');
+    }    
+
 }
