@@ -20,7 +20,10 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="results-container">
+                            @foreach ($notifications as $notification)
+
                             @include('web.sections.inbox.components._notification', ['$notifications' => $notifications])
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
