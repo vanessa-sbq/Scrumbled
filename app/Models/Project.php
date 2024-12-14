@@ -42,7 +42,7 @@ class Project extends Model
     }
 
     /**
-     * Returns true if the project is a favorite of "user", otherwise returns falsez
+     * Returns true if the project is a favorite of "user", otherwise returns false
      */
     public function isFavoritedBy($userId)
     {

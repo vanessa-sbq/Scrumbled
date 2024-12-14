@@ -42,3 +42,7 @@
         @endif
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/favorite.js') }}"></script>
+@endpush
