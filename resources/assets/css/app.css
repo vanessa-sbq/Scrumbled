@@ -9,7 +9,7 @@
     @apply bg-white p-8 rounded-card shadow-md;
   }
   .task-card {
-    @apply mb-4 transition-all duration-200 ease-in-out border-2 border-transparent;
+    @apply transition-all duration-200 ease-in-out border-2 border-transparent;
   }
   .task-card.dragging {
     @apply opacity-50 border-2 border-dashed;
@@ -32,7 +32,7 @@
     pointer-events: none;
   }
   .task-placeholder {
-    @apply hidden mb-4;
+    @apply hidden;
   }
   .task-card.highlight {
     @apply bg-primary/5 border-2 border-primary/50;
