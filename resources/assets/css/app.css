@@ -32,7 +32,7 @@
     pointer-events: none;
   }
   .task-placeholder {
-    @apply hidden mb-4;
+    @apply hidden;
   }
   .task-card.highlight {
     @apply bg-primary/5 border-2 border-primary/50;
