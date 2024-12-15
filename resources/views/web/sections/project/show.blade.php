@@ -35,30 +35,39 @@
                 <!-- In Progress -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">In Progress</h3>
-                    <div class="space-y-4" id="in-progress">
+                    <div class="flex flex-col gap-4 task-column" id="IN_PROGRESS">
                         @foreach ($inProgressTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
+                        <div class="task-placeholder p-4 bg-gray-100 rounded-md shadow-sm text-center text-gray-500">
+                            Place your tasks here
+                        </div>
                     </div>
                 </div>
 
                 <!-- Done -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">Done</h3>
-                    <div class="space-y-4" id="done">
+                    <div class="flex flex-col gap-4 task-column" id="DONE">
                         @foreach ($doneTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
+                        <div class="task-placeholder p-4 bg-gray-100 rounded-md shadow-sm text-center text-gray-500">
+                            Place your tasks here
+                        </div>
                     </div>
                 </div>
 
                 <!-- Accepted -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">Accepted</h3>
-                    <div class="space-y-4" id="accepted">
+                    <div class="flex flex-col gap-4 task-column" id="ACCEPTED">
                         @foreach ($acceptedTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
+                        <div class="task-placeholder p-4 bg-gray-100 rounded-md shadow-sm text-center text-gray-500">
+                            Place your tasks here
+                        </div>
                     </div>
                 </div>
             @else
@@ -81,6 +90,9 @@
 @once
     @push('scripts')
         <script src=" {{ asset('js/task.js') }} "></script>
-        <script src="{{ asset('js/dropdown.js') }}"></script>
+        <script src="{{ asset('js/drag-and-drop.js') }}"></script>
+    @endpush
+    @push('tags')
+        <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
     @endpush
 @endonce

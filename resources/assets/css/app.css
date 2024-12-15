@@ -8,6 +8,38 @@
   .card {
     @apply bg-white p-8 rounded-card shadow-md;
   }
+  .task-card {
+    @apply mb-4 transition-all duration-200 ease-in-out border-2 border-transparent;
+  }
+  .task-card.dragging {
+    @apply opacity-50 border-2 border-dashed;
+  }
+  .task-card:hover {
+    @apply cursor-grab border-primary bg-primary/5 border-2 transition-colors;
+  }
+  .task-column {
+    position: relative;
+  }
+  .task-column.drag-over::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px dashed #ccc;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .task-placeholder {
+    @apply hidden mb-4;
+  }
+  .task-card.highlight {
+    @apply bg-primary/5 border-2 border-primary/50;
+  }
+  .task-card.highlight:hover {
+    @apply border-primary transition-colors;
+  }
 }
 
 @layer base {
