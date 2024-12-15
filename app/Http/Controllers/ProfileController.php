@@ -108,12 +108,13 @@ class ProfileController extends Controller
             'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
             'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
             'full_name' => 'nullable|string|max:255',
-            'bio' => 'nullable|string',
+            'bio' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_public' => 'nullable|boolean',
         ]);
 
         // Collect the validated data
-        $data = $request->only('username', 'email', 'full_name', 'bio');
+        $data = $request->only('username', 'email', 'full_name', 'bio', 'is_public');
 
         // Handle the file upload
         if ($request->hasFile('picture')) {
