@@ -54,6 +54,8 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('js/search.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/search.js') }}"></script>
+    @endpush
+@endonce

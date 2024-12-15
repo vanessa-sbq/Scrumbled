@@ -1,7 +1,7 @@
 @extends('web.layout')
 
 @section('content')
-    <div class="container mx-auto py-8">
+    <div class="container p-4 py-8">
         <!-- Navbar with Breadcrumb -->
         @include('web.sections.project.components._navbar', ['project' => $project])
 
@@ -14,7 +14,7 @@
                 <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
                     <div class="flex items-center">
                         <img src="{{ $project->productOwner->picture ? asset('storage/' . $project->productOwner->picture) : asset('images/users/default.png') }}"
-                             alt="{{ $project->productOwner->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                            alt="{{ $project->productOwner->full_name }}" class="w-10 h-10 rounded-full mr-3">
                         <span class="font-medium">{{ $project->productOwner->full_name }}</span> (Product Owner)
                     </div>
                 </div>
@@ -28,13 +28,14 @@
                 <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
                     <div class="flex items-center">
                         <img src="{{ $project->scrumMaster->picture ? asset('storage/' . $project->scrumMaster->picture) : asset('images/users/default.png') }}"
-                             alt="{{ $project->scrumMaster->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                            alt="{{ $project->scrumMaster->full_name }}" class="w-10 h-10 rounded-full mr-3">
                         <span class="font-medium">{{ $project->scrumMaster->full_name }}</span> (Scrum Master)
                     </div>
 
                     @if (auth()->id() === $project->product_owner_id)
                         <!-- Show 'Remove Member' button for the Product Owner -->
-                        <form action="{{ route('projects.remove', [$project->slug, $project->scrumMaster->username]) }}" method="POST">
+                        <form action="{{ route('projects.remove', [$project->slug, $project->scrumMaster->username]) }}"
+                            method="POST">
                             @csrf
                             <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
                                 Remove Member
@@ -61,13 +62,14 @@
                     <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
                         <div class="flex items-center">
                             <img src="{{ $developer->picture ? asset('storage/' . $developer->picture) : asset('images/users/default.png') }}"
-                                 alt="{{ $developer->full_name }}" class="w-10 h-10 rounded-full mr-3">
+                                alt="{{ $developer->full_name }}" class="w-10 h-10 rounded-full mr-3">
                             <span class="font-medium">{{ $developer->full_name }}</span> (Developer)
                         </div>
 
                         @if (auth()->id() === $project->product_owner_id)
                             <!-- Show 'Remove Member' button for the Product Owner -->
-                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
+                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}"
+                                method="POST">
                                 @csrf
                                 <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-700">
                                     Remove Member
@@ -92,7 +94,7 @@
             @can('manage', $project)
                 <div class="mt-8 text-center">
                     <a href="{{ route('projects.inviteForm', $project->slug) }}"
-                       class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 transition">
+                        class="bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 transition">
                         Invite Members
                     </a>
                 </div>

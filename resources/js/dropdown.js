@@ -1,6 +1,5 @@
-// Get references to the button and the dropdown menu
-const dropdownButton = document.getElementById('trigger');
-const dropdownMenu = document.getElementById('dropdown');
+const dropdownButton = document.getElementById('dropdown-trigger');
+const dropdownMenu = document.getElementById('dropdown-menu');
 
 if (dropdownButton) {
     // Toggle the dropdown visibility when the button is clicked
@@ -19,7 +18,7 @@ if (dropdownButton) {
             dropdownMenu.classList.add('opacity-0', 'scale-95'); // Hide with animation
             setTimeout(() => {
                 dropdownMenu.classList.add('hidden'); // Ensure the menu is fully hidden after animation
-            }, 75); // Match duration of leaving transition
+            }, 200); // Match duration of leaving transition
         }
     });
 
@@ -28,7 +27,7 @@ if (dropdownButton) {
         if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
             setTimeout(() => {
                 dropdownMenu.classList.add('hidden');
-            }, 75);
+            }, 200);
         }
     });
 }

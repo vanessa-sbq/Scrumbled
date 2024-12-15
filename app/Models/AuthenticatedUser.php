@@ -56,4 +56,8 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'favorite', 'user_id', 'project_id');
     }
+    public function profilePic()
+    {
+        return $this->picture ? asset('storage/' . $this->picture) : asset('images/users/default.png');
+    }
 }

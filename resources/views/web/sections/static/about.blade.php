@@ -32,11 +32,9 @@
                             achieving sprint goals.
                         </p>
                     </div>
-                    <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a href="/register"
-                            class="px-3 py-2 inline-flex bg-primary text-white rounded-md hover:bg-primary/90 transition-colors items-center justify-center gap-2">Get
-                            Started <x-lucide-chevron-right class="w-3.5" /></a>
-                    </div>
+                    <x-button variant="primary" size="md" href="/register" class="mt-8">
+                        Get Started <x-lucide-chevron-right class="w-3.5" />
+                    </x-button>
                 </div>
                 <img class="lg:mx-0 mx-auto h-full rounded-3xl object-cover border border-muted shadow-md"
                     src="{{ asset('images/about.png') }}" alt="About Scrumbled Image" />
@@ -55,10 +53,10 @@
                 <div class="block group md:col-span-2 lg:col-span-1">
                     <div class="relative mb-6">
                         <img src="https://pagedone.io/asset/uploads/1696238374.png" alt="Antonio Abílio image"
-                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-blue-500" />
+                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-primary" />
                     </div>
                     <h4
-                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-blue-500">
+                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-primary">
                         António Abílio
                     </h4>
                     <span class="text-gray-500 text-center block transition-all duration-500 group-hover:text-gray-900">
@@ -69,10 +67,10 @@
                 <div class="block group md:col-span-2 lg:col-span-1">
                     <div class="relative mb-6">
                         <img src="https://pagedone.io/asset/uploads/1696238396.png" alt="Vanessa Queirós image"
-                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-blue-500" />
+                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-primary" />
                     </div>
                     <h4
-                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-blue-500">
+                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-primary">
                         Vanessa Queirós
                     </h4>
                     <span class="text-gray-500 text-center block transition-all duration-500 group-hover:text-gray-900">
@@ -83,10 +81,10 @@
                 <div class="block group md:col-span-2 lg:col-span-1">
                     <div class="relative mb-6">
                         <img src="https://pagedone.io/asset/uploads/1696238411.png" alt="Simão Neri image"
-                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-blue-500" />
+                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-primary" />
                     </div>
                     <h4
-                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-blue-500">
+                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-primary">
                         João Santos
                     </h4>
                     <span class="text-gray-500 text-center block transition-all duration-500 group-hover:text-gray-900">
@@ -97,10 +95,10 @@
                 <div class="block group md:col-span-2 lg:col-span-1">
                     <div class="relative mb-6">
                         <img src="https://pagedone.io/asset/uploads/1696238446.png" alt="João Santos image"
-                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-blue-500" />
+                            class="w-40 h-40 rounded-full mx-auto transition-all duration-500 object-cover border border-solid border-transparent group-hover:border-primary" />
                     </div>
                     <h4
-                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-blue-500">
+                        class="text-xl font-semibold text-gray-900 mb-2 capitalize text-center transition-all duration-500 group-hover:text-primary">
                         Simão Neri
                     </h4>
                     <span class="text-gray-500 text-center block transition-all duration-500 group-hover:text-gray-900">

@@ -34,19 +34,38 @@
 
 <div class='flex max-lg:ml-auto space-x-4'>
     @if (Auth::check())
-        @php
-            $dropdownLinks = [
-                ['url' => route('show.profile', Auth::user()->username), 'label' => 'My Profile'],
-                ['url' => url('/logout'), 'label' => 'Logout'],
-            ];
-        @endphp
-        <x-dropdown :links="$dropdownLinks">
-            <img src="{{ Auth::user()->picture ? asset('storage/' . Auth::user()->picture) : asset('images/users/default.png') }}"
-                class="w-12 h-12 rounded-full" alt="Profile Picture" />
-            <div>
-                <p class="text-[15px] text-gray-800 font-bold">{{ Auth::user()->full_name }}</p>
-                <p class="text-xs text-gray-500 mt-0.5">{{ Auth::user()->email }}</p>
+        <x-dropdown>
+            <x-slot name="trigger">
+                <button
+                    class="relative w-10 h-10 text-gray-600 rounded-full bg-gray-100 font-semibold focus:outline-none focus:shadow-outline text-sm overflow-hidden">
+                    <img src="{{ auth()->user()->profilePic() }}" alt="Profile Photo"
+                        class="absolute inset-0 h-full w-full object-cover">
+                </button>
+            </x-slot>
+
+            <div class="px-4 py-3 flex gap-3 ">
+                <div class="block mt-1">
+                    <x-lucide-user class="w-5 h-5" />
+                </div>
+                <div class="block">
+                    <div class="text-primary font-normal mb-1">{{ Auth::user()->full_name }}</div>
+                    <div class="text-sm text-gray-500 font-medium truncate">{{ Auth::user()->email }}</div>
+                </div>
             </div>
+            <hr class="border-t border-muted">
+            <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
+                <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-user-pen /></span> My Profile
+            </x-dropdown-item>
+            <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
+                <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></span> Notifications
+            </x-dropdown-item>
+            <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
+                <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-settings /></span> Settings
+            </x-dropdown-item>
+            <hr class="border-t border-muted">
+            <x-dropdown-item to="{{ url('/logout') }}" class="flex items-center">
+                <span class="flex-shrink-0 w-5 h-5 mr-2 text-red-500"><x-lucide-log-out /></span> Logout
+            </x-dropdown-item>
         </x-dropdown>
     @else
         <div class="flex flex-wrap space-x-4">
@@ -65,6 +84,8 @@
     </button>
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/navbar.js') }}"></script>
-@endpush
+@once
+    @push('scripts')
+        <script src="{{ asset('js/navbar.js') }}"></script>
+    @endpush
+@endonce
