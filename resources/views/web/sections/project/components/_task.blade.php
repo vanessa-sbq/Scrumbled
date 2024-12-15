@@ -1,5 +1,5 @@
-<div class="p-4 bg-gray-100 rounded-md shadow-sm task-card" data-task-id="{{ $task->id }}"
-    data-assigned-to="{{ $task->assigned_to }}" draggable="true">
+<div class="p-4 bg-gray-100 rounded-md shadow-sm task-card {{ $task->assigned_to == Auth::id() ? 'highlight' : '' }}"
+    data-task-id="{{ $task->id }}" data-assigned-to="{{ $task->assigned_to }}" draggable="true">
     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
         <a href="{{ route('task.show', $task->id) }}"
             class="text-lg font-semibold text-gray-800 hover:text-primary transition">
