@@ -7,4 +7,5 @@
 <meta name="user-id" content="{{ Auth::id() }}">
 <title>{{ config('app.name', 'Laravel') }}</title>
 
+@stack('tags')
 @include('web.layout.links')
