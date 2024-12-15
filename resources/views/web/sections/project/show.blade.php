@@ -35,7 +35,7 @@
                 <!-- In Progress -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">In Progress</h3>
-                    <div class="flex flex-col gap-4 task-column" id="in-progress">
+                    <div class="flex flex-col gap-4 task-column" id="IN_PROGRESS">
                         @foreach ($inProgressTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
@@ -48,7 +48,7 @@
                 <!-- Done -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">Done</h3>
-                    <div class="flex flex-col gap-4 task-column" id="done">
+                    <div class="flex flex-col gap-4 task-column" id="DONE">
                         @foreach ($doneTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
@@ -61,7 +61,7 @@
                 <!-- Accepted -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                     <h3 class="text-xl font-bold text-primary mb-4">Accepted</h3>
-                    <div class="flex flex-col gap-4 task-column" id="accepted">
+                    <div class="flex flex-col gap-4 task-column" id="ACCEPTED">
                         @foreach ($acceptedTasks as $task)
                             @include('web.sections.project.components._task', ['task' => $task])
                         @endforeach
@@ -91,5 +91,8 @@
     @push('scripts')
         <script src=" {{ asset('js/task.js') }} "></script>
         <script src="{{ asset('js/drag-and-drop.js') }}"></script>
+    @endpush
+    @push('tags')
+        <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
     @endpush
 @endonce

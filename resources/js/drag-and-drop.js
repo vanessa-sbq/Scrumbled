@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const taskCards = document.querySelectorAll('.task-card');
     const columns = document.querySelectorAll('.task-column');
     let sourceColumnId = null;
+    const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
+    const canManageProject = document.querySelector('meta[name="can-manage-project"]').getAttribute('content') === 'true';
 
     taskCards.forEach(card => {
         card.addEventListener('dragstart', handleDragStart);
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const taskId = event.dataTransfer.getData('text/plain');
         const sourceColumn = sourceColumnId;
         const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
-        const targetColumn = event.currentTarget.id;
+        const targetColumn = event.currentTarget.id.toUpperCase(); // Convert to uppercase
 
         console.log('Drop:', { taskId, sourceColumn, targetColumn });
 
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Check if the user has permission to move the task
-        if (!canMoveTask(taskId, targetColumn)) {
+        if (!canMoveTask(taskCard, targetColumn)) {
             alert('You do not have permission to move this task.');
             return;
         }
@@ -94,17 +96,35 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePlaceholderVisibility(event.currentTarget);
     }
 
-    function canMoveTask(taskId, targetColumn) {
-        // Implement your logic to check if the user has permission to move the task
-        // For example, check if the user is the task owner or a product owner
-        // Return true if the user has permission, false otherwise
-        return true; // Replace with your actual logic
+    function canMoveTask(taskCard, targetColumn) {
+        const assignedTo = taskCard.dataset.assignedTo;
+        if (canManageProject) {
+            return true;
+        }
+        if (assignedTo === userId && (targetColumn === 'IN_PROGRESS' || targetColumn === 'DONE')) {
+            return true;
+        }
+        return false;
     }
 
     function updateTaskStatus(taskId, targetColumn) {
         // Implement your logic to update the task status
         // For example, send an AJAX request to update the task status in the database
-        console.log(`Task ${taskId} moved to ${targetColumn}`);
+        fetch(`/tasks/${taskId}/state`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ state: targetColumn })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`Task ${taskId} moved to ${targetColumn}`);
+            })
+            .catch(error => {
+                console.error('Error updating task state:', error);
+            });
     }
 
     function updatePlaceholderVisibility(column) {
