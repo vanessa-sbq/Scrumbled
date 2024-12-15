@@ -25,7 +25,7 @@
         </div>
 
         @if(Auth::check())
-            @if($user->username === $profileOwner->username || $user->isAdmin() || $user->isInSameProject($profileOwner))
+            @if($user->username === $profileOwner->username || $user->isInSameProject($profileOwner))
                 <div>
                     <div class="md:flex md:gap-1">
                         <div class="flex flex-1 flex-wrap gap-2 flex-col">
