@@ -8,6 +8,15 @@
   .card {
     @apply bg-white p-8 rounded-card shadow-md;
   }
+  .task-card.dragging {
+    @apply opacity-50 border-2 border-dashed;
+  }
+  .task-column.drag-over {
+    @apply border-2 border-dashed border-gray-300 rounded-lg;
+  }
+  .task-placeholder {
+    @apply hidden;
+  }
 }
 
 @layer base {
