@@ -2,6 +2,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3 gap-3">
                     <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
+                    </form> 
                     <?php  
                         $project = \App\Models\Project::find($notification->project_id);
                         $po_id = \App\Models\Project::find($notification->project_id)->product_owner_id;
@@ -10,7 +11,7 @@
                     <?=$po?> invited you to participate in project <?=$project->title?>.
                 </div>
                 <div class="flex gap-2">
-                    <form method="POST" action="{{ route('inbox.acceptInvitation') }}">
+                    <form id="accept-invitation-form" method="POST" action="{{ route('inbox.acceptInvitation') }}">
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
                         <input type="hidden" name="developer_id" value="{{ $notification->receiver_id }}">
@@ -18,7 +19,7 @@
                             Accept
                         </button>
                     </form>
-                    <form method="POST" action="{{ route('inbox.declineInvitation') }}">
+                    <form id="decline-invitation-form" method="POST" action="{{ route('inbox.declineInvitation') }}">
                         @csrf
                         <input type="hidden" name="id" value="{{ $notification->id }}">
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
