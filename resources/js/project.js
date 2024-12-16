@@ -179,14 +179,11 @@ document.getElementById('changeDescriptionBtn').addEventListener('click', functi
         });
 });
 
-function attachToInviteButton() {
-    const inviteButtons = document.querySelectorAll(".inviteButton");
+function attachToTransferButton() {
+    const inviteButtons = document.querySelectorAll(".transferButton");
 
     inviteButtons.forEach(button => {
         button.addEventListener("click", function() {
-            console.log("Invite button clicked!");
-
-
             const userId = button.getAttribute('id');
             console.log('User ID:', userId);
 
@@ -202,10 +199,10 @@ function attachToInviteButton() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        alert('Invite sent successfully!');
+                        window.location.reload();
                         console.log(data['message'])
                     } else {
-                        alert('Error sending invite');
+                        alert('Unable to transfer ownership.');
                     }
                 })
                 .catch(error => {
@@ -216,45 +213,124 @@ function attachToInviteButton() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Delegate click event for all pagination links
-    document.getElementById('pagination-container').addEventListener('click', function (e) {
-        const target = e.target.closest('a'); // Ensure the closest <a> element is targeted
+function attachToPagination() {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Delegate click event for all pagination links
+        document.getElementById('pagination-container').addEventListener('click', function (e) {
+            const target = e.target.closest('a'); // Ensure the closest <a> element is targeted
 
-        if (target && target.tagName === 'A') {
-            e.preventDefault(); // Prevent default link behavior
+            if (target && target.tagName === 'A') {
+                e.preventDefault(); // Prevent default link behavior
 
-            // Fetch the URL from the link
-            const url = target.href;
+                // Fetch the URL from the link
+                const url = target.href;
 
-            // Perform the AJAX request
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(response => response.text())
-                .then(html => {
-                    // Update the results and pagination with the new content
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
+                // Perform the AJAX request
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        // Update the results and pagination with the new content
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
 
-                    // Replace the results container
-                    const newResults = doc.getElementById('results-container');
-                    document.getElementById('results-container').innerHTML = newResults.innerHTML;
+                        // Replace the results container
+                        const newResults = doc.getElementById('results-container');
+                        document.getElementById('results-container').innerHTML = newResults.innerHTML;
 
-                    // Replace the pagination container
-                    const newPagination = doc.getElementById('pagination-container');
-                    document.getElementById('pagination-container').innerHTML = newPagination.innerHTML;
+                        // Replace the pagination container
+                        const newPagination = doc.getElementById('pagination-container');
+                        document.getElementById('pagination-container').innerHTML = newPagination.innerHTML;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching pagination data:', error);
+                    });
+            }
+        });
+    });
+}
+
+let paginationRemoved = false;
+
+function searchHelper(savedContainer) {
+    const searchInput = document.querySelector('#search-input');
+    const resultContainer = document.querySelector('#results-container');
+    const pagination = document.querySelector('#pagination-container');
+    const filterInput = document.querySelector('#filter-input');
+
+    let debounceTimer;
+
+    const query = searchInput.value;
+    const status = filterInput ? filterInput.value : '';
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+        if (query || (filterInput !== null && filterInput !== '')) {
+            // Hide the pagination container instead of removing it
+            if (pagination) {
+                pagination.style.display = 'none';
+            }
+
+            let url = `/api/profiles/transferProject/search?search=${query}`;
+            if (status) {
+                url += `&status=${status}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    resultContainer.innerHTML = data;
+                    attachToTransferButton();
                 })
                 .catch(error => {
-                    console.error('Error fetching pagination data:', error);
+                    console.error('Error fetching data:', error);
                 });
-        }
-    });
-});
+        } else {
+            resultContainer.innerHTML = '';
 
-attachToInviteButton()
+            savedContainer.childNodes.forEach(childNode => {
+                if (childNode.id === 'results-container') {
+                    childNode.childNodes.forEach(child => {
+                        resultContainer.appendChild(child.cloneNode(true));
+                    });
+                }
+
+                if (childNode.id === 'pagination-container') {
+                    // Reattach the pagination and make it visible again
+                    const existingPagination = document.querySelector('#pagination-container');
+                    if (!existingPagination) {
+                        resultContainer.appendChild(childNode.cloneNode(true));
+                    } else {
+                        existingPagination.style.display = 'block';
+                    }
+                    attachToPagination();
+                    attachToTransferButton();
+                }
+            });
+        }
+    }, 200);
+}
+
+
+window.onload = () => {
+    let savedContainer = document.querySelector('#profileList').cloneNode(true);
+
+    const searchInput = document.querySelector('#search-input');
+    const filterInput = document.querySelector('#filter-input');
+
+    if (filterInput) {
+        filterInput.addEventListener('input', () => searchHelper(savedContainer))
+    }
+
+    searchInput.addEventListener('input', () => searchHelper(savedContainer));
+};
+
+attachToTransferButton()
+attachToPagination()
 document.querySelector('#change_visibility').addEventListener('click', () => {openModal('visibility_modal');});
 document.querySelector('#transfer_ownership').addEventListener('click', () => {openModal('transfer_modal')})
 document.querySelector('#archive_project').addEventListener('click', () => {openModal('archive_modal');});

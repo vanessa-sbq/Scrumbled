@@ -23,7 +23,7 @@
             <button onclick="closeModal('{{ $attributes->get('id') }}')" type="button"
                     class="px-4 py-2 rounded-lg text-gray-800 text-sm border-none outline-none tracking-wide bg-gray-200 hover:bg-gray-300 active:bg-gray-200">{{ $closeButtonText }}</button>
 
-            @if ($saveAction === "remove_button")
+            @if ($saveButtonText !== "remove_button")
                 <button onclick="{{ $saveAction }}('{{ $attributes->get('id') }}')" type="button"
                         class="px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide {{ $activeButtonColor }} hover:{{ $hoverButtonColor }} active:{{ $activeButtonColor }}">{{ $saveButtonText }}</button>
             @endif

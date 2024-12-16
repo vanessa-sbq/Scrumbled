@@ -106,6 +106,7 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
     Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
     Route::post('/api/projects/transferProject', 'transferProject');
+    Route::get('/api/profiles/transferProject/search', 'transferProjectSearch');
 });
 
 // TODO: Remove

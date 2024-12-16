@@ -80,7 +80,7 @@
                                placeholder="Search users...">
 
                         <div id="results-container" class="space-y-4">
-                            @include('web.sections.project.components._userInvite', ['users' => $users])
+                            @include('web.sections.project.components._userInvite', ['users' => $users, 'project' => $project])
                         </div>
                         <div id="pagination-container" class="mt-4">
                             {{ $users->links() }} <!-- Pagination links -->

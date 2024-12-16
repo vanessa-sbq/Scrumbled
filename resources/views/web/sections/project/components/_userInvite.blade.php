@@ -11,7 +11,7 @@
             </div>
         </div>
         <button id="{{$user->id}}"
-           class="inviteButton bg-red-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+           class="transferButton bg-red-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
             Transfer Project
         </button>
     </div>

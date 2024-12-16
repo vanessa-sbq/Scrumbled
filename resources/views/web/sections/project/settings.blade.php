@@ -5,9 +5,9 @@
         <!-- Navbar with Breadcrumb -->
         @include('web.sections.project.components._navbar', ['project' => $project])
 
-        <div class="flex h-screen">
+        <div class="flex">
             <!-- Sidebar -->
-            <aside class="w-1/4 p-6">
+            <aside class="w-3/12 p-6 hidden md:block">
                 <h2 class="text-xl font-semibold mb-4">Settings</h2>
                 <nav class="space-y-2">
                     @if (Auth::check() && (Auth::user()->id === $project->product_owner_id || Auth::user()->id === $project->scrum_master_id))
@@ -18,11 +18,11 @@
             </aside>
 
             <!-- Main Content -->
-            <div class="flex flex-col w-3/4 p-6 gap-10">
+            <div class="flex flex-1 flex-col w-3/4 p-6 gap-10">
                 @if (request()->routeIs('projects.settings') && Auth::check() && (Auth::user()->id === $project->product_owner_id || Auth::user()->id === $project->scrum_master_id))
                     @include('web.sections.project.components._general', ['project' => $project])
                 @else
-                    @include('web.sections.project.components._team', ['project' => $project])
+                    @include('web.sections.project.components._team', ['project' => $project, 'developers' => $developers])
                 @endif
 
 
