@@ -1,13 +1,14 @@
-<div class="justify-between w-full left">
-    </form> 
-    <?php  
-        $project = \App\Models\Project::find($notification->project_id);
-        $po_id = \App\Models\Project::find($notification->project_id)->product_owner_id;
-        $po = \App\Models\AuthenticatedUser::find($po_id)->username;
-    ?>
-    <?=$po?> invited you to participate in project <?=$project->title?>.
-</div>
-    <div class="flex gap-2">
+<div class="flex">    
+    <div class="basis-3/4">
+        </form> 
+        <?php  
+            $project = \App\Models\Project::find($notification->project_id);
+            $po_id = \App\Models\Project::find($notification->project_id)->product_owner_id;
+            $po = \App\Models\AuthenticatedUser::find($po_id)->username;
+        ?>
+        <?=$po?> invited you to participate in project <?=$project->title?>.
+    </div>
+    <div class="basis-1/4 flex gap-2">
         <form id="accept-invitation-form" method="POST" action="{{ route('inbox.acceptInvitation') }}">
             @csrf
             <input type="hidden" name="project_id" value="{{ $project->id }}">
