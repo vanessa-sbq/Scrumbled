@@ -34,18 +34,6 @@
             <x-input type="select" name="is_public" label="Profile Visibility"
                      :options="['0' => 'Private', '1' => 'Public']"
                      value="{{ old('is_public', $user->is_public) }}" />
-
-            {{-- Actions --}}
-            <div class="flex items-center justify-between space-x-4 mt-6">
-                <button type="submit"
-                        class="w-full bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                    Update Profile
-                </button>
-                <a href="{{ route('show.profile', $user->username) }}"
-                   class="w-full bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-center">
-                    Cancel
-                </a>
-            </div>
         </x-form>
     </div>
 @endsection

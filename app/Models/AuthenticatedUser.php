@@ -72,6 +72,16 @@ class AuthenticatedUser extends Authenticatable
         return $this->is_public;
     }
 
+    /**
+     * Check if the user is banned.
+     *
+     * @return bool
+     */
+    public function isBanned()
+    {
+        return $this->status === 'BANNED';
+    }
+
     public function isInSameProject(AuthenticatedUser $otherUser)
     {
         $userProjects = $this->ownedProjects->pluck('id')

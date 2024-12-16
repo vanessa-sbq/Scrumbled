@@ -150,7 +150,7 @@ class TaskController extends Controller
         $task->effort = $request->effort;
         $task->save();
 
-        return redirect()->back();
+        return redirect()->route('task.show', $task)->with('success', 'Task updated successfully!');
     }
 
     public function show($id)
