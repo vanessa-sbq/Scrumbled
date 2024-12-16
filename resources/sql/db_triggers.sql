@@ -103,13 +103,17 @@ BEGIN
     DELETE FROM notification
     WHERE receiver_id = NEW.developer_id AND project_id = NEW.project_id AND type = 'INVITE';
 
-    -- Send notification to the project owner
+    -- Send notification to the project owner if receiver_id is different from invited_user_id
     INSERT INTO notification (receiver_id, type, project_id, invited_user_id, created_at)
-    VALUES ((SELECT product_owner_id FROM project WHERE id = NEW.project_id), 'ACCEPTED_INVITATION', NEW.project_id, NEW.developer_id, NOW());
+    SELECT product_owner_id, 'ACCEPTED_INVITATION', NEW.project_id, NEW.developer_id, NOW()
+    FROM project
+    WHERE id = NEW.project_id AND product_owner_id <> NEW.developer_id;
 
-    -- Send notification to the scrum master
+    -- Send notification to the scrum master if receiver_id is different from invited_user_id
     INSERT INTO notification (receiver_id, type, project_id, invited_user_id, created_at)
-    VALUES ((SELECT scrum_master_id FROM project WHERE id = NEW.project_id), 'ACCEPTED_INVITATION', NEW.project_id, NEW.developer_id, NOW());
+    SELECT scrum_master_id, 'ACCEPTED_INVITATION', NEW.project_id, NEW.developer_id, NOW()
+    FROM project
+    WHERE id = NEW.project_id AND scrum_master_id <> NEW.developer_id;
 
     RETURN NEW;
 END;

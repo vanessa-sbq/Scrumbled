@@ -29,15 +29,10 @@ class ProjectController extends Controller
         $type = $request->query('type', $user ? 'my_projects' : 'public');
 
         if ($type === 'my_projects' && $user) {
-            $projects = Project::where('product_owner_id', $user->id)
-                ->orWhereHas('developers', function ($query) use ($user) {
-                    $query->where('developer_id', $user->id);
-                })
-                ->get();
+            $projects = $user->allProjects();
         } elseif ($type === 'public') {
             $projects = Project::where('is_public', true)->get();
         } elseif ($type === 'favorites' && $user) {
-            // Assuming you have a favorites relationship
             $projects = $user->favorites()->get();
         } else {
             $projects = collect(); // Empty collection if no valid type
@@ -208,10 +203,12 @@ class ProjectController extends Controller
             Developer::create([
                 'user_id' => $user->id,
             ]);
-        }
 
-        // Attach the user to the project
-        $project->developers()->attach($user);
+            DeveloperProject::create([
+                'developer_id' => $user->id,
+                'project_id' => $project->id 
+            ]); 
+        }
 
         return redirect()->route('projects.team', $project->slug)->with('success', 'Member invited successfully.');
     }
