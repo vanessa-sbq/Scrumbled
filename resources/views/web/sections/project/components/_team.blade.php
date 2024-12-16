@@ -40,20 +40,27 @@
     @if ($developers->isNotEmpty())
         <div class="space-y-4">
             @foreach ($developers as $developer)
-                <div class="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between p-4 border border-gray-300 rounded-md shadow-sm">
-                    <div class="flex flex-wrap md:flex-nowrap items-center space-x-4">
+                <div class="flex flex-col gap-2 md:flex-row md:gap-0 items-center p-4 border border-gray-300 rounded-md shadow-sm">
+                    <div class="flex justify-self-start flex-wrap md:flex-nowrap items-center space-x-4">
                         <img src="{{ $developer->picture ? asset('storage/' . $developer->picture) : asset('images/users/default.png') }}"
                              alt="{{ $developer->full_name }}" class="w-12 h-12 rounded-full">
                         <span class="font-medium text-gray-800">{{ $developer->full_name }}</span>
                     </div>
-                    @if (auth()->id() === $project->product_owner_id)
-                        <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
-                                Remove Member
-                            </button>
-                        </form>
-                    @endif
+                    <div class=" md:ml-auto flex gap-2 items-center justify-center flex-wrap">
+                        @if (auth()->id() === $project->product_owner_id)
+                            @if (!isset($project->scrum_master_id))
+                                <button type="submit" class="px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-700">
+                                    Set as Scrum Master
+                                </button>
+                            @endif
+                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
+                                    Remove Member
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>

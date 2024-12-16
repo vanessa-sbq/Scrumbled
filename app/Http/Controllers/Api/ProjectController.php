@@ -151,5 +151,16 @@ class ProjectController extends Controller
         return response()->json($v);
     }
 
+    public function setScrumMaster() {
+
+    }
+
+    public function removeScrumMaster() {
+
+    }
+
+    public function removeDeveloper() {
+
+    }
 
 }

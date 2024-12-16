@@ -336,7 +336,7 @@ class ProjectController extends Controller
         });
         $users->setCollection($filteredCollection);
 
-        $developers = $project->developers()->paginate(5);
+        $developers = $project->developers()->paginate(2);
         return view('web.sections.project.settings', compact('project', 'users', 'developers'));
     }
 
