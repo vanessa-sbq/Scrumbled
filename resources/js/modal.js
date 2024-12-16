@@ -11,8 +11,3 @@ function closeModal(id) {
         modal.style.display = 'none';
     }
 }
-
-function saveModal(id) {
-    alert('Save button clicked for modal: ' + id);
-    closeModal(id);
-}

@@ -5,6 +5,7 @@
     $variantClasses = [
         'primary' => 'bg-primary text-white hover:bg-primary/90',
         'secondary' => 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+        'danger' => 'bg-red-600 text-white hover:bg-red-700',
     ][$variant];
     $sizeClasses = [
         'sm' => 'px-4 py-2 text-sm',

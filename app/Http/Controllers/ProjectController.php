@@ -317,4 +317,32 @@ class ProjectController extends Controller
             return response()->json(['status' => 'success', 'message' => "Favorited!"]);
         }
     }
+
+    public function showProjectSettings($slug)
+    {
+        $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
+        $users = AuthenticatedUser::paginate(4);
+        return view('web.sections.project.settings', compact('project', 'users'));
+    }
+
+
+
+    public function deleteProject($slug, $username) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+
+        if ($project->product_owner_id !== $user->id) {
+            return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
+        }
+    }
+    public function archiveProject($slug, $username) {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
+
+        if ($project->product_owner_id !== $user->id) {
+            return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
+        }
+    }
+
+
 }

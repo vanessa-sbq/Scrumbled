@@ -11,14 +11,21 @@ class Modal extends Component
     public $title;
     public $closeButtonText;
     public $saveButtonText;
+    public $saveAction;
+    public $activeButtonColor;
+    public $hoverButtonColor;
+
     /**
      * Create a new component instance.
      */
-    public function __construct($title = 'Modal Title', $closeButtonText = 'Close', $saveButtonText = 'Save')
+    public function __construct($title = 'Modal Title', $closeButtonText = 'Close', $saveButtonText = 'Save', $saveAction = 'saveModal', $activeButtonColor = 'bg-blue-600' , $hoverButtonColor = 'bg-blue-700')
     {
         $this->title = $title;
         $this->closeButtonText = $closeButtonText;
         $this->saveButtonText = $saveButtonText;
+        $this->saveAction = $saveAction;
+        $this->activeButtonColor = $activeButtonColor;
+        $this->hoverButtonColor = $hoverButtonColor;
     }
 
     /**
