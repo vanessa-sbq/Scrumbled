@@ -16,8 +16,7 @@ class InboxController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $notifications = Notification::where('receiver_id', $user->id)->get();
-        //$notifications = Notification::where('receiver_id', $user->id)->paginate(10);
+        $notifications = Notification::where('receiver_id', $user->id)->paginate(5);
         return view('web.sections.inbox.index', compact('notifications'));
     }
 

@@ -30,12 +30,13 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                <div id="inbox-pagination-container" class="mt-4">
-                                 <!-- Pagination links -->
-                                 <!-- TODO: Implement pagination!!!-->
-                                </div>
                             </tbody>
                         </table>
+                </div>
+                <div id="inbox-pagination-container" class="mt-4">
+                                 <!-- Pagination links -->
+                                 <!-- TODO: Implement pagination!!!-->
+                    {{ $notifications->links() }}
                 </div>
             @endif
         </div>
