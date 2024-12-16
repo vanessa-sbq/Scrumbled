@@ -22,7 +22,7 @@
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
                         <a href="{{ route('task.show', $task->id) }}"
-                           class="text-lg font-semibold text-gray-800 hover:text-blue-500 transition">
+                            class="text-lg font-semibold text-gray-800 hover:text-primary transition">
                             {{ $task->title }}
                         </a>
                     </td>
@@ -56,7 +56,8 @@
                                 </button>
                             </form>
                         @elseif ($task->assigned_to === Auth::id())
-                            <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS" class="state-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                            <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS"
+                                class="state-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                                 Start
                             </button>
                         @endif

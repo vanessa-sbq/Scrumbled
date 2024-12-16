@@ -30,3 +30,10 @@
         </div>
     </div>
 </div>
+
+
+@once
+    @push('scripts')
+        <script src="{{ asset('js/modal.js') }}"></script>
+    @endpush
+@endonce
