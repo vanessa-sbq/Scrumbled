@@ -60,6 +60,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+    Route::get('/projects/{slug}/settings/general', 'showProjectSettings')->name('projects.settings');
+    Route::get('/projects/{slug}/settings/team', 'showProjectSettings')->name('projects.team.settings');
 
     Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
     Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite');
@@ -107,6 +109,18 @@ Route::controller(\App\Http\Controllers\Api\UserController::class)->group(functi
     Route::get('/api/profiles/search', 'search');
 });
 
+Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(function () {
+    Route::post('/api/projects/changeVisibility', 'changeVisibility');
+    Route::post('/api/projects/archiveProject', 'archiveProject');
+    Route::post('/api/projects/deleteProject', 'deleteProject');
+    Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
+    Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
+    Route::post('/api/projects/transferProject', 'transferProject');
+    Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
+    Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster'); // TODO: Implement
+    Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster'); // TODO: Implement
+    Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper'); // TODO: Implement
+});
 
 // TODO: Remove
 /* Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
