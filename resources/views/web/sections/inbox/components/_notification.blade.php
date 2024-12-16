@@ -1,5 +1,5 @@
         @if ($notification->type == "INVITE")
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between w-full">
                 <div class="flex items-center space-x-3 gap-3">
                     <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
                     </form> 
@@ -31,7 +31,9 @@
                 </div>
             </div>
         @elseif ($notification->type == "COMPLETED_TASK")
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 gap-3">
+            <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
+
                 <?php  
                     $task = \App\Models\Task::find($notification->task_id); 
                     $completed_by = \App\Models\AuthenticatedUser::find($notification->completed_by)->username;   
@@ -41,7 +43,9 @@
                 <?php endif; ?>
             </div>
         @elseif ($notification->type == "ACCEPTED_INVITATION")
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 gap-3">
+            <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
+
                 <?php
                     $invited_user = \App\Models\AuthenticatedUser::find($notification->invited_user_id)->username;
                     $project = \App\Models\Project::find($notification->project_id)->title;      
@@ -49,7 +53,9 @@
                 <?=$invited_user?> accepted your invitation to <?=$project?>.
             </div>
         @elseif ($notification->type == "ASSIGN")
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 gap-3">
+            <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
+
                 <?php
                     $task = \App\Models\Task::find($notification->task_id)->title; 
                     $project = \App\Models\Project::find($notification->project_id)->title;      
@@ -57,7 +63,8 @@
                 You got assigned to task "<?=$task?>" in project <?=$project?>.
             </div>
         @elseif ($notification->type == "PO_CHANGE")
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 gap-3">
+            <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
                 <?php
                     $old_po = \App\Models\AuthenticatedUser::find($notification->old_product_owner_id)->username;   
                     $new_po = \App\Models\AuthenticatedUser::find($notification->new_product_owner_id)->username;   
@@ -66,7 +73,5 @@
                 <?=$old_po?> gave his role of Product Owner to <?=$new_po?> in project <?=$project?>.
             </div>
         @endif
-    </td>
-    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
     </td>
 </tr>

@@ -20,6 +20,12 @@ class InboxController extends Controller
         return view('web.sections.inbox.index', compact('notifications'));
     }
 
+    public function filterByInvitations(){
+        $user = Auth::user();
+        $notifications = Notification::where('receiver_id', $user->id)->where('type', 'INVITE')->paginate(5);
+        return view('web.sections.inbox.index', compact('notifications'));
+    }
+
 
     public function acceptInvitation(Request $request)
     {
