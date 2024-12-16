@@ -161,7 +161,8 @@ class TaskController extends Controller
 
         $project = $task->project;
 
-        return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project,]);
-    }
+        $comments = $task->comments()->orderBy('created_at', 'asc')->get();
 
+        return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project, 'comments' => $comments,]);
+    }
 }

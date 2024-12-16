@@ -37,4 +37,9 @@ class Task extends Model
     {
         return $this->belongsTo(Developer::class, 'assigned_to', 'user_id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
