@@ -93,37 +93,54 @@
             <!-- Display Comments -->
             <div class="space-y-4">
                 @forelse ($comments as $comment)
-                    <div class="bg-gray-50 p-4 rounded-lg shadow text-sm text-gray-700">
-                        <p class="mb-2">{{ $comment->description }}</p>
-
-                        <div class="flex justify-between items-center text-xs text-gray-500">
-                            <!-- Display User -->
-                            <a href="{{ route('show.profile', $comment->user->username) }}" class="flex items-center space-x-2 group">
-                                <img src="{{ asset($comment->user->picture ? 'storage/' . $comment->user->picture : 'images/users/default.png') }}"
-                                     alt="{{ $comment->user->username }}" class="w-6 h-6 rounded-full">
-                                <span class="group-hover:underline group-hover:text-primary transition-colors">
+                    <div class="bg-gray-50 p-4 rounded-lg shadow text-sm text-gray-700" id="comment-{{ $comment->id }}">
+                        <div class="flex justify-between">
+                            <div>
+                                <!-- Display User -->
+                                <a href="{{ route('show.profile', $comment->user->username) }}" class="flex items-center space-x-2 group">
+                                    <img src="{{ asset($comment->user->picture ? 'storage/' . $comment->user->picture : 'images/users/default.png') }}"
+                                         alt="{{ $comment->user->username }}" class="w-6 h-6 rounded-full">
+                                    <span class="group-hover:underline group-hover:text-primary transition-colors">
                         {{ $comment->user->username }}
                     </span>
-                            </a>
+                                </a>
+                            </div>
 
-                            <!-- Actions -->
-                            <div class="flex items-center space-x-2">
-                                <!-- Posted Timestamp -->
-                                <span>Posted on: {{ $comment->created_at->format('F j, Y, g:i a') }}</span>
+                            <!-- Edit Button -->
+                            @if (Auth::user()->id === $comment->user->id)
+                                <button class="text-blue-500 hover:text-blue-700" onclick="editComment({{ $comment->id }})">
+                                    ✏️ Edit
+                                </button>
+                            @endif
 
-                                <!-- Delete Button -->
+                            <!-- Delete Button -->
+                            @if (Auth::user()->id === $comment->user->id)
                                 <form method="POST" action="{{ route('comments.delete', $comment->id) }}" onsubmit="return confirm('Are you sure you want to delete this comment?');">
                                     @csrf
                                     <button type="submit" class="text-red-500 hover:text-red-700">
-                                        Delete Comment
+                                        🗑️ Delete
                                     </button>
                                 </form>
-                            </div>
+                            @endif
+                        </div>
+
+                        <div id="comment-text-{{ $comment->id }}" class="mb-2">{{ $comment->description }}</div>
+
+                        <!-- Editable Textarea (Hidden by default) -->
+                        <form id="edit-form-{{ $comment->id }}" method="POST" action="{{ route('comments.edit', $comment->id) }}" class="hidden">
+                            @csrf
+                            <textarea name="description" id="description-{{ $comment->id }}" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200" required>{{ $comment->description }}</textarea>
+                            <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Save Changes</button>
+                        </form>
+
+                        <div class="text-right text-xs text-gray-500">
+                            <span>Posted on {{ $comment->created_at->format('F j, Y, g:i a') }}</span>
                         </div>
                     </div>
                 @empty
                     <p class="text-gray-500">No comments yet.</p>
                 @endforelse
+
             </div>
 
 
@@ -145,7 +162,7 @@
                         </div>
                         <div class="flex justify-end">
                             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                                Add Comment
+                                Confirm
                             </button>
                         </div>
                     </form>

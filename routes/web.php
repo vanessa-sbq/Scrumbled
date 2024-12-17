@@ -129,4 +129,5 @@ Route::controller(TaskController::class)->group(function () {
 Route::controller(CommentController::class)->group(function () {
     Route::post('/tasks/{id}/comment', 'create')->name('comments.create');
     Route::post('/comments/{id}', 'delete')->name('comments.delete');
+    Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');
 });

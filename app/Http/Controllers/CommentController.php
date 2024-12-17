@@ -35,12 +35,23 @@ class CommentController extends Controller
 
         $task = $comment->task;
 
-        if($user->id === $author->id) {
-            $comment->delete();
+        $comment->delete();
 
-            return redirect()->route('task.show', $task->id)->with('success', 'Comment deleted successfully!');
-        }
+        return redirect()->route('task.show', $task->id)->with('success', 'Comment deleted successfully!');
+    }
 
-        return redirect()->route('task.show', $task->id)->with('error', 'Comment could not be deleted!');
+    public function edit(Request $request, $commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $user = Auth::user();
+
+        $request->validate([
+            'description' => 'required|string|max:1000',
+        ]);
+
+        $comment->description = $request->description;
+        $comment->save();
+
+        return redirect()->route('task.show', $comment->task->id)->with('success', 'Comment updated successfully!');
     }
 }
