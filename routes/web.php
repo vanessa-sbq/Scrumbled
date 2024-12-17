@@ -117,8 +117,8 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
     Route::post('/api/projects/transferProject', 'transferProject');
     Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
-    Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster'); // TODO: Implement
-    Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster'); // TODO: Implement
+    Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
+    Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster');
     Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper'); // TODO: Implement
     Route::post('/api/projects/leaveProject', 'selfRemoveFromProject');
 });

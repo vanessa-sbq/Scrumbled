@@ -7,8 +7,10 @@ use App\Models\DeveloperProject;
 use App\Models\ProductOwner;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
+use App\Models\ScrumMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -176,16 +178,124 @@ class ProjectController extends Controller
         return response()->json($v);
     }
 
-    public function setScrumMaster() {
+    public function setScrumMaster(Request $request) {
+        $projectSlug = $request->input('slug');
+        $uid = $request->input('userId');
 
+        $authId = Auth::user()->id;
+
+        $project = Project::where('slug', $projectSlug)->firstOrFail();
+
+        if ($authId != $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'You do not have permission to set the Scrum Master.']);
+        }
+
+        if ($uid == $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'Product Owner cannot be a Scrum Master.']);
+        }
+
+        $developers = [];
+        foreach ($project->developers as $developer) {
+            $developers[] = $developer->id;
+        }
+
+        //Log::info('Developers Array: ' . json_encode($developers));
+
+
+        if (!in_array($uid, $developers)) {
+            return response()->json(['status' => 'error', 'message' => 'The person does not belong to this project.']);
+        }
+
+        if (isset($project->scrum_master_id)) {
+            return response()->json(['status' => 'error', 'message' => 'This role has been already taken.']);
+        }
+
+        if (!ScrumMaster::where(['developer_id' => $uid])->exists()) {
+            ScrumMaster::create([
+                'developer_id' => $uid
+            ]);
+        }
+
+        $project->update(['scrum_master_id' => $uid]);
+        return response()->json(['status' => 'success', 'message' => 'User attributed to Scrum Master.']);
     }
 
-    public function removeScrumMaster() {
 
+    public function removeScrumMaster(Request $request) {
+        $projectSlug = $request->input('slug');
+        $uid = $request->input('userId');
+
+        $authId = Auth::user()->id;
+
+        $project = Project::where('slug', $projectSlug)->firstOrFail();
+
+        if ($authId != $project->product_owner_id && $authId != $project->scrum_master) {
+            return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove the Srum Master.']);
+        }
+
+        if ($uid == $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'Product Owner is not a Scrum Master.']);
+        }
+
+        $developers = [];
+        foreach ($project->developers as $developer) {
+            $developers[] = $developer->id;
+        }
+
+        if (!in_array($uid, $developers)) {
+            return response()->json(['status' => 'error', 'message' => 'The person does not belong to this project.']);
+        }
+
+        if (!isset($project->scrum_master_id)) {
+            return response()->json(['status' => 'error', 'message' => 'This role is already empty.n.']);
+        }
+
+        $project->update(['scrum_master_id' => null]);
+        return response()->json(['status' => 'success', 'message' => 'Scrum Master was removed successfully.']);
     }
 
-    public function removeDeveloper() {
+    public function removeDeveloper(Request $request) {
+        $projectSlug = $request->input('slug');
+        $uid = $request->input('userId');
 
+        $authId = Auth::user()->id;
+
+        $project = Project::where('slug', $projectSlug)->firstOrFail();
+
+        if ($authId != $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove a Developer.']);
+        }
+
+        if ($uid == $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'Product Owner cannot be removed this way.']);
+        }
+
+        $developers = [];
+        foreach ($project->developers as $developer) {
+            $developers[] = $developer->id;
+        }
+
+        if (!in_array($uid, $developers)) {
+            return response()->json(['status' => 'error', 'message' => 'The person does not belong to this project.']);
+        }
+
+        if ($project->scrum_master_id == $uid) {
+            $project->update(['scrum_master_id' => null]);
+        }
+
+        $project->developers()->detach($uid);
+
+        $developerProject = DeveloperProject::where('project_id', $project->id)
+            ->where('developer_id', $uid)
+            ->first();
+
+        // Remove only if the record exists
+        if ($developerProject) {
+            $developerProject->delete();
+        }
+
+        $project->save();
+        return response()->json(['status' => 'success', 'message' => 'Developer was removed successfully.']);
     }
 
     public function selfRemoveFromProject(Request $request) {
