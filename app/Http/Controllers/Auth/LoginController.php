@@ -53,8 +53,6 @@ class LoginController extends Controller
     }
 
     public function resetPassword(Request $request) {
-        // TODO: Mailtrap
-
         $count = AuthenticatedUser::where('email', $request->email)->count();
 
         if ($count > 0){

@@ -8,7 +8,7 @@
         <span class="font-bold text-gray-800">Reset Password</span>
     </nav>
     <h1 class="text-4xl font-bold mb-8 text-center">Reset Password</h1>
-    <x-form :action="route('login.resetPassword')" method="POST" label="Send Reset Link">
+    <x-form :action="route('login.resetPassword')" method="POST" label="Reset Password">
         {{-- Email Field --}}
         <x-input type="email" name="email" label="E-Mail" placeholder="Enter your email" required autofocus />
             @if (!empty(session('success')))
