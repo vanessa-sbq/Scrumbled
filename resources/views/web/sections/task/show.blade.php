@@ -102,18 +102,30 @@
                                 <img src="{{ asset($comment->user->picture ? 'storage/' . $comment->user->picture : 'images/users/default.png') }}"
                                      alt="{{ $comment->user->username }}" class="w-6 h-6 rounded-full">
                                 <span class="group-hover:underline group-hover:text-primary transition-colors">
-                            {{ $comment->user->username }}
-                        </span>
+                        {{ $comment->user->username }}
+                    </span>
                             </a>
 
-                            <!-- Posted Timestamp -->
-                            <span>Posted on: {{ $comment->created_at->format('F j, Y, g:i a') }}</span>
+                            <!-- Actions -->
+                            <div class="flex items-center space-x-2">
+                                <!-- Posted Timestamp -->
+                                <span>Posted on: {{ $comment->created_at->format('F j, Y, g:i a') }}</span>
+
+                                <!-- Delete Button -->
+                                <form method="POST" action="{{ route('comments.delete', $comment->id) }}" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                    @csrf
+                                    <button type="submit" class="text-red-500 hover:text-red-700">
+                                        Delete Comment
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @empty
                     <p class="text-gray-500">No comments yet.</p>
                 @endforelse
             </div>
+
 
             <!-- Trigger Button -->
             <div class="mt-6">

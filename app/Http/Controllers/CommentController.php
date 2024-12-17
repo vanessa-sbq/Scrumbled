@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -22,5 +24,23 @@ class CommentController extends Controller
         ]);
 
         return redirect()->route('task.show', $taskId)->with('success', 'Comment added successfully!');
+    }
+
+    public function delete($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        $author = $comment->user;
+        $user = Auth::user();
+
+        $task = $comment->task;
+
+        if($user->id === $author->id) {
+            $comment->delete();
+
+            return redirect()->route('task.show', $task->id)->with('success', 'Comment deleted successfully!');
+        }
+
+        return redirect()->route('task.show', $task->id)->with('error', 'Comment could not be deleted!');
     }
 }
