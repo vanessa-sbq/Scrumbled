@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\AuthenticatedUser;
+use App\Models\DeveloperProject;
 use App\Models\ProductOwner;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
@@ -101,20 +102,44 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $title = $request->input('title');
 
+        $newSlug = transliterator_transliterate('Any-Latin; Latin-ASCII', $title);
+
+        // Convert to lowercase
+        $newSlug = strtolower($newSlug);
+
+        // Replace spaces and special characters with hyphens
+        $newSlug = preg_replace('/[^a-z0-9]+/', '-', $newSlug);
+
+        // Trim hyphens from the start and end
+        $newSlug = trim($newSlug, '-');
+
+        $originalSlug = $newSlug; // Store the original slug for numbering
+        $counter = 1;
+
+        // Check for existing slug in the database and append a number if necessary
+        while (Project::where('slug', $newSlug)->exists()) {
+            $newSlug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $project = Project::where('slug', $projectSlug)->firstOrFail();
+
+        if ($title === $project->title || $newSlug === $project->slug) {
+            return response()->json(['status' => 'error', 'message' => 'New title must be different than old title.'], 400);
+        }
 
         $user = auth()->user();
 
         if (strlen($title) <= 0) {
-            return response()->json(['status' => 'error', 'message' => 'Description cannot exceed 5000 characters.'], 400);
+            return response()->json(['status' => 'error', 'message' => 'Title cannot be empty.'], 400);
         }
 
         if ($project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
-        $project->update(['title' => $title]);
-        return response()->json(['status' => 'success', 'message' => 'Archival state changed successfully']);
+        $project->update(['title' => $title, 'slug' => $newSlug]);
+        return response()->json(['status' => 'success', 'message' => 'Archival state changed successfully', 'redirect' => route('projects.show', $newSlug)], 301);
     }
 
     public function changeProjectDescription(Request $request) {
@@ -161,6 +186,54 @@ class ProjectController extends Controller
 
     public function removeDeveloper() {
 
+    }
+
+    public function selfRemoveFromProject(Request $request) {
+        $projectSlug = $request->input('slug');
+        $uid = $request->input('userId');
+
+        $user = auth()->user();
+
+        $project = Project::where('slug', $projectSlug)->firstOrFail();
+
+        if ($user->id != $uid) {
+            return response()->json(['status' => 'error', 'message' => 'You cannot remove other members this way.'.$user->id], 400);
+        }
+
+        $projectManagement = [$project->scrum_master_id, $project->product_owner_id];
+        $developers = [];
+        foreach ($project->developers as $developer) {
+            $developers[] = $developer->id;
+        }
+
+        if ((!in_array($uid, $projectManagement)) && (!in_array($uid, $developers))) {
+            return response()->json(['status' => 'error', 'message' => 'You do not belong to this project.'], 400);
+        }
+
+        if ($uid == $project->product_owner_id) {
+            return response()->json(['status' => 'error', 'message' => 'To remove your self from the project please transfer or delete the project.'], 400);
+        }
+
+        if ($uid == $project->scrum_master_id) {
+            $project->update(['scrum_master_id' => null]);
+        }
+
+        if (in_array($uid, $developers)) {
+            $project->developers()->detach($uid);
+
+            $developerProject = DeveloperProject::where('project_id', $project->id)
+                ->where('developer_id', $uid)
+                ->first();
+
+            // Remove only if the record exists
+            if ($developerProject) {
+                $developerProject->delete();
+            }
+
+        }
+
+        $project->save();
+        return response()->json(['status' => 'success', 'message' => 'You have been removed from the project.'], 200);
     }
 
 }

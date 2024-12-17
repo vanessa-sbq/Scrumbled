@@ -204,11 +204,13 @@ class ProjectController extends Controller
             Developer::create([
                 'user_id' => $user->id,
             ]);
+        }
 
+        if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
             DeveloperProject::create([
                 'developer_id' => $user->id,
-                'project_id' => $project->id 
-            ]); 
+                'project_id' => $project->id
+            ]);
         }
 
         return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
@@ -336,23 +338,5 @@ class ProjectController extends Controller
         $developers = $project->developers()->paginate(2);
         return view('web.sections.project.settings', compact('project', 'users', 'developers'));
     }
-
-    public function deleteProject($slug, $username) {
-        $project = Project::where('slug', $slug)->firstOrFail();
-        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
-
-        if ($project->product_owner_id !== $user->id) {
-            return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
-        }
-    }
-    public function archiveProject($slug, $username) {
-        $project = Project::where('slug', $slug)->firstOrFail();
-        $user = AuthenticatedUser::where('username', $username)->firstOrFail();
-
-        if ($project->product_owner_id !== $user->id) {
-            return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
-        }
-    }
-
 
 }
