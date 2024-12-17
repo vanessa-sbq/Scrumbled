@@ -6,26 +6,77 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AuthenticatedUser;
 use App\Models\Notification;
 use App\Models\DeveloperProject;
+use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 class InboxController extends Controller
 {
+    /*
+     * Auxiliary function to get the infos for a notifications array
+     */
+    public function getNotificationInfos($notifications){
+        // Return an empty array if there are no notifications
+        if (empty($notifications)) {
+            return [];
+        }
+
+        $notificationInfos = [];
+
+        foreach($notifications as $notification){
+            if ($notification->project_id) {
+                $notificationInfo['project'] = Project::find($notification->project_id);
+                $notificationInfo['current_po'] = AuthenticatedUser::find($notificationInfo['project']->product_owner_id);
+            }
+
+            if ($notification->invited_user_id){
+                $notificationInfo['invited_user'] = AuthenticatedUser::find($notification->invited_user_id)->username;
+            }
+
+            if ($notification->task_id){
+                $notificationInfo['task_title'] = Task::find($notification->task_id)->title; 
+            }
+
+            if ($notification->completed_by){
+                $notificationInfo['completed_by'] = AuthenticatedUser::find($notification->completed_by)->username;   
+            }
+
+            if ($notification->old_product_owner_id){
+                $notificationInfo['old_po'] = AuthenticatedUser::find($notification->old_product_owner_id)->username;   
+            }
+
+            if ($notification->new_product_owner_id){
+                $notificationInfo['new_po'] = AuthenticatedUser::find($notification->new_product_owner_id)->username;   
+            }
+
+            $notificationInfo['type'] = $notification->type;
+            $notificationInfo['id'] = $notification->id;
+            $notificationInfo['receiver_id'] = $notification->receiver_id;
+            $notificationInfo['created_at'] = $notification->created_at;
+            
+            $notificationInfos[] = $notificationInfo;
+        }
+
+        return $notificationInfos;
+    }
+
 
     public function index()
     {
         $user = Auth::user();
         $notifications = Notification::where('receiver_id', $user->id)->paginate(5);
-        return view('web.sections.inbox.index', compact('notifications'));
+        $notificationInfos = self::getNotificationInfos($notifications);
+        return view('web.sections.inbox.index', compact('notificationInfos', 'notifications'));
     }
 
     public function filterByInvitations(){
         $user = Auth::user();
         $notifications = Notification::where('receiver_id', $user->id)->where('type', 'INVITE')->paginate(5);
-        return view('web.sections.inbox.index', compact('notifications'));
+        $notificationInfos = self::getNotificationInfos($notifications);
+        return view('web.sections.inbox.index', compact('notificationInfos', 'notifications'));
     }
-
 
     public function acceptInvitation(Request $request)
     {

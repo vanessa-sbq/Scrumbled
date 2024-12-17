@@ -1,27 +1,22 @@
 <div class="flex">    
     <div class="basis-3/4">
         </form> 
-        <?php  
-            $project = \App\Models\Project::find($notification->project_id);
-            $po_id = \App\Models\Project::find($notification->project_id)->product_owner_id;
-            $po = \App\Models\AuthenticatedUser::find($po_id)->username;
-        ?>
-        <?=$po?> invited you to participate in project <?=$project->title?>.
+        {{ $notificationInfo['current_po']->username }} invited you to participate in project {{ $notificationInfo['project']->title }}.
     </div>
     <div class="basis-1/4 flex gap-2">
         <form id="accept-invitation-form" method="POST" action="{{ route('inbox.acceptInvitation') }}">
             @csrf
-            <input type="hidden" name="project_id" value="{{ $project->id }}">
-            <input type="hidden" name="developer_id" value="{{ $notification->receiver_id }}">
+            <input type="hidden" name="project_id" value="{{ $notificationInfo['project']->id }}">
+            <input type="hidden" name="developer_id" value="{{ $notificationInfo['receiver_id'] }}">
             <button type="submit" class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                 Accept
             </button>
         </form>
         <form id="decline-invitation-form" method="POST" action="{{ route('inbox.declineInvitation') }}">
             @csrf
-            <input type="hidden" name="id" value="{{ $notification->id }}">
-            <input type="hidden" name="project_id" value="{{ $project->id }}">
-            <input type="hidden" name="developer_id" value="{{ $notification->receiver_id }}">
+            <input type="hidden" name="id" value="{{ $notificationInfo['id'] }}">
+            <input type="hidden" name="project_id" value="{{ $notificationInfo['project']->id }}">
+            <input type="hidden" name="developer_id" value="{{ $notificationInfo['receiver_id'] }}">
             <button type="submit" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300">
                 Decline
             </button>

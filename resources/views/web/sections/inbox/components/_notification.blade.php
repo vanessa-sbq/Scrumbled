@@ -1,26 +1,26 @@
 <div class="flex flex-row items-center gap-3">
     <!-- Checkbox section -->
     <div class="basis-1/7">
-        <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notification->id }}">
+        <input type="checkbox" class="notification-checkbox" name="selected_notifications[]" value="{{ $notificationInfo['id'] }}">
     </div>    
 
     <!-- Notification content based on type -->
-    <div class="basis-5/7 flex-grow left">
-        @if ($notification->type == "INVITE")
-            @include('web.sections.inbox.components._invitation', ['$notifications' => $notifications])
-        @elseif ($notification->type == "COMPLETED_TASK")
-            @include('web.sections.inbox.components._completed', ['$notifications' => $notifications])
-        @elseif ($notification->type == "ACCEPTED_INVITATION")
-            @include('web.sections.inbox.components._acceptedinv', ['$notifications' => $notifications])
-        @elseif ($notification->type == "ASSIGN")
-            @include('web.sections.inbox.components._assign', ['$notifications' => $notifications])
-        @elseif ($notification->type == "PO_CHANGE")
-            @include('web.sections.inbox.components._pochange', ['$notifications' => $notifications])
+    <div class="basis-5/7 flex-grow">
+        @if ($notificationInfo['type'] == "INVITE")
+            @include('web.sections.inbox.components._invitation', ['$notificationInfo' => $notificationInfo])
+        @elseif ($notificationInfo['type'] == "COMPLETED_TASK")
+            {{ $notificationInfo['completed_by'] }} completed task "{{ $notificationInfo['task_title'] }}" in project {{ $notificationInfo['project']->title }}.
+        @elseif ($notificationInfo['type'] == "ACCEPTED_INVITATION")
+            {{ $notificationInfo['invited_user'] }} accepted your invitation to {{ $notificationInfo['project']->title }}.
+        @elseif ($notificationInfo['type'] == "ASSIGN")
+            You got assigned to task "{{ $notificationInfo['task_title'] }}" in project {{ $notificationInfo['project']->title }}.
+        @elseif ($notificationInfo['type'] == "PO_CHANGE")
+            {{ $notificationInfo['old_po'] }} gave his role of Product Owner to {{ $notificationInfo['new_po'] }} in project {{ $notificationInfo['project']->title }}.
         @endif
     </div>
 
     <!-- Display time -->
     <div class="basis-1/7">
-        {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
+        {{ \Carbon\Carbon::parse($notificationInfo['created_at'])->diffForHumans() }}
     </div>
 </div>
