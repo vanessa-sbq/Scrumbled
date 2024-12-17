@@ -56,7 +56,7 @@ class UserController extends Controller
         $user->update($data);
 
         // Redirect to the login page with a success message
-        return redirect()->route('admin.users.show', $user->username)->with('success', 'Profile edited successfully');
+        return redirect()->route('admin.users')->with('success', 'Profile edited successfully');
     }
 
     public function ban($userId)

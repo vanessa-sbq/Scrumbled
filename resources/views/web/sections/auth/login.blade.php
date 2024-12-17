@@ -12,13 +12,18 @@
             <x-input type="password" name="password" label="Password" placeholder="Enter your password" required />
 
             {{-- Remember Me --}}
-            <div class="mb-4">
-                <label for="remember" class="inline-flex items-center">
-                    <input type="checkbox" name="remember" id="remember"
-                        class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-muted-foreground">Remember Me</span>
-                </label>
+            <div class="flex justify-between">
+                <div class="mb-4">
+                    <label for="remember" class="inline-flex items-center">
+                        <input type="checkbox" name="remember" id="remember" class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                        <span class="ml-2 text-sm text-muted-foreground">Remember Me</span>
+                    </label>
+                </div>
+
+                {{-- Recover Password --}}
+                <a href="{{ route('login.forgotPassword') }}" class="ml-2 text-sm text-muted-foreground hover:underline">Forgot password?</a>
             </div>
         </x-form>
+    
     </div>
 @endsection
