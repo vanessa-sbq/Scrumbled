@@ -123,8 +123,8 @@ document.getElementById('changeTitleBtn').addEventListener('click', function(eve
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // alert(data.message); // TODO: Toast Notification ?
-                window.location.reload();
+                //alert(data.message); // TODO: Toast Notification ?
+                window.location.replace(data.redirect)
             } else {
                 alert(data.message); // Error message
             }

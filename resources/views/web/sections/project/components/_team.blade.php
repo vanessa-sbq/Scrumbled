@@ -23,12 +23,9 @@
                 <span class="font-medium text-gray-800">{{ $project->scrumMaster->full_name }}</span>
             </div>
             @if (auth()->id() === $project->product_owner_id)
-                <form action="{{ route('projects.remove', [$project->slug, $project->scrumMaster->username]) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
-                        Remove Member
-                    </button>
-                </form>
+                <button data-user-id="{{$project->scrum_master_id}}" class="remove_sm_button px-3 py-1 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-md">
+                    Remove Scrum Master
+                </button>
             @endif
         </div>
     @else
@@ -38,7 +35,7 @@
     <!-- Developers -->
     <h2 class="text-xl font-semibold mb-4">Developers</h2>
     @if ($developers->isNotEmpty())
-        <div class="space-y-4">
+        <p class="space-y-4">
             @foreach ($developers as $developer)
                 <div class="flex flex-col gap-2 md:flex-row md:gap-0 items-center p-4 border border-gray-300 rounded-md shadow-sm">
                     <div class="flex justify-self-start flex-wrap md:flex-nowrap items-center space-x-4">
@@ -49,20 +46,25 @@
                     <div class=" md:ml-auto flex gap-2 items-center justify-center flex-wrap">
                         @if (auth()->id() === $project->product_owner_id)
                             @if (!isset($project->scrum_master_id))
-                                <button type="submit" class="px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-700">
+                                <button data-user-id="{{$developer->id}}" class="set_as_sm_button px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-700">
                                     Set as Scrum Master
                                 </button>
                             @endif
-                            <form action="{{ route('projects.remove', [$project->slug, $developer->username]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
-                                    Remove Member
-                                </button>
-                            </form>
+                            <button data-user-id="{{$developer->id}}" data-user-name="{{ $developer->full_name }}" class="remove_dev_button px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
+                                Remove Developer
+                            </button>
                         @endif
                     </div>
                 </div>
             @endforeach
+                @if (auth()->id() === $project->product_owner_id)
+                    <x-modal id="remove_developer_modal" title="Developer removal" closeButtonText="Cancel" saveButtonText="Yes, remove" saveAction="removeDeveloperHelper" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                        <div>
+                            <p id="fill_user_name"></p>
+                            <p id="extra"></p>
+                        </div>
+                    </x-modal>
+                @endif
         </div>
 
         <!-- Pagination -->
@@ -83,3 +85,7 @@
         </div>
     @endcan
 </div>
+
+@push('scripts')
+    <script src=" {{ asset('js/team.js') }} "></script>
+@endpush

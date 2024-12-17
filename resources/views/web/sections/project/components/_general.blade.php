@@ -1,15 +1,15 @@
 <div>
     <h2 class="text-2xl font-bold mb-4">Edit Details</h2>
-    <div class="divide-y divide-gray-400">
-        <form id="changeTitleForm" class="flex card items-center gap-4 mb-2 flex-1">
+    <div class="flex flex-col divide-y divide-gray-400">
+        <form id="changeTitleForm" class="flex flex-wrap items-center gap-4 mb-2 flex-1">
             @csrf
-            <label for="title" class="block text-md font-semibold">Project Title</label>
+            <label for="title" class="text-md font-semibold">Project Title</label>
             <input
                     type="text"
                     id="title"
                     name="title"
                     placeholder="Choose a title for the project."
-                    class="w-1/3 px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    class="px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     value="{{ old('title', $project->title) }}"
                     required
             >
@@ -26,7 +26,7 @@
                     id="description"
                     name="description"
                     placeholder="Describe your project in detail."
-                    class="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+                    class="w-full  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
                     rows="5"
                     required
             >{{ old('description', $project->description) }}</textarea>
@@ -44,12 +44,12 @@
 
     <div class="border border-red-600 rounded-lg divide-y divide-gray-700">
         <!-- Change project visibility -->
-        <div class="p-4 flex items-center justify-between">
+        <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
                 <h3 class="font-semibold">Change project visibility</h3>
                 <p class="text-gray-400">This project is currently {{$project->is_public ? 'public' : 'private'}}.</p>
             </div>
-            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 px-6 py-2 text-base " id="change_visibility">
+            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="change_visibility">
                 Change visibility
             </button>
 
@@ -59,14 +59,14 @@
         </div>
 
         <!-- Transfer ownership -->
-        <div class="p-4 flex items-center justify-between">
+        <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
                 <h3 class="font-semibold">Transfer ownership</h3>
                 <p class="text-gray-400">
                     Transfer this project to another user.
                 </p>
             </div>
-            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 px-6 py-2 text-base " id="transfer_ownership">
+            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="transfer_ownership">
                 Transfer
             </button>
 
@@ -91,12 +91,12 @@
         </div>
 
         <!-- Archive this project -->
-        <div class="p-4 flex items-center justify-between">
+        <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
                 <h3 class="font-semibold">Archive this project</h3>
                 <p class="text-gray-400">Mark this project as archived.</p>
             </div>
-            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-red-600 text-white hover:bg-red-700 px-6 py-2 text-base " id="archive_project">
+            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="archive_project">
                 Archive this project
             </button>
 
@@ -107,7 +107,7 @@
         </div>
 
         <!-- Delete this project -->
-        <div class="p-4 flex items-center justify-between">
+        <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
                 <h3 class="font-semibold">Delete this project</h3>
                 <p class="text-gray-400">Once you delete a project, there is no going back. Please be certain.</p>
