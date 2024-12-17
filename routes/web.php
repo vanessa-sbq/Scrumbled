@@ -49,6 +49,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/{username}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/users/{username}/ban', [AdminUserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/users/{username}/unban', [AdminUserController::class, 'unban'])->name('admin.users.unban');
+
+        Route::get('/projects', [AdminUserController::class, 'list'])->name('admin.projects');
     });
 });
 

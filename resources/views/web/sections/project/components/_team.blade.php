@@ -50,7 +50,7 @@
                                     Set as Scrum Master
                                 </button>
                             @endif
-                            <button data-user-id="{{$developer->id}}" data-user-name="{{ $developer->full_name }}" class="remove_dev_button px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
+                            <button data-user-id="{{$developer->id}}" data-user-name="{{ $developer->username }}" class="remove_dev_button px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
                                 Remove Developer
                             </button>
                         @endif

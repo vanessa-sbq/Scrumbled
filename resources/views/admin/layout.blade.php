@@ -6,9 +6,8 @@
 </head>
 
 <body>
-    <header>
-        @include('admin.layout.header')
-    </header>
+    @include('admin.layout.header')
+    @include('admin.components._navbar')
     <main>
         @yield('content')
     </main>
@@ -18,6 +17,7 @@
 
     <!-- Scripts -->
     @include('admin.layout.scripts')
+    @stack('scripts')
 </body>
 
 </html>
