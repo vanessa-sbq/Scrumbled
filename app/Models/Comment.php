@@ -27,4 +27,5 @@ class Comment extends Model
     {
         return $this->belongsTo(AuthenticatedUser::class, 'user_id');
     }
+
 }
