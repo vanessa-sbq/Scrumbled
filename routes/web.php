@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\ProfileController as ProfileController;
 use App\Http\Controllers\TaskController;
 
@@ -49,8 +50,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/{username}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/users/{username}/ban', [AdminUserController::class, 'ban'])->name('admin.users.ban');
         Route::post('/users/{username}/unban', [AdminUserController::class, 'unban'])->name('admin.users.unban');
-
-        Route::get('/projects', [AdminUserController::class, 'list'])->name('admin.projects');
+        Route::get('/projects', [AdminProjectController::class, 'projectList'])->name('admin.projects');
     });
 });
 
@@ -59,22 +59,26 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects', 'list')->name('projects');
     Route::get('/projects/new', 'create')->name('projects.create');
     Route::post('/projects/new', 'store')->name('projects.store');
-    Route::get('/projects/{slug}', 'show')->name('projects.show');
-    Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
-    Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
-    Route::get('/projects/{slug}/settings/general', 'showProjectSettings')->name('projects.settings');
-    Route::get('/projects/{slug}/settings/team', 'showProjectSettings')->name('projects.team.settings');
 
-    Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
-    Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite');
+    Route::middleware(['auth', 'project.membership'])->group(function () {
+        Route::get('/projects/{slug}', 'show')->name('projects.show');
+        Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
+        Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+        Route::get('/projects/{slug}/settings/general', 'showProjectSettings')->name('projects.settings');
+        Route::get('/projects/{slug}/settings/team', 'showProjectSettings')->name('projects.team.settings');
+        Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
+        Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
+        Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
+    });
+
+    Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite'); // FIXME: Should this be inside the middleware? Doesn't it expose data to public?
 
     Route::middleware(['auth', 'product.owner'])->group(function () {
         Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
         Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
         Route::post('/projects/{slug}/remove/{username}', 'remove')->name('projects.remove');
     });
-    Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
-    Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
+
 });
 
 // Authentication
@@ -121,7 +125,7 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
     Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
     Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster');
-    Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper'); // TODO: Implement
+    Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper');
     Route::post('/api/projects/leaveProject', 'selfRemoveFromProject');
 });
 

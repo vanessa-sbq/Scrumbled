@@ -39,7 +39,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -92,7 +92,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 

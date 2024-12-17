@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Other middleware
         'product.owner' => \App\Http\Middleware\ProductOwnerMiddleware::class,
+        'project.membership' => \App\Http\Middleware\CheckProjectMembership::class,
     ];
 }
