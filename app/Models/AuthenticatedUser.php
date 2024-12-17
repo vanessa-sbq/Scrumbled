@@ -42,7 +42,8 @@ class AuthenticatedUser extends Authenticatable
      */
     public function developerProjects()
     {
-        return $this->belongsToMany(Project::class, 'developer_project', 'developer_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'developer_project', 'developer_id', 'project_id')
+            ->where('developer_project.is_pending', false);
     }
 
     /**
@@ -57,9 +58,18 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->belongsToMany(Project::class, 'favorite', 'user_id', 'project_id');
     }
+
     public function profilePic()
     {
         return $this->picture ? asset('storage/' . $this->picture) : asset('images/users/default.png');
+    }
+
+    /**
+     * Get the notifications for the user.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
     /**

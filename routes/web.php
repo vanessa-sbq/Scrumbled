@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
+use App\Http\Controllers\InboxController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\LoginController;
@@ -60,6 +61,8 @@ Route::controller(ProjectController::class)->group(function () {
     Route::get('/projects/{slug}', 'show')->name('projects.show');
     Route::get('/projects/{slug}/backlog', 'backlog')->name('projects.backlog');
     Route::get('/projects/{slug}/team', 'showTeam')->name('projects.team');
+    Route::get('/projects/{slug}/settings/general', 'showProjectSettings')->name('projects.settings');
+    Route::get('/projects/{slug}/settings/team', 'showProjectSettings')->name('projects.team.settings');
 
     Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
     Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite');
@@ -77,6 +80,8 @@ Route::controller(ProjectController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
+    Route::get('/login/forgot-password', 'forgotPassword')->name('login.forgotPassword');
+    Route::post('/login/reset-password', 'resetPassword')->name('login.resetPassword');
     Route::get('/logout', 'logout')->name('logout')->middleware(['auth:web']);
 });
 
@@ -93,9 +98,32 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
 });
 
+// Inbox
+Route::controller(InboxController::class)->group(function () {
+    Route::get('/inbox', 'index')->name('inbox');
+    Route::get('/inbox/invitations', 'filterByInvitations')->name('inbox.invitations');
+    Route::post('/inbox/acceptInvitation', 'acceptInvitation')->name('inbox.acceptInvitation');
+    Route::post('/inbox/declineInvitation', 'declineInvitation')->name('inbox.declineInvitation');
+    Route::post('/inbox/delete', 'delete')->name('inbox.delete');
+});
+
 // API
 Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
+});
+
+Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(function () {
+    Route::post('/api/projects/changeVisibility', 'changeVisibility');
+    Route::post('/api/projects/archiveProject', 'archiveProject');
+    Route::post('/api/projects/deleteProject', 'deleteProject');
+    Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
+    Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
+    Route::post('/api/projects/transferProject', 'transferProject');
+    Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
+    Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
+    Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster');
+    Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper'); // TODO: Implement
+    Route::post('/api/projects/leaveProject', 'selfRemoveFromProject');
 });
 
 // TODO: Remove

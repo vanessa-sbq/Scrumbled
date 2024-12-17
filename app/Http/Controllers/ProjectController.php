@@ -14,6 +14,7 @@ use App\Models\Task;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Pagination\Paginator;
 
 class ProjectController extends Controller
 {
@@ -29,15 +30,10 @@ class ProjectController extends Controller
         $type = $request->query('type', $user ? 'my_projects' : 'public');
 
         if ($type === 'my_projects' && $user) {
-            $projects = Project::where('product_owner_id', $user->id)
-                ->orWhereHas('developers', function ($query) use ($user) {
-                    $query->where('developer_id', $user->id);
-                })
-                ->get();
+            $projects = $user->allProjects();
         } elseif ($type === 'public') {
             $projects = Project::where('is_public', true)->get();
         } elseif ($type === 'favorites' && $user) {
-            // Assuming you have a favorites relationship
             $projects = $user->favorites()->get();
         } else {
             $projects = collect(); // Empty collection if no valid type
@@ -64,7 +60,7 @@ class ProjectController extends Controller
         $inProgressTasks = $sprint ? $sprint->tasks()->where('state', 'IN_PROGRESS')->get() : collect();
         $doneTasks = $sprint ? $sprint->tasks()->where('state', 'DONE')->get() : collect();
         $acceptedTasks = $sprint ? $sprint->tasks()->where('state', 'ACCEPTED')->get() : collect();
-        
+
         return view('web.sections.project.show', compact(
             'project',
             'sprint',
@@ -196,8 +192,8 @@ class ProjectController extends Controller
 
         // Check if the user is already in the project
         $isUserInProject = DeveloperProject::where('project_id', $project->id)
-            ->where('developer_id', $user->id)
-            ->exists() || $project->product_owner_id == $user->id;
+                ->where('developer_id', $user->id)
+                ->exists() || $project->product_owner_id == $user->id;
 
         if ($isUserInProject) {
             return redirect()->route('projects.show', $project->slug)->with('error', 'User is already in the project.');
@@ -210,10 +206,14 @@ class ProjectController extends Controller
             ]);
         }
 
-        // Attach the user to the project
-        $project->developers()->attach($user);
+        if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
+            DeveloperProject::create([
+                'developer_id' => $user->id,
+                'project_id' => $project->id
+            ]);
+        }
 
-        return redirect()->route('projects.team', $project->slug)->with('success', 'Member invited successfully.');
+        return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
     }
 
     public function backlog($slug)
@@ -228,14 +228,14 @@ class ProjectController extends Controller
     }
 
     public function searchTasks(Request $request)
-    {        
+    {
         $url = $request->url();
-        
+
         $slug = explode('/', $url)[4];
 
 
         $project = Project::where('slug', $slug)->firstOrFail();
-        
+
         $search = $request->input('query');
 
         //dd($request);
@@ -244,11 +244,11 @@ class ProjectController extends Controller
 
         if (isset($search) && $search !== '') {
             $tasks = Task::where('project_id',  $project->id)
-                    ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
-                    ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
-                    ->get();
+                ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
+                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
+                ->get();
         }
-   
+
 
         return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
     }
@@ -317,4 +317,26 @@ class ProjectController extends Controller
             return response()->json(['status' => 'success', 'message' => "Favorited!"]);
         }
     }
+
+    public function showProjectSettings($slug)
+    {
+        $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
+        $users = AuthenticatedUser::paginate(5);
+
+        // Get the IDs to exclude
+        $excludedIds = [$project->scrum_master_id, $project->product_owner_id];
+        foreach ($project->developers as $developer) {
+            $excludedIds[] = $developer->id;
+        }
+
+        $collection = $users->getCollection();
+        $filteredCollection = $collection->filter(function($users) use ($excludedIds) {
+            return !in_array($users->id, $excludedIds);
+        });
+        $users->setCollection($filteredCollection);
+
+        $developers = $project->developers()->paginate(2);
+        return view('web.sections.project.settings', compact('project', 'users', 'developers'));
+    }
+
 }
