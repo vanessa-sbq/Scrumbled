@@ -42,23 +42,15 @@
             </div>
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-            <!-- <a href="{{ route('admin.users.show', $user->username) }}" target="_blank" rel="noopener"
-                class="bg-primary text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                View Profile
-            </a> -->
-
-            <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="admin_user_view_profile">
+            <button class="admin-user-view-profile inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base" data-username="{{ $user->username }}">
                 View Profile
             </button>
-            <x-modal id="admin_view_user_modal" title="Admin View User profile" closeButtonText="Cancel" saveButtonText="Proceed" saveAction="adminUserViewProfile" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
-                <p>aDASDKASKD</p>
+            <!-- Modal definition -->
+            <x-modal id="admin_view_user_modal_{{ $user->username }}" title="User Profile" closeButtonText="Cancel" saveButtonText="Edit" closeAction="adminCloseModal" saveAction="adminUserViewProfile" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                @include('admin.components._user_modal', ['user' => $user])
             </x-modal>
         </td>
     </tr>
 @endforeach
 
-@push('scripts')
-    <script src=" {{ asset('js/modal.js') }} "></script>
-    <script src=" {{ asset('js/admin.js') }} "></script>
-    <script>console.log('JavaScript is working');</script>
-@endpush
+

@@ -54,5 +54,7 @@
 @once
     @push('scripts')
         <script src="{{ asset('js/search.js') }}"></script>
+        <script src=" {{ asset('js/modal.js') }} "></script>
+        <script src=" {{ asset('js/admin.js') }} "></script>
     @endpush
 @endonce
