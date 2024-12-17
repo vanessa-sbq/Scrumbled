@@ -2,16 +2,16 @@
 
 @section('content')
     <div class="container py-8">
-        <h1 class="text-4xl font-bold mb-8 text-center">Inbox</h1>
+        <h1 class="text-4xl font-bold mb-8">Inbox</h1>
         <div class="flex gap-3">
-            <div class="w-1/6 mb-60">
+            <div class="w-1/6 mb">
                 <nav class="space-y-2">
                 <a href="{{ route('inbox') }}" class="block py-2 px-4 rounded relative {{ request()->routeIs('inbox') ? 'bg-gray-200 font-semibold' : '' }} hover:before:content-[''] hover:before:absolute hover:before:top-0 hover:before:left-0 hover:before:h-full hover:before:w-1 hover:before:bg-blue-500 hover:before:rounded-sm">All Notifications</a>
                 <a href="{{ route('inbox.invitations') }}" class="block py-2 px-4 rounded relative {{ request()->routeIs('inbox.invitations') ? 'bg-gray-200 font-semibold' : '' }} hover:before:content-[''] hover:before:absolute hover:before:top-0 hover:before:left-0 hover:before:h-full hover:before:w-1 hover:before:bg-blue-500 hover:before:rounded-sm">Invitations</a>
                 </nav>
             </div>
-                @if ($notifications->isEmpty())
-                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center mb-8">
+                @if (empty($notificationInfos))
+                    <div class="w-2/3 flex flex-col items-center justify-center mb-8">
                         <x-lucide-mail-open class="text-gray-600" width="200" height="200"/>
                         <p class="text-gray-600 text-center mt-16"><strong><span class="text-2xl">Your inbox is empty!</span></strong><br><br>Time to plan, sprint, and conquer your next big goal..</p>
                     </div>
@@ -35,24 +35,21 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200" id="results-container">
-                                    @foreach ($notifications as $notification)
+                                    @foreach ($notificationInfos as $notificationInfo)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
-                                                @include('web.sections.inbox.components._notification', ['$notifications' => $notifications])
+                                                @include('web.sections.inbox.components._notification', ['$notificationInfo' => $notificationInfo])
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                     </div>
-                    
                 @endif
-                
             </div>
-            
         </div>
         <div id="inbox-pagination-container" class="mt-4">
-                        {{ $notifications->links() }}
-                </div>
+            {{ $notifications->links() }}
+        </div>
     </div>
 @endsection

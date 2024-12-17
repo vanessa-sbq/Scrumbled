@@ -81,6 +81,8 @@ Route::controller(ProjectController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
+    Route::get('/login/forgot-password', 'forgotPassword')->name('login.forgotPassword');
+    Route::post('/login/reset-password', 'resetPassword')->name('login.resetPassword');
     Route::get('/logout', 'logout')->name('logout')->middleware(['auth:web']);
 });
 
