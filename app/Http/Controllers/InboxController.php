@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AuthenticatedUser;
 use App\Models\Notification;
 use App\Models\DeveloperProject;
+use App\Models\Developer;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -117,7 +118,7 @@ class InboxController extends Controller
         return redirect()->back()->with('success', 'Invitation declined successfully.');
     }    
 
-    public function delete(Request $request) {
+    /* public function delete(Request $request) {
         $validated = $request->validate([
             'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected
         ]);
@@ -125,6 +126,33 @@ class InboxController extends Controller
         Notification::whereIn('id', $request->selected_notifications)->delete();
 
         return redirect()->back()->with('success', 'Notifications deleted successfully.');
+    } */
+    public function delete(Request $request) {
+        $validated = $request->validate([
+            'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected
+        ]);
+    
+        // Get the selected notifications
+        $notifications = Notification::whereIn('id', $request->selected_notifications)->get();
+    
+        // Loop through the notifications
+        foreach ($notifications as $notification) {
+            if ($notification->type == 'INVITE') {
+                $user = Auth::user();
+                $project_id = $notification->project_id;
+                $developer_id = $notification->receiver_id;
+                $id = $notification->id;
+                $deleted = DB::table('developer_project')
+                    ->where('developer_id', $developer_id)
+                    ->where('project_id', $project_id)
+                    ->delete();
+                Notification::where('id', $id)->delete(); // Delete the corresponding notification
+            } else {
+                $notification->delete();
+            }
+        }
+    
+        return redirect()->back()->with('success', 'Notifications processed successfully.');
     }
 
 }
