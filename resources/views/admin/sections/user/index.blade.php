@@ -43,6 +43,19 @@
                         @include('admin.components._user', ['users' => $users])  
                     </tbody>
                 </table>
+                <x-modal id="delete_user_modal" data-user-id="" title="Delete user" closeButtonText="Cancel" saveButtonText="Delete" saveAction="deleteUser" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                    <p class="font-bold">Read carefully:</p>
+                    <p>According to the business rules the user's projects will:</p>
+                    <div class="px-5 py-2">
+                        <ul class="list-disc">
+                        <li><p>Be deleted if the project is private.</p></li>
+                        <li><p>Be archived if the project is public.</p></li>
+                        </ul>
+                    </div>
+                    <p>Note that archived projects are read-only. They are projects that are frozen in time.</p>
+                    <p>If the project has no Product Owner to unarchive the project the team has to get in contact with an admin.</p>
+                    <p class="font-bold">Deleting a user without a reasonable cause may end your contract.</p>
+                </x-modal>
             </div>
         </div>
     </div>

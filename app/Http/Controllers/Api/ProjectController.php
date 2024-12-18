@@ -37,9 +37,11 @@ class ProjectController extends Controller
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        $user = auth()->user();
+        if (!Auth::guard("admin")->check()) {
+            $user = auth()->user();
+        }
 
-        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
+        if ((!Auth::guard("admin")->check()) && ($project->product_owner_id !== $user->id)) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -90,9 +92,11 @@ class ProjectController extends Controller
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        $user = auth()->user();
+        if (!Auth::guard("admin")->check()) {
+            $user = auth()->user();
+        }
 
-        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
+        if ((!Auth::guard("admin")->check()) && ($project->product_owner_id !== $user->id)) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 

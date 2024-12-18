@@ -23,13 +23,14 @@
             <!-- Sprint Backlog -->
             @include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
 
-            <div class="mb-6 mt-4 flex items-center">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
-                    <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
-                </label>
-            </div>
-
+            @if (Auth::user())
+                <div class="mb-6 mt-4 flex items-center">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
+                        <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
+                    </label>
+                </div>
+            @endif
             <!-- Other Cards (In Progress, Done, Accepted) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- In Progress -->
@@ -93,6 +94,8 @@
         <script src="{{ asset('js/drag-and-drop.js') }}"></script>
     @endpush
     @push('tags')
-        <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
+        @if (Auth::user())
+                <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
+       @endif
     @endpush
 @endonce

@@ -7,20 +7,23 @@ CREATE OR REPLACE FUNCTION create_po_change_notification() RETURNS TRIGGER AS $$
 DECLARE
     dev_id BIGINT;
 BEGIN
-    -- Loop through each developer of the project and send a notification
-    FOR dev_id IN
-        SELECT developer_id
-        FROM developer_project
-        WHERE project_id = NEW.id AND is_pending = FALSE
-    LOOP
-        INSERT INTO notification (receiver_id, type, project_id, old_product_owner_id, new_product_owner_id)
-        VALUES (dev_id, 'PO_CHANGE', NEW.id, OLD.product_owner_id, NEW.product_owner_id);
-    END LOOP;
+    -- Check if the new product owner ID is not null
+    IF NEW.product_owner_id IS NOT NULL THEN
+        -- Loop through each developer of the project and send a notification
+        FOR dev_id IN
+            SELECT developer_id
+            FROM developer_project
+            WHERE project_id = NEW.id AND is_pending = FALSE
+        LOOP
+            INSERT INTO notification (receiver_id, type, project_id, old_product_owner_id, new_product_owner_id)
+            VALUES (dev_id, 'PO_CHANGE', NEW.id, OLD.product_owner_id, NEW.product_owner_id);
+        END LOOP;
 
-    -- Send a notification to the new product owner 
-    IF NEW.product_owner_id IS DISTINCT FROM OLD.product_owner_id THEN
-        INSERT INTO notification (receiver_id, type, project_id, old_product_owner_id, new_product_owner_id)
-        VALUES (NEW.product_owner_id, 'PO_CHANGE', NEW.id, OLD.product_owner_id, NEW.product_owner_id);
+        -- Send a notification to the new product owner
+        IF NEW.product_owner_id IS DISTINCT FROM OLD.product_owner_id THEN
+            INSERT INTO notification (receiver_id, type, project_id, old_product_owner_id, new_product_owner_id)
+            VALUES (NEW.product_owner_id, 'PO_CHANGE', NEW.id, OLD.product_owner_id, NEW.product_owner_id);
+        END IF;
     END IF;
 
     RETURN NEW;

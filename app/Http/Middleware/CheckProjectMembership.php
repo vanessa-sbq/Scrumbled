@@ -26,6 +26,10 @@ class CheckProjectMembership
 
         $project = Project::where('slug', $slug)->firstOrFail(); // Find the project by slug
 
+        if ($project->is_public) {
+            return $next($request);
+        }
+
         $authId = Auth::user()->id;
 
         $pending_developers = DeveloperProject::where(['project_id' => $project->id, 'is_pending' => true])->get();
@@ -45,10 +49,6 @@ class CheckProjectMembership
             if ($developer && $developer['id'] === $authId) {
                 return $next($request);
             }
-        }
-
-        if ($project->is_public) {
-            return $next($request);
         }
 
         return redirect()->route('projects')->with('error', 'You do not have access to this project.');

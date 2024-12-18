@@ -26,6 +26,7 @@
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
             <div class="flex space-x-2">
+                <button id="{{$user->id}}" class="admin-user-delete-profile bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition">Delete</button>
                 <form method="POST"
                     action="{{ $user->status === 'BANNED' ? route('admin.users.unban', $user->id) : route('admin.users.ban', $user->id) }}">
                     @csrf

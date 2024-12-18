@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuthenticatedUser;
+use App\Models\Project;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -103,6 +107,49 @@ class UserController extends Controller
 
         // Redirect to the user's profile page with a success message
         return redirect()->route('admin.users.show', $user->username)->with('success', 'User created successfully');
+    }
+
+    public function deleteUser(Request $request) {
+        Log::info(json_encode($request));
+        if (!Auth::guard("admin")->check()) {
+            return response()->json(['status' => 'error', 'message' => 'You do not have permission to execute this.'], 403);
+        }
+
+        $uid = $request->input('userId');
+
+        $userToDelete = AuthenticatedUser::where('id', $uid)->firstOrFail();
+
+        $userProjectsWherePO = Project::where('product_owner_id', $uid)->get();
+
+         /*
+         Admin Delete:
+            Archive: Leave alone ()
+            Public: Gets archived
+            Private: Delete
+        */
+        $publicProjects = [];
+        $privateProjects = [];
+        foreach ($userProjectsWherePO as $userProjectWherePO) {
+            if ($userProjectWherePO['is_public']) {
+                $publicProjects[] = $userProjectWherePO;
+            } else {
+                $privateProjects[] = $userProjectWherePO;
+            }
+        }
+
+        foreach ($privateProjects as $privateProject) {
+            $privateProject->delete();
+        }
+
+        foreach ($publicProjects as $publicProject) {
+            $publicProject->update(['is_archived' => true]);
+        }
+
+        Log::info(json_encode($publicProjects));
+        Log::info(json_encode($privateProjects));
+
+        $userToDelete->delete();
+        return response()->json(['status' => 'success', 'message' => 'User has been successfully deleted.']);
     }
     
 }
