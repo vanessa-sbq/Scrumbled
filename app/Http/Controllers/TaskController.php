@@ -150,7 +150,7 @@ class TaskController extends Controller
         $task->effort = $request->effort;
         $task->save();
 
-        return redirect()->back();
+        return redirect()->route('task.show', $task)->with('success', 'Task updated successfully!');
     }
 
     public function show($id)
@@ -161,7 +161,8 @@ class TaskController extends Controller
 
         $project = $task->project;
 
-        return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project,]);
-    }
+        $comments = $task->comments()->orderBy('created_at', 'asc')->get();
 
+        return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project, 'comments' => $comments,]);
+    }
 }

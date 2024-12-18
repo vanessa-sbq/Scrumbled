@@ -24,6 +24,7 @@ class AuthenticatedUserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'bio' => fake()->text(),
             'picture' => null,
+            'is_public' => true,
             'status' => 'NEEDS_CONFIRMATION',
             'remember_token' => Str::random(10),
         ];

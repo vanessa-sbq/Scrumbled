@@ -19,6 +19,7 @@ class AuthenticatedUser extends Authenticatable
         'email',
         'bio',
         'picture',
+        'is_public',
         'status',
         'remember_token',
     ];
@@ -62,7 +63,7 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->picture ? asset('storage/' . $this->picture) : asset('images/users/default.png');
     }
-    
+
     /**
      * Get the notifications for the user.
      */
@@ -70,4 +71,38 @@ class AuthenticatedUser extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+    /**
+     * Check if the user profile is public.
+     *
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->is_public;
+    }
+
+    /**
+     * Check if the user is banned.
+     *
+     * @return bool
+     */
+    public function isBanned()
+    {
+        return $this->status === 'BANNED';
+    }
+
+    public function isInSameProject(AuthenticatedUser $otherUser)
+    {
+        $userProjects = $this->ownedProjects->pluck('id')
+            ->merge($this->developerProjects->pluck('id'))
+            ->unique();
+
+        $otherUserProjects = $otherUser->ownedProjects->pluck('id')
+            ->merge($otherUser->developerProjects->pluck('id'))
+            ->unique();
+
+        return $userProjects->intersect($otherUserProjects)->isNotEmpty();
+    }
+
 }

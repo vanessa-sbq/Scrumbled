@@ -38,6 +38,14 @@ class LoginController extends Controller
         ]);
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $user = Auth::user();
+            if($user->isBanned()) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'This account is currently banned.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
  
             return redirect()->intended('/projects');

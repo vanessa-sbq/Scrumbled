@@ -21,6 +21,7 @@ CREATE TABLE
         email VARCHAR(255) NOT NULL UNIQUE,
         bio TEXT,
         picture TEXT,
+        is_public BOOLEAN NOT NULL DEFAULT TRUE,
         status account_status NOT NULL DEFAULT 'NEEDS_CONFIRMATION',
         remember_token VARCHAR(255),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),

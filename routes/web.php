@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\InboxController;
@@ -150,4 +151,11 @@ Route::controller(TaskController::class)->group(function () {
     Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
     Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
     Route::get('/tasks/{id}', 'show')->name('task.show');
+});
+
+//Comments
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/tasks/{id}/comment', 'create')->name('comments.create');
+    Route::post('/comments/{id}', 'delete')->name('comments.delete');
+    Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');
 });
