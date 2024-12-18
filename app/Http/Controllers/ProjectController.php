@@ -174,7 +174,8 @@ class ProjectController extends Controller
         return view('web.sections.project.invite', compact('project', 'users'));
     }
 
-    /**
+    // TODO: Remove?
+    /** 
      * Invite a member to the project.
      *
      * @param \Illuminate\Http\Request $request

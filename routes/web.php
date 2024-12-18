@@ -4,7 +4,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\PusherController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -184,4 +186,9 @@ Route::controller(CommentController::class)->group(function () {
         Route::post('/comments/{id}', 'delete')->name('comments.delete');
         Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');
     });
+});
+
+// Pusher
+Route::controller(PusherController::class)->group(function () {
+    Route::get('/pusher', 'showPusherTest');
 });

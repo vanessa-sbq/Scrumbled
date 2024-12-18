@@ -1,5 +1,4 @@
 <!-- resources/views/web/sections/static/_navbar.blade.php -->
-
 <div id="collapseMenu"
     class='max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
     <button id="toggleClose"
@@ -56,8 +55,12 @@
             <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
                 <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-user-pen /></span> My Profile
             </x-dropdown-item>
-            <x-dropdown-item to="{{ route('inbox', Auth::user()->username) }}" class="flex items-center">
-                <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></span> Notifications
+            <x-dropdown-item to="{{ route('inbox', Auth::user()->username) }}" class="flex items-center relative">
+                <!-- Blue Dot -->
+                <div id="notification-dot" class="hidden absolute top-2 right-32 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>  
+                <!-- Bell Icon -->
+                <div class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></div> 
+                Notifications
             </x-dropdown-item>
             <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
                 <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-settings /></span> Settings
@@ -87,5 +90,34 @@
 @once
     @push('scripts')
         <script src="{{ asset('js/navbar.js') }}"></script>
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Pusher Setup
+                Pusher.logToConsole = true;
+
+                const pusher = new Pusher('03b9124b3ce439d7ba7d', {
+                    cluster: 'eu',
+                    encrypted: true
+                });
+
+                // Subscribe to the notifications channel
+                const channel = pusher.subscribe('user.{{ Auth::id() }}'); // Private channel for the authenticated user
+
+                // Listen for new notification events
+                channel.bind('new-notification', function(data) {
+                    console.log('New notification received:', data);
+                    showNotificationDot();
+                });
+
+                // Show the blue dot
+                function showNotificationDot() {
+                    const notificationDot = document.getElementById('notification-dot');
+                    if (notificationDot) {
+                        notificationDot.classList.remove('hidden');
+                    }
+                }
+            });
+        </script>
     @endpush
 @endonce
