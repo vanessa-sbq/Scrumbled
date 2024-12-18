@@ -114,6 +114,8 @@
                 function showNotificationDot() {
                     const notificationDot = document.getElementById('notification-dot');
                     if (notificationDot) {
+                        let audio = new Audio('{{ asset('storage/sounds/receive.mp3') }}');
+                        audio.play();
                         notificationDot.classList.remove('hidden');
                     }
                 }

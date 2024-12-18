@@ -15,6 +15,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
+use Mail;
+use App\Mail\InviteDetailsMail;
+
 
 class ProjectController extends Controller
 {
@@ -214,6 +217,7 @@ class ProjectController extends Controller
             ]);
         }
 
+        Mail::to($user->email)->send(new InviteDetailsMail($user));
         return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
     }
 
