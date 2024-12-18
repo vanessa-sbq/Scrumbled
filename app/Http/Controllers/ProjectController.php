@@ -209,7 +209,7 @@ class ProjectController extends Controller
         if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
             DeveloperProject::create([
                 'developer_id' => $user->id,
-                'project_id' => $project->id
+                'project_id' => $project->id,
             ]);
         }
 
@@ -233,12 +233,10 @@ class ProjectController extends Controller
 
         $slug = explode('/', $url)[4];
 
-
         $project = Project::where('slug', $slug)->firstOrFail();
 
         $search = $request->input('query');
 
-        //dd($request);
 
         $tasks = Task::where('project_id', $project->id)->get();
 

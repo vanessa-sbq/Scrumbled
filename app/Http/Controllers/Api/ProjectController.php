@@ -39,7 +39,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -92,7 +92,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -344,6 +344,34 @@ class ProjectController extends Controller
 
         $project->save();
         return response()->json(['status' => 'success', 'message' => 'You have been removed from the project.'], 200);
+    }
+
+    public function searchProjects(Request $request) {
+        $search = $request->input('search');
+        $statusVisibility = $request->input('statusVisibility');
+        $statusArchival = $request->input('statusArchival');
+
+        $query1 = Project::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            });
+
+        if ($statusVisibility !== "ANY") {
+            $query1 = $query1->where('is_public', $statusVisibility === "PUBLIC");
+        }
+
+        if ($statusArchival !== "ANY") {
+            $query1 = $query1->where('is_archived', $statusArchival === "ARCHIVED");
+        }
+
+        $projects = $query1->get();
+
+        $v = view('admin.components._project', ['projects' => $projects])->render();
+        return response()->json($v);
     }
 
 }

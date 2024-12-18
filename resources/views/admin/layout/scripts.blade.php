@@ -1,1 +1,1 @@
-<script src="{{ asset('js/search.js') }}"></script>
+<script src="{{ asset('js/app.js') }}" defer></script>
