@@ -13,9 +13,6 @@
                         Confirmation</option>
                     <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
                 </select>
-                <a href="{{ route('admin.users.showCreate') }}" class="basis-1/9 inline-block px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-primary border border-transparent rounded-md shadow-md hover:bg-primary-dark focus:outline-none focus:ring-primary focus:border-primary-dark">
-                    Create User
-                </a>
             </div>
             <div class="overflow-x-auto bg-white rounded-lg ">
                 <table class="min-w-full divide-y divide-gray-200">
