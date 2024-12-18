@@ -75,10 +75,12 @@
                 <!-- No Active Sprint Message -->
                 <div class="text-center py-16">
                     <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
-                    <a href="{{ route('sprint.create', $project->slug) }}"
-                        class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
-                        Create Sprint
-                    </a>
+                    @if (Auth::user())
+                        <a href="{{ route('sprint.create', $project->slug) }}"
+                            class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                            Create Sprint
+                        </a>
+                    @endif
                 </div>
         @endif
 

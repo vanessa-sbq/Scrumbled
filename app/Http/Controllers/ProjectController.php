@@ -101,6 +101,7 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_public' => 'required|boolean',
+            'is_archived' => 'boolean'
         ]);
 
         // Ensure the authenticated user is set
@@ -111,7 +112,7 @@ class ProjectController extends Controller
             $project->title = $request->title;
             $project->description = $request->description;
             $project->is_public = $request->is_public;
-            $project->is_archived = false; // Default to false
+            $project->is_archived = $request->input('is_archived') ?? false; // Default to false
             $project->product_owner_id = $user->id;
 
             // Generate a unique slug
@@ -333,7 +334,7 @@ class ProjectController extends Controller
         });
         $users->setCollection($filteredCollection);
 
-        $developers = $project->developers()->paginate(2);
+        $developers = $project->developers()->paginate(5);
         return view('web.sections.project.settings', compact('project', 'users', 'developers'));
     }
 

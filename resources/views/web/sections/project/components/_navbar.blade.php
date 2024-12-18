@@ -1,6 +1,6 @@
 <div class="flex justify-between items-center mb-6">
     <div class="flex items-center space-x-2 text-gray-600">
-        <a href="{{ route('projects') }}"
+        <a href="{{ Auth::guard("admin")->check() ? route('admin.projects') : route('projects') }}"
             class="hover:underline">{{ Auth::user() ? Auth::user()->username : 'projects' }}</a>
         <span>/</span>
         <a href="{{ route('projects.show', $project->slug) }}" class="font-bold hover:underline">{{ $project->slug }}</a>
@@ -18,7 +18,5 @@
             <a href="{{ route('projects.team.settings', $project->slug) }}"
        @endif
                class="{{ (request()->routeIs('projects.settings') || request()->routeIs('projects.team.settings')) ? 'text-primary font-bold' : 'text-blue-500 hover:underline' }}">Settings</a>
-        <!--<a href="{{ route('projects.team', $project->slug) }}"
-            class="{{ request()->routeIs('projects.invite') ? 'text-blue-500 font-bold' : 'text-primary hover:underline' }}">Team</a>-->
     </div>
 </div>

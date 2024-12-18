@@ -22,7 +22,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
             //return redirect()->route('projects.settings', $project->slug)->with('error', 'Cannot perform these changes. Are you the Product Owner?');
         }
@@ -59,12 +59,12 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
         if ($project->product_owner_id === $newOwner->id) {
-            return response()->json(['status' => 'error', 'message' => 'You are already the Product Owner.']);
+            return response()->json(['status' => 'error', 'message' => 'The chosen person is already the Product Owner.']);
         }
 
         if ($newOwner->id === $project->scrum_master_id) {
@@ -77,9 +77,9 @@ class ProjectController extends Controller
             }
         }
 
-        $oldPossiblePO = ProductOwner::where('user_id', $uid)->first();
+        $newPossiblePO = ProductOwner::where('user_id', $uid)->first();
 
-        if (!isset($oldPossiblePO)) {
+        if (!isset($newPossiblePO)) {
             ProductOwner::create(['user_id' => $uid]);
         }
 
@@ -92,9 +92,7 @@ class ProjectController extends Controller
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if (!Auth::guard("admin")->check()) {
-            $user = auth()->user();
-        }
+        $user = auth()->user();
 
         if ((!Auth::guard("admin")->check()) && ($project->product_owner_id !== $user->id)) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
@@ -140,7 +138,7 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Title cannot be empty.'], 400);
         }
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -160,7 +158,7 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Description cannot exceed 5000 characters.'], 400);
         }
 
-        if ($project->product_owner_id !== $user->id && $project->scrum_master_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id && $project->scrum_master_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Do you have permission to perform these changes ?'], 403);
         }
 
@@ -186,11 +184,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to set the Scrum Master.']);
         }
 
@@ -229,11 +229,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id && $authId != $project->scrum_master) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id && $authId != $project->scrum_master) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove the Srum Master.']);
         }
 
@@ -262,11 +264,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove a Developer.']);
         }
 
@@ -299,7 +303,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
-        return response()->json(['status' => 'success', 'message' => 'Developer was removed successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'Developer was removed successfully.', 'redirect' => route('projects.team.settings', $projectSlug)]);
     }
 
     public function selfRemoveFromProject(Request $request) {

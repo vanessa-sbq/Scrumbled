@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         // Other middleware
         'product.owner' => \App\Http\Middleware\ProductOwnerMiddleware::class,
         'project.membership' => \App\Http\Middleware\CheckProjectMembership::class,
-        'no.admin' => \App\Http\Middleware\PreventAdminInteraction::class
+        'no.admin' => \App\Http\Middleware\PreventAdminInteraction::class,
+        'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class
     ];
 }

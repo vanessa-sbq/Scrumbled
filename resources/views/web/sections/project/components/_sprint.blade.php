@@ -50,9 +50,12 @@
                             <form method="POST" action="{{ route('tasks.assign', $task->id) }}">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-                                <button type="submit"
-                                    class="bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
-                                    Assign
+                                <button
+                                        data-url="{{ route('tasks.updateState', $task->id) }}"
+                                        data-state="IN_PROGRESS"
+                                        class="@if(Auth::guard('admin')->check()) cursor-not-allowed @endif state-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+                                        @if(Auth::guard('admin')->check()) disabled @endif>
+                                    Start
                                 </button>
                             </form>
                         @elseif ($task->assigned_to === Auth::id())
