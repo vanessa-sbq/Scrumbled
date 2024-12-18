@@ -118,7 +118,7 @@ VALUES
     (3, 1, FALSE),
     (3, 2, FALSE),
     (4, 2, FALSE),
-    (4, 1, TRUE);
+    (4, 1, FALSE);
 
 -- Populate sprint table
 INSERT INTO
@@ -213,10 +213,10 @@ VALUES
 
 -- Populate the notification table with an invitation notification
 -- User Simão (ID 4) is invited to project ID 1 (Scrumbled Project)
-INSERT INTO
-    notification (receiver_id, type, project_id)
-VALUES
-    (4, 'INVITE', 1);
+--INSERT INTO
+--    notification (receiver_id, type, project_id)
+--VALUES
+--    (4, 'INVITE', 1);
 
 -- Populate the notification table with an accepted invitation notification
 -- User João (ID 3) accepted an invitation to project ID 1 (Scrumbled Project)

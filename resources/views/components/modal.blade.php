@@ -25,7 +25,7 @@
 
             @if ($saveButtonText !== "remove_button")
                 <button onclick="{{ $saveAction }}('{{ $attributes->get('id') }}')" type="button"
-                        class="px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide {{ $activeButtonColor }} hover:{{ $hoverButtonColor }} active:{{ $activeButtonColor }}">{{ $saveButtonText }}</button>
+                        class="confirmButton px-4 py-2 rounded-lg text-white text-sm border-none outline-none tracking-wide {{ $activeButtonColor }} hover:{{ $hoverButtonColor }} active:{{ $activeButtonColor }}">{{ $saveButtonText }}</button>
             @endif
         </div>
     </div>

@@ -170,9 +170,12 @@ EXECUTE FUNCTION create_pending_notification();
 -- Create a function to create a notification when a developer is assigned to a task.
 CREATE OR REPLACE FUNCTION create_assign_notification() RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO notification (receiver_id, type, task_id)
-    VALUES (NEW.assigned_to, 'ASSIGN', NEW.id);
-    RETURN NEW;
+    -- Only insert a notification if assigned_to is not NULL
+    IF NEW.assigned_to IS NOT NULL THEN
+INSERT INTO notification (receiver_id, type, task_id)
+VALUES (NEW.assigned_to, 'ASSIGN', NEW.id);
+END IF;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
