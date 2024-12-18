@@ -26,7 +26,7 @@ use App\Http\Controllers\TaskController;
 |
 */
 
-Route::middleware(['auth', 'no.admin'])->group(function () {
+Route::middleware(['no.admin'])->group(function () {
     // Home
     Route::view("/", 'web.sections.static.home');
 
@@ -58,7 +58,7 @@ Route::prefix('admin')->group(function () {
 
 // Projects
 Route::controller(ProjectController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/projects', 'list')->name('projects');
         Route::get('/projects/new', 'create')->name('projects.create');
         Route::post('/projects/new', 'store')->name('projects.store');
@@ -89,7 +89,7 @@ Route::controller(ProjectController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/login/forgot-password', 'forgotPassword')->name('login.forgotPassword');
         Route::post('/login/reset-password', 'resetPassword')->name('login.resetPassword');
     });
@@ -97,7 +97,7 @@ Route::controller(LoginController::class)->group(function () {
 });
 
 Route::controller(RegisterController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/register', 'showRegistrationForm')->name('register');
         Route::post('/register', 'register');
     });
@@ -105,7 +105,7 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Profile
 Route::controller(ProfileController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/profiles', 'index')->name('profiles');
         Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
         Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
@@ -115,7 +115,7 @@ Route::controller(ProfileController::class)->group(function () {
 
 // Inbox
 Route::controller(InboxController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/inbox', 'index')->name('inbox');
         Route::get('/inbox/invitations', 'filterByInvitations')->name('inbox.invitations');
         Route::post('/inbox/acceptInvitation', 'acceptInvitation')->name('inbox.acceptInvitation');
@@ -130,7 +130,7 @@ Route::controller(\App\Http\Controllers\Api\UserController::class)->group(functi
 });
 
 Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::post('/api/projects/changeVisibility', 'changeVisibility');
         Route::post('/api/projects/transferProject', 'transferProject');
         Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
@@ -153,7 +153,7 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
 
 //Sprints
 Route::controller(SprintController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
         Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
         Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
@@ -166,7 +166,7 @@ Route::controller(SprintController::class)->group(function () {
 
 //Tasks
 Route::controller(TaskController::class)->group(function () {
-    Route::middleware(['auth', 'no.admin'])->group(function () {
+    Route::middleware(['no.admin'])->group(function () {
         Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
         Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
         Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
