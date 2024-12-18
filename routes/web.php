@@ -142,6 +142,7 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     Route::post('/api/projects/deleteProject', 'deleteProject');
     Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
     Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
+    Route::get('/api/projects/search', 'searchProjects');
 });
 
 // TODO: Remove

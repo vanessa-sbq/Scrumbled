@@ -346,4 +346,32 @@ class ProjectController extends Controller
         return response()->json(['status' => 'success', 'message' => 'You have been removed from the project.'], 200);
     }
 
+    public function searchProjects(Request $request) {
+        $search = $request->input('search');
+        $statusVisibility = $request->input('statusVisibility');
+        $statusArchival = $request->input('statusArchival');
+
+        $query1 = Project::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            });
+
+        if ($statusVisibility !== "ANY") {
+            $query1 = $query1->where('is_public', $statusVisibility === "PUBLIC");
+        }
+
+        if ($statusArchival !== "ANY") {
+            $query1 = $query1->where('is_archived', $statusArchival === "ARCHIVED");
+        }
+
+        $projects = $query1->get();
+
+        $v = view('admin.components._project', ['projects' => $projects])->render();
+        return response()->json($v);
+    }
+
 }

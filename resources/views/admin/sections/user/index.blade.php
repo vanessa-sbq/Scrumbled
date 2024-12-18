@@ -6,7 +6,7 @@
             <div class="flex gap-4 items-center mb-4">
                 <input type="text" id="search-input" class="basis-7/9 flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="Search users...">
                 <select id="filter-input" name="status" class="basis-1/9 border py-2 rounded">
-                    <option value="ANY">Any Status</option>
+                    <option value="ANY">Any Visibility</option>
                     <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
                     <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>
                         Needs
