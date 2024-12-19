@@ -86,82 +86,35 @@
             </div>
         </div>
 
-        <!-- Comment Section -->
-        <section class="mt-8">
+        <section class="mt-8" data-create-comment-url="{{ route('comments.create', $task->id) }}">
             <h2 class="text-xl font-bold text-gray-800 mb-4">Comments</h2>
 
             <!-- Display Comments -->
             <div class="space-y-4">
                 @forelse ($comments as $comment)
-                    <div class="bg-gray-50 p-4 rounded-lg shadow text-sm text-gray-700" id="comment-{{ $comment->id }}">
-                        <div class="flex justify-between">
-                            <div>
-                                <!-- Display User -->
-                                <a href="{{ route('show.profile', $comment->user->username) }}" class="flex items-center space-x-2 group">
-                                    <img src="{{ asset($comment->user->picture ? 'storage/' . $comment->user->picture : 'images/users/default.png') }}"
-                                         alt="{{ $comment->user->username }}" class="w-6 h-6 rounded-full">
-                                    <span class="group-hover:underline group-hover:text-primary transition-colors">
-                        {{ $comment->user->username }}
-                    </span>
-                                </a>
-                            </div>
-
-                            <!-- Edit Button -->
-                            @if (Auth::user()->id === $comment->user->id)
-                                <button class="text-blue-500 hover:text-blue-700" onclick="editComment({{ $comment->id }})">
-                                    ✏️ Edit
-                                </button>
-                            @endif
-
-                            <!-- Delete Button -->
-                            @if (Auth::user()->id === $comment->user->id)
-                                <form method="POST" action="{{ route('comments.delete', $comment->id) }}" onsubmit="return confirm('Are you sure you want to delete this comment?');">
-                                    @csrf
-                                    <button type="submit" class="text-red-500 hover:text-red-700">
-                                        🗑️ Delete
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
-
-                        <div id="comment-text-{{ $comment->id }}" class="mb-2">{{ $comment->description }}</div>
-
-                        <!-- Editable Textarea (Hidden by default) -->
-                        <form id="edit-form-{{ $comment->id }}" method="POST" action="{{ route('comments.edit', $comment->id) }}" class="hidden">
-                            @csrf
-                            <textarea name="description" id="description-{{ $comment->id }}" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200" required>{{ $comment->description }}</textarea>
-                            <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Save Changes</button>
-                        </form>
-
-                        <div class="text-right text-xs text-gray-500">
-                            <span>Posted on {{ $comment->created_at->format('F j, Y, g:i a') }}</span>
-                        </div>
-                    </div>
+                    @include('web.sections.task.components._comments', ['user' => $comment->user, 'comment' => $comment])
                 @empty
                     <p class="text-gray-500">No comments yet.</p>
                 @endforelse
-
             </div>
 
-
-            <!-- Trigger Button -->
+            <!-- Add Comment Section -->
             <div class="mt-6">
                 <button id="addComment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                     Add Comment
                 </button>
             </div>
 
-            <!-- Hidden Comment Form -->
             <div id="commentForm" class="mt-4 hidden">
                 <div class="bg-gray-50 p-4 rounded-lg shadow">
-                    <form method="POST" action="{{ route('comments.create', $task->id) }}">
+                    <form id="add-comment-form">
                         @csrf
                         <div class="mb-4">
-                    <textarea name="description" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200"
+                    <textarea name="description" id="new-comment-description" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200"
                               placeholder="Write your comment here..." required></textarea>
                         </div>
                         <div class="flex justify-end">
-                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                            <button type="button" id="submit-comment" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                                 Confirm
                             </button>
                         </div>
@@ -174,7 +127,8 @@
 
 @once
     @push('scripts')
-        <script src=" {{ asset('js/comments.js') }} "></script>
+
+        <script  src=" {{ asset('js/comments.js') }} "></script>
     @endpush
 @endonce
 
