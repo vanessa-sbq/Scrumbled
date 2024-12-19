@@ -16,9 +16,7 @@ class CommentReadOnlyIfArchived
     public function handle(Request $request, Closure $next): Response
     {
         $comment_id = $request->input('id');
-
-        dd($comment_id);
-
+        // TODO: Finish this when comments are using ajax.
         return $next($request);
     }
 }

@@ -142,7 +142,7 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     Route::middleware(['auth.admin_or_user'])->group(function () {
         Route::post('/api/projects/changeVisibility', 'changeVisibility');
         Route::post('/api/projects/transferProject', 'transferProject');
-        Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
+        Route::get('/api/profiles/transferProject/search', 'transferProjectSearch');
 
         Route::middleware(['not.archived.api'])->group(function () {
             Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
@@ -170,37 +170,51 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
 
 //Sprints
 Route::controller(SprintController::class)->group(function () {
+    Route::middleware(['project.membership'])->group(function () {
         Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
-        Route::middleware(['not.archived', 'auth.admin_or_user'])->group(function () {
-            Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
-            Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
-        });
-            Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');////////////////////////////
-            Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');////////////////////////x
-            Route::post('sprints/{id}/close', 'close')->name('sprint.close');//////////////////////////
+    });
+    Route::middleware(['not.archived', 'auth.admin_or_user'])->group(function () {
+        Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
+        Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
+    });
+    Route::middleware(['sprint.can.access', 'sprint.not.archived'])->group(function () {
+        Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
+        Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
+        Route::post('sprints/{id}/close', 'close')->name('sprint.close');
+    });
+    Route::middleware(['sprint.can.access'])->group(function () {
         Route::get('/sprints/{id}', 'show')->name('sprint.show');
+    });
 });
 
 //Tasks
 Route::controller(TaskController::class)->group(function () {
     Route::middleware(['auth.admin_or_user'])->group(function () {
-        Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');//////////////////////////x
-        Route::middleware(['not.archived'])->group(function () {
+        Route::middleware(['task.not.archived.api', 'task.can.access.api'])->group(function () {
+            Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
+        });
+        Route::middleware(['project.membership', 'not.archived'])->group(function () {
             Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
             Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
             Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
             Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
         });
-        Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');//////////////////////////////////
+        Route::middleware(['task.not.archived.api', 'task.can.access.api'])->group(function () {
+            Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
+        });
     });
-    Route::get('/tasks/{id}', 'show')->name('task.show');
+    Route::middleware(['task.can.access'])->group(function () {
+        Route::get('/tasks/{id}', 'show')->name('task.show');
+    });
 });
 
 //Comments
 Route::controller(CommentController::class)->group(function () {
     Route::middleware(['auth.admin_or_user'])->group(function () {
-        Route::post('/tasks/{id}/comment', 'create')->name('comments.create');////////////////////////////
-        Route::post('/comments/{id}', 'delete')->name('comments.delete');//////////////////////////////
-        Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');////////////////////////////////
+        Route::middleware(['task.not.archived', 'task.can.access'])->group(function () {
+            Route::post('/tasks/{id}/comment', 'create')->name('comments.create');
+        });
+        Route::post('/comments/{id}', 'delete')->name('comments.delete');// FIXME: Check if comment can be deleted
+        Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');// FIXME: Check if comment can be edited
     });
 });
