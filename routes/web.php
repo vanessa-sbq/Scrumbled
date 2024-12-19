@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\ProfileController as ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Events\NewNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -191,4 +192,8 @@ Route::controller(CommentController::class)->group(function () {
 // Pusher
 Route::controller(PusherController::class)->group(function () {
     Route::get('/pusher', 'showPusherTest');
+});
+Route::post('/trigger-event', function () {
+    $user = Auth::user();
+    event(new NewNotification($user->id, 'Invitation accepted successfully!'));
 });

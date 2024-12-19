@@ -85,9 +85,12 @@
     <button id="toggleOpen" class='lg:hidden'>
         <x-lucide-menu class="w-8 h-8" />
     </button>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50"></div>
 </div>
-<!-- Toast container -->
-<div id="toast-container" class="fixed top-4 right-4 flex flex-col items-end z-50"></div>
+
+
 
 @once
     @push('scripts')
@@ -109,9 +112,8 @@
 
                 // Listen for new notification events
                 channel.bind('new-notification', function(data) {
-                    console.log('New notification received:', data);
                     showNotificationDot();
-                    showToast(JSON.stringify(data));
+                    showToast(data.message);
                 });
 
                 // Show the blue dot
@@ -125,5 +127,12 @@
                 }
             });
         </script>
+
+        @if(session('fire_event'))
+        <script>
+            // Use JavaScript or AJAX to trigger a backend route that fires the event
+            fetch('/trigger-event', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+        </script>
+        @endif
     @endpush
 @endonce

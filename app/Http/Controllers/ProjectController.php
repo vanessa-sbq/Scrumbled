@@ -220,7 +220,7 @@ class ProjectController extends Controller
         }
 
         Mail::to($user->email)->send(new InviteDetailsMail($user));
-        event(new NewNotification($user->id));
+        event(new NewNotification($user->id, 'You received an invitation!'));
         return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
     }
 

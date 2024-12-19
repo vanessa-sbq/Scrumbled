@@ -17,10 +17,10 @@ class NewNotification implements ShouldBroadcast
     public $userId;
     public $message;
 
-    public function __construct($userId)
+    public function __construct($userId, $message)
     {
         $this->userId = $userId;
-        $this->message = "NEW NOTIFICATION";
+        $this->message = $message;
     }
 
     public function broadcastOn()

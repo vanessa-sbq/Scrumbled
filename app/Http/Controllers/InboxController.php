@@ -12,6 +12,7 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Events\NewNotification;
 
 class InboxController extends Controller
 {
@@ -97,6 +98,10 @@ class InboxController extends Controller
         if (!$updated) {
             return redirect()->back()->with('error', 'Failed to accept the invitation.');
         }
+
+        session()->flash('fire_event', true);
+        $user = Auth::user();
+
         return redirect()->back()->with('success', 'Invitation accepted successfully.');
     }
     
