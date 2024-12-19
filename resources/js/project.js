@@ -72,20 +72,6 @@ function deleteProject(id) {
         });
     closeModal(id);
 }
-function executeOption(event) {
-    switch(event.srcElement.id) {
-        case 'change_visibility':
-            break;
-        case 'archive_project':
-            console.log("REMOVE_ME: archive_project");
-            break;
-        case 'delete_project':
-            console.log("REMOVE_ME: delete_project");
-            break;
-        default:
-            break;
-    }
-}
 
 // Change Project Title
 document.getElementById('changeTitleBtn').addEventListener('click', function(event) {

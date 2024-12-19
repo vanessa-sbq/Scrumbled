@@ -96,8 +96,8 @@
         <script src="{{ asset('js/drag-and-drop.js') }}"></script>
     @endpush
     @push('tags')
-        @if (Auth::user())
-                <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
+        @if (Auth::user() || Auth::guard("admin")->check())
+                <meta name="can-manage-project" content="{{ Auth::guard("admin")->check() || Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
        @endif
     @endpush
 @endonce

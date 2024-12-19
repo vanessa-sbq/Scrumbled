@@ -28,7 +28,7 @@ use App\Http\Controllers\TaskController;
 
 Route::middleware(['no.admin'])->group(function () {
     // Home
-    Route::view("/", 'web.sections.static.home');
+    Route::view("/", 'web.sections.static.home')->name('homePage');
 
     // Static routes
     Route::view('/about', 'web.sections.static.about')->name('about');
@@ -102,7 +102,7 @@ Route::controller(LoginController::class)->group(function () {
 });
 
 Route::controller(RegisterController::class)->group(function () {
-    Route::middleware(['no.admin'])->group(function () {
+    Route::middleware(['guest', 'no.admin'])->group(function () {
         Route::get('/register', 'showRegistrationForm')->name('register');
         Route::post('/register', 'register');
     });
