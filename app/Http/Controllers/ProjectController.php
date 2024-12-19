@@ -321,7 +321,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
 
-        $developers = $project->developers()->paginate(1);
+        $developers = $project->developers()->paginate(3);
         return view('web.sections.project.settings', ['project' => $project, 'users' => $developers, 'developers' => $developers]);
     }
 
