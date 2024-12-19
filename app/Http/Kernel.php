@@ -71,6 +71,8 @@ class Kernel extends HttpKernel
         'product.owner' => \App\Http\Middleware\ProductOwnerMiddleware::class,
         'project.membership' => \App\Http\Middleware\CheckProjectMembership::class,
         'no.admin' => \App\Http\Middleware\PreventAdminInteraction::class,
-        'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class
+        'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class,
+        'not.archived.api' => \App\Http\Middleware\ProjectReadOnlyIfArchivedApi::class,
+        'not.archived' => \App\Http\Middleware\ProjectReadOnlyIfArchived::class,
     ];
 }

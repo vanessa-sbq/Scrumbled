@@ -83,7 +83,7 @@ class ProjectController extends Controller
         }
 
         if ($newOwner->id === $project->scrum_master_id && (!isset($acceptLossOfSM))) {
-            return response()->json(['status' => 'waiting_for_confirmation_sm', 'message' => 'The user ' . $newOwner->username . ' is a scrum master and cannot be both Product Owner and Scrum master at the same time. Continuing will remove ' . $user->username . ' from Scrum Master.']);
+            return response()->json(['status' => 'waiting_for_confirmation_sm', 'message' => 'The user ' . $newOwner->username . ' is a scrum master and cannot be both Product Owner and Scrum master at the same time. Continuing will remove ' . $newOwner->username . ' from Scrum Master.']);
         }
 
         if (isset($acceptLossOfSM) && !$acceptLossOfSM) {

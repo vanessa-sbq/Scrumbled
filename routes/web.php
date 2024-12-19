@@ -79,10 +79,12 @@ Route::controller(ProjectController::class)->group(function () {
             Route::get('/projects/{slug}/settings/team', 'showProjectSettings')->name('projects.team.settings');
             Route::get('/projects/{slug}/tasks', 'showTasks')->name('projects.tasks');
             Route::get('/projects/{slug}/tasks/search', 'searchTasks')->name('projects.tasks.search');
-            Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
+            Route::middleware(['not.archived', 'product.owner'])->group(function () {
+                Route::post('projects/{slug}/leave', 'leave')->name('projects.leave');
+            });
         });
 
-        Route::middleware(['product.owner'])->group(function () {
+        Route::middleware(['not.archived', 'product.owner'])->group(function () {
             Route::get('/projects/{slug}/invite', 'showInviteForm')->name('projects.inviteForm');
             Route::post('/projects/{slug}/invite', 'inviteMember')->name('projects.invite.submit');
             Route::post('/projects/{slug}/remove/{username}', 'remove')->name('projects.remove');
@@ -141,14 +143,22 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
         Route::post('/api/projects/changeVisibility', 'changeVisibility');
         Route::post('/api/projects/transferProject', 'transferProject');
         Route::get('/api/profiles/transferProject/search', 'transferProjectSearch'); // FIXME: Change this
-        Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
-        Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster');
-        Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper');
-        Route::post('/api/projects/leaveProject', 'selfRemoveFromProject');
+
+        Route::middleware(['not.archived.api'])->group(function () {
+            Route::post('/api/projects/team/setScrumMaster', 'setScrumMaster');
+            Route::post('/api/projects/team/removeScrumMaster', 'removeScrumMaster');
+            Route::post('/api/projects/team/removeDeveloper', 'removeDeveloper');
+            Route::post('/api/projects/leaveProject', 'selfRemoveFromProject');
+        });
+
         Route::post('/api/projects/archiveProject', 'archiveProject');
         Route::post('/api/projects/deleteProject', 'deleteProject');
-        Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
-        Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
+
+        Route::middleware(['not.archived.api'])->group(function () {
+            Route::post('/api/projects/changeProjectTitle', 'changeProjectTitle');
+            Route::post('/api/projects/changeProjectDescription', 'changeProjectDescription');
+        });
+
         Route::get('/api/projects/search', 'searchProjects');
     });
 });
@@ -161,25 +171,27 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
 //Sprints
 Route::controller(SprintController::class)->group(function () {
         Route::get('/projects/{slug}/sprints', 'list')->name('sprints');
-        Route::middleware(['auth.admin_or_user'])->group(function () {
+        Route::middleware(['not.archived', 'auth.admin_or_user'])->group(function () {
             Route::get('/projects/{slug}/sprints/new', 'create')->name('sprint.create');
             Route::post('/projects/{slug}/sprints/new', 'store')->name('sprint.store');
-            Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');
-            Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');
-            Route::post('sprints/{id}/close', 'close')->name('sprint.close');
         });
+            Route::get('/sprints/{id}/edit', 'edit')->name('sprint.edit');////////////////////////////
+            Route::post('/sprints/{id}/edit', 'update')->name('sprint.update');////////////////////////x
+            Route::post('sprints/{id}/close', 'close')->name('sprint.close');//////////////////////////
         Route::get('/sprints/{id}', 'show')->name('sprint.show');
 });
 
 //Tasks
 Route::controller(TaskController::class)->group(function () {
     Route::middleware(['auth.admin_or_user'])->group(function () {
-        Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
-        Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
-        Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
-        Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
-        Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
-        Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');
+        Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');//////////////////////////x
+        Route::middleware(['not.archived'])->group(function () {
+            Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
+            Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
+            Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
+            Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
+        });
+        Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');//////////////////////////////////
     });
     Route::get('/tasks/{id}', 'show')->name('task.show');
 });
@@ -187,8 +199,8 @@ Route::controller(TaskController::class)->group(function () {
 //Comments
 Route::controller(CommentController::class)->group(function () {
     Route::middleware(['auth.admin_or_user'])->group(function () {
-        Route::post('/tasks/{id}/comment', 'create')->name('comments.create');
-        Route::post('/comments/{id}', 'delete')->name('comments.delete');
-        Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');
+        Route::post('/tasks/{id}/comment', 'create')->name('comments.create');////////////////////////////
+        Route::post('/comments/{id}', 'delete')->name('comments.delete');//////////////////////////////
+        Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');////////////////////////////////
     });
 });
