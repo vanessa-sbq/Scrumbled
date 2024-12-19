@@ -193,7 +193,12 @@ Route::controller(CommentController::class)->group(function () {
 Route::controller(PusherController::class)->group(function () {
     Route::get('/pusher', 'showPusherTest');
 });
-Route::post('/trigger-event', function () {
+Route::post('/trigger-event', function (\Illuminate\Http\Request $request) {
     $user = Auth::user();
-    event(new NewNotification($user->id, 'Invitation accepted successfully!'));
-});
+    if (!$user) {
+        return response()->json(['status' => 'error', 'message' => 'User not authenticated'], 401);
+    }
+    $message = $request->input('message', 'Default notification message');
+    event(new NewNotification($user->id, $message));
+    return response()->json(['status' => 'success', 'message' => 'Notification triggered successfully']);
+})->middleware('auth');

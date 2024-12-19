@@ -99,10 +99,10 @@ class InboxController extends Controller
             return redirect()->back()->with('error', 'Failed to accept the invitation.');
         }
 
-        session()->flash('fire_event', true);
+        session()->flash('invite_accept_event', true);
         $user = Auth::user();
 
-        return redirect()->back()->with('success', 'Invitation accepted successfully.');
+        return redirect()->route('inbox')->with('success', 'Invitation accepted successfully.');
     }
     
     public function declineInvitation(Request $request)
@@ -123,15 +123,6 @@ class InboxController extends Controller
         return redirect()->back()->with('success', 'Invitation declined successfully.');
     }    
 
-    /* public function delete(Request $request) {
-        $validated = $request->validate([
-            'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected
-        ]);
-
-        Notification::whereIn('id', $request->selected_notifications)->delete();
-
-        return redirect()->back()->with('success', 'Notifications deleted successfully.');
-    } */
     public function delete(Request $request) {
         $validated = $request->validate([
             'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected

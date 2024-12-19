@@ -128,10 +128,18 @@
             });
         </script>
 
-        @if(session('fire_event'))
+        @if(session('invite_accept_event'))
         <script>
-            // Use JavaScript or AJAX to trigger a backend route that fires the event
-            fetch('/trigger-event', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+            fetch('/trigger-event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    message: 'Invitation accepted successfully!'
+                })
+            });
         </script>
         @endif
     @endpush
