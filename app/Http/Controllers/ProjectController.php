@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
 use Mail;
 use App\Mail\InviteDetailsMail;
+use App\Events\InviteCreated;
+use App\Events\NewNotification;
 
 
 class ProjectController extends Controller
@@ -218,6 +220,7 @@ class ProjectController extends Controller
         }
 
         Mail::to($user->email)->send(new InviteDetailsMail($user));
+        event(new NewNotification($user->id));
         return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
     }
 

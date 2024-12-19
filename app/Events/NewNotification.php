@@ -10,9 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewNotification
+class NewNotification implements ShouldBroadcast
 {
-    use InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $userId;
     public $message;
@@ -20,7 +20,7 @@ class NewNotification
     public function __construct($userId)
     {
         $this->userId = $userId;
-        $this->message = $message;
+        $this->message = "NEW NOTIFICATION";
     }
 
     public function broadcastOn()
@@ -28,7 +28,7 @@ class NewNotification
         return 'user.' . $this->userId;
     }
 
-    public function broadcastWith()
+    public function broadcastAs()
     {
         return 'new-notification';
     }

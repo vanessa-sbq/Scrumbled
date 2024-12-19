@@ -86,11 +86,14 @@
         <x-lucide-menu class="w-8 h-8" />
     </button>
 </div>
+<!-- Toast container -->
+<div id="toast-container" class="fixed top-4 right-4 flex flex-col items-end z-50"></div>
 
 @once
     @push('scripts')
         <script src="{{ asset('js/navbar.js') }}"></script>
-        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
+        <script src="{{ asset('js/toast.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 // Pusher Setup
@@ -108,13 +111,14 @@
                 channel.bind('new-notification', function(data) {
                     console.log('New notification received:', data);
                     showNotificationDot();
+                    showToast(JSON.stringify(data));
                 });
 
                 // Show the blue dot
                 function showNotificationDot() {
                     const notificationDot = document.getElementById('notification-dot');
                     if (notificationDot) {
-                        let audio = new Audio('{{ asset('storage/sounds/receive.mp3') }}');
+                        let audio = new Audio('{{ asset("storage/sounds/receive.mp3") }}');
                         audio.play();
                         notificationDot.classList.remove('hidden');
                     }
