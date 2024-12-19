@@ -136,7 +136,9 @@ class SprintController extends Controller {
             'end_date' => $validated['end_date'] ?? $sprint->end_date,
         ]);
 
-        return redirect()->route('sprint.show', $sprint->id)->with('success', 'Sprint updated successfully.');
+        $project = $sprint->project;
+
+        return redirect()->route('projects.show', $project->slug)->with('success', 'Sprint updated successfully.');
     }
 
     public function close($id)
