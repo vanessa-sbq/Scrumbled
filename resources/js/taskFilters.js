@@ -2,8 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const taskResultsContainer = document.getElementById("task-results-container");
     const stateInput = document.getElementById("state-input");
     const valueInput = document.getElementById("value-input");
+    const effortInput = document.getElementById("effort-input");
     const searchInput = document.getElementById("task-search-input");
     const taskSearchForm = document.getElementById("task-search");
+
+    // Element for task counter
+    const taskCounterElement = document.querySelector("th.text-lg.font-bold.text-primary"); // Adjust the selector if needed
 
     // Function to fetch filtered tasks
     function fetchFilteredTasks(event) {
@@ -13,9 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const query = searchInput.value.trim();
         const state = stateInput.value;
         const value = valueInput.value;
+        const effort = effortInput.value;
 
         // Append existing filters to the search URL
-        const params = new URLSearchParams({ query, state, value });
+        const params = new URLSearchParams({ query, state, value, effort });
         const url = `${taskSearchForm.action}?${params.toString()}`;
 
         // Update the URL without reloading the page
@@ -37,6 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
             .then((data) => {
                 if (data.html) {
                     taskResultsContainer.innerHTML = data.html;
+
+                    // Update task counter
+                    if (data.count !== undefined && taskCounterElement) {
+                        taskCounterElement.textContent = `To Do (${data.count})`;
+                    }
                 } else {
                     taskResultsContainer.innerHTML = `
                         <tr>
@@ -45,6 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             </td>
                         </tr>
                     `;
+                    if (taskCounterElement) {
+                        taskCounterElement.textContent = "To Do (0)";
+                    }
                 }
             })
             .catch((error) => {
@@ -56,11 +69,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         </td>
                     </tr>
                 `;
+                if (taskCounterElement) {
+                    taskCounterElement.textContent = "To Do (Error)";
+                }
             });
     }
 
     // Attach event listeners for filters and search
-    [stateInput, valueInput].forEach((input) =>
+    [stateInput, valueInput, effortInput].forEach((input) =>
         input.addEventListener("change", fetchFilteredTasks)
     );
     taskSearchForm.addEventListener("submit", fetchFilteredTasks);

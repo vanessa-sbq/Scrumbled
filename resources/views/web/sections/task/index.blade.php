@@ -22,7 +22,7 @@
 
                 <!-- Filters -->
                 <div class="flex gap-2 mb-2">
-                    <select id="state-input" name="state" class="w-1/4 border py-1.5 px-2 rounded text-sm">
+                    <select id="state-input" name="state" class="w-1/5 border py-1.5 px-2 rounded text-sm">
                         <option value="">All States</option>
                         <option value="BACKLOG">Backlog</option>
                         <option value="SPRINT_BACKLOG">Sprint Backlog</option>
@@ -30,12 +30,21 @@
                         <option value="DONE">Done</option>
                         <option value="ACCEPTED">Accepted</option>
                     </select>
-                    <select id="value-input" name="value" class="w-1/4 border py-1.5 px-2 rounded text-sm">
+                    <select id="value-input" name="value" class="w-1/5 border py-1.5 px-2 rounded text-sm">
                         <option value="">All Values</option>
                         <option value="MUST_HAVE">Must Have</option>
                         <option value="SHOULD_HAVE">Should Have</option>
                         <option value="COULD_HAVE">Could Have</option>
                         <option value="WILL_NOT_HAVE">Will Not Have</option>
+                    </select>
+                    <select id="effort-input" name="effort" class="w-1/5 border py-1.5 px-2 rounded text-sm">
+                        <option value="">All Efforts</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="5">5</option>
+                        <option value="8">8</option>
+                        <option value="13">13</option>
                     </select>
                 </div>
             </form>

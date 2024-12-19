@@ -268,7 +268,8 @@ class ProjectController extends Controller
         // Handle AJAX requests
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('web.sections.task.components._task', ['tasks' => $tasks])->render()
+                'html' => view('web.sections.task.components._task', ['tasks' => $tasks])->render(),
+                'count' => $tasks->count(),
             ]);
         }
 
