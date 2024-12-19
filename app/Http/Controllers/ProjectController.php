@@ -230,26 +230,58 @@ class ProjectController extends Controller
     public function searchTasks(Request $request)
     {
         $url = $request->url();
-
         $slug = explode('/', $url)[4];
-
         $project = Project::where('slug', $slug)->firstOrFail();
 
+        // Base query for tasks in the project
+        $tasks = Task::where('project_id', $project->id);
+
+        // Handle search query
         $search = $request->input('query');
-
-
-        $tasks = Task::where('project_id', $project->id)->get();
-
-        if (isset($search) && $search !== '') {
-            $tasks = Task::where('project_id',  $project->id)
-                ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
-                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
-                ->get();
+        if (!empty($search)) {
+            $tasks->where(function ($queryBuilder) use ($search) {
+                $queryBuilder->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$search])
+                    ->orWhere('title', 'LIKE', '%' . $search . '%');
+            })->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search]);
         }
 
+        // Apply filters
+        if ($request->filled('assigned_to')) {
+            $tasks->where('assigned_to', $request->input('assigned_to'));
+        }
 
-        return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
+        if ($request->filled('value')) {
+            $tasks->where('value', $request->input('value'));
+        }
+
+        if ($request->filled('state')) {
+            $tasks->where('state', $request->input('state'));
+        }
+
+        if ($request->filled('effort')) {
+            $tasks->where('effort', $request->input('effort'));
+        }
+
+        // Get the filtered tasks
+        $tasks = $tasks->get();
+
+        // Handle AJAX requests
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('web.sections.task.components._task', ['tasks' => $tasks])->render()
+            ]);
+        }
+
+        // Handle regular requests
+        $developers = $project->developers;
+
+        return view('web.sections.task.index', [
+            'project' => $project,
+            'tasks' => $tasks,
+            'developers' => $developers,
+        ]);
     }
+
 
     public function leave($slug) {
         $project = Project::where('slug', $slug)->firstOrFail();
