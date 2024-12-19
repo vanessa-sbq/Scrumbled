@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class,
         'not.archived.api' => \App\Http\Middleware\ProjectReadOnlyIfArchivedApi::class,
         'not.archived' => \App\Http\Middleware\ProjectReadOnlyIfArchived::class,
+        'comment.not.archived' => \App\Http\Middleware\CommentReadOnlyIfArchived::class,
     ];
 }
