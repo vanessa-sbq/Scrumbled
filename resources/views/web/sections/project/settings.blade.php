@@ -1,36 +1,37 @@
 @extends('web.layout')
 
 @section('content')
+
+    <div id="backdrop" class="fixed inset-0 bg-black opacity-50 hidden z-50"></div>
+
+    <div id="collapseSettings" class="md:hidden before:fixed max-md:before:bg-black hidden max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
+        <button id="closeSettings" class="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border">
+            <x-lucide-x class="w-8 h-8" />
+        </button>
+
+        <div class="lg:flex gap-x-5 max-lg:space-y-3 z-50">
+            @php $hidden = "" @endphp
+            @include('web.sections.project.components._settingsSidebar', ['project' => $project, 'hidden' => $hidden])
+        </div>
+    </div>
+
+    <div id="openSettings" class="md:hidden fixed left-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-10 bg-gray-200 hover:bg-gray-300 active:bg-gray-300 h-12 rounded-r-full z-40 cursor-pointer">
+        <x-lucide-wrench />
+        <x-lucide-chevron-right />
+    </div>
+
     <div class="flex flex-col flex-1 container p-4 md:py-16">
         <!-- Navbar with Breadcrumb -->
-        @include('web.sections.project.components._navbar', ['project' => $project])
+        @php $hidden = "hidden" @endphp
+        @include('web.sections.project.components._navbar', ['project' => $project, 'hidden' => $hidden])
 
         <div class="flex">
             <!-- Sidebar -->
-            <aside class="w-3/12 p-6 hidden md:block flex">
-                <h2 class="text-xl font-semibold mb-4">Settings</h2>
-                <nav class="space-y-2">
-                    @if (Auth::check() && (Auth::user()->id === $project->product_owner_id || Auth::user()->id === $project->scrum_master_id))
-                        <a href="{{ route('projects.settings', $project->slug) }}" class="block py-2 px-4 rounded {{ request()->routeIs('projects.settings') ? 'bg-gray-200 font-semibold' : 'hover:underline' }}">General</a>
-                    @endif
-                    <a href="{{ route('projects.team.settings', $project->slug) }}" class="block py-2 px-4 rounded {{ request()->routeIs('projects.team.settings') ? 'bg-gray-200 font-semibold' : 'hover:underline' }}">Collaborators</a>
-                        @if (Auth::check() && ($project->developers->pluck('id')->contains(Auth::user()->id) || Auth::user()->id === $project->scrum_master_id))
-                            <div class="group relative">
-                                <button class="leave_project_button flex-1 py-2 px-4 w-full text-left rounded hover:text-white relative z-10" id="{{ Auth::user()->id }}">
-                                    Leave Project
-                                </button>
-                                <span class="absolute left-0 top-0 rounded h-full w-full bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                                <x-modal id="leave_project_modal" title="Leave Project" closeButtonText="Cancel" saveButtonText="Leave" saveAction="leaveProject" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
-                                    <p>Are you sure you want to leave this project? This action cannot be reverted by you.</p>
-                                </x-modal>
-                            </div>
-                        @endif
-                </nav>
-            </aside>
+            @include('web.sections.project.components._settingsSidebar', ['project' => $project])
 
             <!-- Main Content -->
             <div class="flex flex-1 flex-col w-3/4 p-6 gap-10">
-                @if (request()->routeIs('projects.settings') && Auth::check() && (Auth::user()->id === $project->product_owner_id || Auth::user()->id === $project->scrum_master_id))
+                @if (request()->routeIs('projects.settings') && ((Auth::guard("admin")->check()) || (Auth::check() && (Auth::user()->id === $project->product_owner_id || Auth::user()->id === $project->scrum_master_id))))
                     @include('web.sections.project.components._general', ['project' => $project])
                 @else
                     @include('web.sections.project.components._team', ['project' => $project, 'developers' => $developers])

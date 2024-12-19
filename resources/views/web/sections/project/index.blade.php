@@ -6,10 +6,12 @@
         <div
             class="flex flex-wrap gap-4 min-h-14 justify-between items-center my-8 bg-white rounded-md py-2 px-8 border border-muted shadow-sm">
             @php
-                $projectLinks = [
-                    ['type' => 'my_projects', 'label' => 'My Projects'],
-                    ['type' => 'public', 'label' => 'Public'],
-                ];
+                $projectLinks = [];
+                if (auth()->check()) {
+                    $projectLinks[] = ['type' => 'my_projects', 'label' => 'My Projects'];
+                }
+
+                $projectLinks[] = ['type' => 'public', 'label' => 'Public'];
 
                 if (auth()->check()) {
                     $projectLinks[] = ['type' => 'favorites', 'label' => 'Favorites'];

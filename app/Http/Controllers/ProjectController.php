@@ -101,6 +101,7 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_public' => 'required|boolean',
+            'is_archived' => 'boolean'
         ]);
 
         // Ensure the authenticated user is set
@@ -111,7 +112,7 @@ class ProjectController extends Controller
             $project->title = $request->title;
             $project->description = $request->description;
             $project->is_public = $request->is_public;
-            $project->is_archived = false; // Default to false
+            $project->is_archived = $request->input('is_archived') ?? false; // Default to false
             $project->product_owner_id = $user->id;
 
             // Generate a unique slug
@@ -352,22 +353,9 @@ class ProjectController extends Controller
     public function showProjectSettings($slug)
     {
         $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
-        $users = AuthenticatedUser::paginate(5);
 
-        // Get the IDs to exclude
-        $excludedIds = [$project->scrum_master_id, $project->product_owner_id];
-        foreach ($project->developers as $developer) {
-            $excludedIds[] = $developer->id;
-        }
-
-        $collection = $users->getCollection();
-        $filteredCollection = $collection->filter(function($users) use ($excludedIds) {
-            return !in_array($users->id, $excludedIds);
-        });
-        $users->setCollection($filteredCollection);
-
-        $developers = $project->developers()->paginate(2);
-        return view('web.sections.project.settings', compact('project', 'users', 'developers'));
+        $developers = $project->developers()->paginate(3);
+        return view('web.sections.project.settings', ['project' => $project, 'users' => $developers, 'developers' => $developers]);
     }
 
 }

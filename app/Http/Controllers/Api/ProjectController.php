@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Developer;
 use App\Models\DeveloperProject;
 use App\Models\ProductOwner;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Models\ScrumMaster;
+use App\Models\Sprint;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +25,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
             //return redirect()->route('projects.settings', $project->slug)->with('error', 'Cannot perform these changes. Are you the Product Owner?');
         }
@@ -37,9 +40,11 @@ class ProjectController extends Controller
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        $user = auth()->user();
+        if (!Auth::guard("admin")->check()) {
+            $user = auth()->user();
+        }
 
-        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
+        if ((!Auth::guard("admin")->check()) && ($project->product_owner_id !== $user->id)) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -51,37 +56,99 @@ class ProjectController extends Controller
     public function transferProject(Request $request) {
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
+        $acceptLossOfSM = $request->input('sm_loss');
+        $acceptLossOfDev = $request->input('dev_loss');
+
+        Log::info($uid);
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
-        $newOwner = AuthenticatedUser::where('id', $uid)->firstOrFail();
+        $oldOwner = $project->product_owner_id;
+
+        $newOwner = AuthenticatedUser::query()
+            ->whereIn('id', function ($query) use ($project) {
+                $query->select('developer_id')
+                    ->from('developer_project')
+                    ->where('project_id', $project->id);
+            })
+            ->where('id', $uid)->firstOrFail();
 
         $user = auth()->user();
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $oldOwner !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
-        if ($project->product_owner_id === $newOwner->id) {
-            return response()->json(['status' => 'error', 'message' => 'You are already the Product Owner.']);
+        if ($oldOwner === $newOwner->id) {
+            return response()->json(['status' => 'error', 'message' => 'The chosen person is already the Product Owner.']);
         }
 
-        if ($newOwner->id === $project->scrum_master_id) {
-            return response()->json(['status' => 'error', 'message' => 'The user ' . $user->username . 'is a scrum master and cannot be both PO and Scrum master at the same time.']);
+        if ($newOwner->id === $project->scrum_master_id && (!isset($acceptLossOfSM))) {
+            return response()->json(['status' => 'waiting_for_confirmation_sm', 'message' => 'The user ' . $newOwner->username . ' is a scrum master and cannot be both Product Owner and Scrum master at the same time. Continuing will remove ' . $newOwner->username . ' from Scrum Master.']);
         }
+
+        if (isset($acceptLossOfSM) && !$acceptLossOfSM) {
+            return response()->json(['status' => 'error', 'message' => 'The user ' . $newOwner->username . ' is a scrum master and cannot be both Product Owner and Scrum master at the same time.']);
+        } else {
+            $project->scrum_master_id = null;
+            $project->save();
+        }
+
+
 
         foreach ($project->developers as $developer) {
-            if ($newOwner->id === $developer->id) {
-                return response()->json(['status' => 'error', 'message' => 'The user ' . $user->username . 'is a developer and cannot be both PO and Developer at the same time.']);
+            if ($newOwner->id === $developer->id && (!isset($acceptLossOfDev))) {
+                return response()->json(['status' => 'waiting_for_confirmation_dev', 'message' => 'The user ' . $newOwner->username . ' is a developer and cannot be both PO and Developer at the same time.']);
             }
         }
 
-        $oldPossiblePO = ProductOwner::where('user_id', $uid)->first();
+        Log::info($acceptLossOfDev);
 
-        if (!isset($oldPossiblePO)) {
+        if (isset($acceptLossOfDev) && !$acceptLossOfDev) {
+            return response()->json(['status' => 'error', 'message' => 'The user ' . $newOwner->username . ' is a developer and cannot be both PO and Developer at the same time.']);
+        } else {
+            $project->developers()->detach($newOwner->id);
+
+            $developerProject = DeveloperProject::where('project_id', $project->id)
+                ->where('developer_id', $newOwner->id)
+                ->first();
+
+            if ($developerProject) {
+                $developerProject->delete();
+            }
+        }
+
+        $newPossiblePO = ProductOwner::where('user_id', $uid)->first();
+
+        if (!isset($newPossiblePO)) {
             ProductOwner::create(['user_id' => $uid]);
         }
 
         $project->update(['product_owner_id' => $newOwner->id]);
+
+        if (!Developer::where('user_id', $oldOwner)->exists()) {
+            Developer::create([
+                'user_id' => $oldOwner,
+            ]);
+        }
+
+        if (!DeveloperProject::where(['developer_id' => $oldOwner, 'project_id' => $project->id ])->exists()) {
+            DeveloperProject::create([
+                'developer_id' => $oldOwner,
+                'project_id' => $project->id,
+            ]);
+        }
+
+        $backlogTasks = Task::where('project_id', $project->id)->where('state', 'BACKLOG')->get();
+        $currentSprint = Sprint::where('project_id', $project->id)->where('is_archived', false)->first();
+        $sprintBacklogTasks = $currentSprint ? $currentSprint->tasks()->where('state', 'SPRINT_BACKLOG')->get() : collect();
+
+        foreach ($backlogTasks as $task) {
+            $task->update(['assigned_to' => null]);
+        }
+
+        foreach ($sprintBacklogTasks as $task) {
+            $task->update(['assigned_to' => null]);
+        }
 
         return response()->json(['status' => 'success', 'message' => 'Project transferred']);
     }
@@ -92,7 +159,7 @@ class ProjectController extends Controller
 
         $user = auth()->user();
 
-        if (($project->product_owner_id !== $user->id) && (!Auth::guard("admin")->check())) {
+        if ((!Auth::guard("admin")->check()) && ($project->product_owner_id !== $user->id)) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -136,7 +203,7 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Title cannot be empty.'], 400);
         }
 
-        if ($project->product_owner_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Cannot perform these changes. Are you the Product Owner?'], 403);
         }
 
@@ -156,7 +223,7 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Description cannot exceed 5000 characters.'], 400);
         }
 
-        if ($project->product_owner_id !== $user->id && $project->scrum_master_id !== $user->id) {
+        if (!Auth::guard("admin")->check() && $project->product_owner_id !== $user->id && $project->scrum_master_id !== $user->id) {
             return response()->json(['status' => 'error', 'message' => 'Do you have permission to perform these changes ?'], 403);
         }
 
@@ -166,12 +233,24 @@ class ProjectController extends Controller
 
     public function transferProjectSearch(Request $request) {
         $search = $request->input('search');
+        $slug = $request->input('slug');
+
+        // Find the project by slug
+        $project = Project::query()->where('slug', $slug)->firstOrFail();
 
         $users = AuthenticatedUser::query()
-            ->where('username', 'like', "%{$search}%")
-            ->orWhere('full_name', 'like', "%{$search}%")
-            ->orWhere('email', 'like', "%{$search}%")
+            ->whereIn('id', function ($query) use ($project) {
+                $query->select('developer_id')
+                    ->from('developer_project')
+                    ->where('project_id', $project->id);
+            })
+            ->where(function ($query) use ($search) {
+                $query->where('username', 'like', "%{$search}%")
+                    ->orWhere('full_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })
             ->get();
+
 
         $v = view('web.sections.project.components._userInvite', ['users' => $users])->render();
 
@@ -182,11 +261,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to set the Scrum Master.']);
         }
 
@@ -225,11 +306,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id && $authId != $project->scrum_master) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id && $authId != $project->scrum_master) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove the Srum Master.']);
         }
 
@@ -258,11 +341,13 @@ class ProjectController extends Controller
         $projectSlug = $request->input('slug');
         $uid = $request->input('userId');
 
-        $authId = Auth::user()->id;
+        if (!Auth::guard("admin")->check()) {
+            $authId = Auth::user()->id;
+        }
 
         $project = Project::where('slug', $projectSlug)->firstOrFail();
 
-        if ($authId != $project->product_owner_id) {
+        if ((!Auth::guard("admin")->check()) && $authId != $project->product_owner_id) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to remove a Developer.']);
         }
 
@@ -295,7 +380,7 @@ class ProjectController extends Controller
         }
 
         $project->save();
-        return response()->json(['status' => 'success', 'message' => 'Developer was removed successfully.']);
+        return response()->json(['status' => 'success', 'message' => 'Developer was removed successfully.', 'redirect' => route('projects.team.settings', $projectSlug)]);
     }
 
     public function selfRemoveFromProject(Request $request) {

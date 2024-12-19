@@ -10,7 +10,7 @@
                 <label for="old_picture" class="block text-sm font-medium text-muted-foreground">Current Picture</label>
                 <div class="flex items-center space-x-4 mt-2">
                     <img class="h-24 w-24 rounded-full border border-gray-300 shadow-sm" id="old_picture"
-                         src="{{ asset('storage/' . $user->picture) }}" alt="Profile Picture">
+                         src="{{ asset($user->picture ? 'storage/' . $user->picture : 'images/users/default.png') }}" alt="Profile Picture">
                     <x-input type="file" name="picture" label="New Picture" />
                     @error('picture')
                     <span class="text-red-500 text-sm">{{ $message }}</span>

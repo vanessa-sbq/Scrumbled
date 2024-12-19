@@ -70,7 +70,7 @@
                 Transfer
             </button>
 
-            <x-modal id="transfer_modal" title="Project ownership" closeButtonText="Cancel" saveButtonText="remove_button" saveAction="transferOwnership" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+            <x-modal id="transfer_modal" title="Project ownership" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="transferOwnership" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
                 <div class="container mx-auto py-8">
                     <h1 class="text-4xl font-bold mb-8 text-center">User Profiles</h1>
 
@@ -80,13 +80,27 @@
                                placeholder="Search users...">
 
                         <div id="results-container" class="space-y-4">
-                            @include('web.sections.project.components._userInvite', ['users' => $users, 'project' => $project])
+                            @include('web.sections.project.components._userInvite', ['users' => $users])
                         </div>
                         <div id="pagination-container" class="mt-4">
                             {{ $users->links() }} <!-- Pagination links -->
                         </div>
                     </div>
                 </div>
+            </x-modal>
+
+            <x-modal id="transfer_modal_sm" title="Confirm Scrum Master Role Change" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="confirmScrumMasterLoss" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                <p class="text-gray-600">
+                    The selected user is currently assigned as the Scrum Master. By transferring ownership, they will lose this role.
+                    Do you want to proceed?
+                </p>
+            </x-modal>
+
+            <x-modal id="transfer_modal_dev" title="Confirm Developer Role Change" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="confirmDeveloperLoss" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                <p class="text-gray-600">
+                    The selected user is currently assigned as a Developer. By transferring ownership, they will lose this role.
+                    Do you want to proceed?
+                </p>
             </x-modal>
         </div>
 

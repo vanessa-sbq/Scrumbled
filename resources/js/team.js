@@ -117,7 +117,7 @@ function removeDeveloperHelper() {
         .then(data => {
             if (data.status === 'success') {
                 //alert(data.message);
-                location.reload();
+                window.location.replace(data['redirect']);
             } else {
                 alert(`Error: ${data.message}`);
             }

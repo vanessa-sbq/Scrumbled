@@ -16,8 +16,8 @@
         </div>
         <div class="flex flex-col gap-2 w-full">
             <div class="flex gap-1 justify-center sm:justify-end flex-wrap">
-                <a href="{{ "route('admin.projects.show', $project->id)" }}" class="bg-primary text-white px-4 py-1 rounded-md shadow-sm hover:bg-blue-600">View</a>
-                <a href="{{ "route('admin.projects.edit', $project->id)" }}" class="bg-yellow-400 text-white px-4 py-1 rounded-md hover:bg-yellow-500 transition">Edit</a>
+                <a href="{{ route('projects.show', $project->slug) }}" class="bg-primary text-white px-4 py-1 rounded-md shadow-sm hover:bg-blue-600">View</a>
+                <a href="{{ route('projects.settings', $project->slug) }}" class="bg-yellow-400 text-white px-4 py-1 rounded-md hover:bg-yellow-500 transition">Edit</a>
             </div>
             <div class="flex gap-1 justify-center sm:justify-end flex-wrap">
                 <button data-project-slug="{{$project->slug}}" class="archive-project-button bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition">{{ $project->is_archived ? 'Unarchive' : 'Archive' }}</button>

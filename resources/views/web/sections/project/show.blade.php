@@ -23,13 +23,14 @@
             <!-- Sprint Backlog -->
             @include('web.sections.project.components._sprint', ['tasks' => $sprintBacklogTasks])
 
-            <div class="mb-6 mt-4 flex items-center">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
-                    <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
-                </label>
-            </div>
-
+            @if (Auth::user())
+                <div class="mb-6 mt-4 flex items-center">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" id="showMyTasks" class="form-checkbox text-primary" />
+                        <span class="ml-2 text-lg font-medium text-gray-700">Show only my tasks</span>
+                    </label>
+                </div>
+            @endif
             <!-- Other Cards (In Progress, Done, Accepted) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- In Progress -->
@@ -74,10 +75,12 @@
                 <!-- No Active Sprint Message -->
                 <div class="text-center py-16">
                     <h2 class="text-2xl font-bold text-gray-600 mb-4">This project has no active sprints!</h2>
-                    <a href="{{ route('sprint.create', $project->slug) }}"
-                        class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
-                        Create Sprint
-                    </a>
+                    @if (Auth::user())
+                        <a href="{{ route('sprint.create', $project->slug) }}"
+                            class="bg-primary text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                            Create Sprint
+                        </a>
+                    @endif
                 </div>
         @endif
 
@@ -93,6 +96,8 @@
         <script src="{{ asset('js/drag-and-drop.js') }}"></script>
     @endpush
     @push('tags')
-        <meta name="can-manage-project" content="{{ Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
+        @if (Auth::user() || Auth::guard("admin")->check())
+                <meta name="can-manage-project" content="{{ Auth::guard("admin")->check() || Auth::user()->can('manage', $project) ? 'true' : 'false' }}">
+       @endif
     @endpush
 @endonce
