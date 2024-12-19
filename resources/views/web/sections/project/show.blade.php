@@ -11,12 +11,22 @@
                 <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
                         class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
                 @can('manage', $project)
-                    <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
-                        @csrf
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
-                            Close Sprint
-                        </button>
-                    </form>
+                    <div class="flex gap-2">
+                        <!-- Edit Sprint Button -->
+                        <a href="{{ route('sprint.edit', $sprint->id) }}"
+                           class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition">
+                            Edit Sprint
+                        </a>
+
+                        <!-- Close Sprint Button -->
+                        <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
+                            @csrf
+                            <button type="submit"
+                                    class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                                Close Sprint
+                            </button>
+                        </form>
+                    </div>
                 @endcan
             </div>
 
