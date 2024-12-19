@@ -149,7 +149,9 @@ class InboxController extends Controller
                 $notification->delete();
             }
         }
-    
+        
+        session()->flash('notifications_deleted', true);
+        
         return redirect()->back()->with('success', 'Notifications processed successfully.');
     }
 

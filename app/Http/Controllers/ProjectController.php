@@ -136,6 +136,8 @@ class ProjectController extends Controller
 
             $project->save();
 
+            session()->flash('created_project');
+
             // Log the project attributes after saving
             Log::info('Project attributes after saving:', $project->getAttributes());
 
@@ -312,7 +314,7 @@ class ProjectController extends Controller
             Favorite::where('user_id', $user->id)
                 ->where('project_id', $project->id)
                 ->delete();
-
+            //event(new NewNotification($user->id, 'Removed from Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Unfavorited!"]);
         } else {
             // Favorite logic
@@ -320,6 +322,7 @@ class ProjectController extends Controller
                 'user_id' => $user->id,
                 'project_id' => $project->id,
             ]);
+            //event(new NewNotification($user->id, 'Added to Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Favorited!"]);
         }
     }

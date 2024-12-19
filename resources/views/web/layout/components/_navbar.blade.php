@@ -96,7 +96,7 @@
     @push('scripts')
         <script src="{{ asset('js/navbar.js') }}"></script>
         <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
-        <script src="{{ asset('js/toast.js') }}"></script>
+        <script src="{{ asset('js/toast.js') }}" ></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 // Pusher Setup
@@ -132,6 +132,9 @@
             $events = [
                 'invite_accept_event' => 'Invitation accepted successfully!',
                 'invite_decline_event' => 'Invitation declined.',
+                'notifications_deleted' => 'Notifications deleted.',
+                'edited_profile' => 'Profile edited successfully!',
+                'created_project' =>  'Created project!'
             ];
         @endphp
 
@@ -145,7 +148,8 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
-                            message: '{{ $message }}'
+                            message: '{{ $message }}',
+                            event_type: '{{ $event }}' 
                         })
                     });
                 </script>

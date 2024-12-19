@@ -200,5 +200,6 @@ Route::post('/trigger-event', function (\Illuminate\Http\Request $request) {
     }
     $message = $request->input('message', 'Default notification message');
     event(new NewNotification($user->id, $message));
+    $event_type = $request->input('event_type');
     return response()->json(['status' => 'success', 'message' => 'Notification triggered successfully']);
 })->middleware(['auth', 'no.admin']);
