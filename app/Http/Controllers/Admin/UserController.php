@@ -86,7 +86,7 @@ class UserController extends Controller
             'full_name' => 'nullable|string|max:255',
             'bio' => 'nullable|string',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:ACTIVE,NEEDS_CONFIRMATION,BANNED'
+            'status' => 'required|in:ACTIVE,BANNED'
         ]);
 
         // Collect the validated data

@@ -25,7 +25,7 @@ class AuthenticatedUserFactory extends Factory
             'bio' => fake()->text(),
             'picture' => null,
             'is_public' => true,
-            'status' => 'NEEDS_CONFIRMATION',
+            'status' => 'ACTIVE',
             'remember_token' => Str::random(10),
         ];
     }

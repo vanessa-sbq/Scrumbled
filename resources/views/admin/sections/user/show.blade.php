@@ -39,10 +39,6 @@
                         <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                     </div>
                     @switch($user->status)
-                        @case('NEEDS_CONFIRMATION')
-                            <h3>(Email not verified)</h3>
-                        @break
-
                         @case('ACTIVE')
                             <h3>(Active)</h3>
                         @break

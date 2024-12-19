@@ -70,7 +70,6 @@
                 <label for="status" class="block text-gray-700">Account Status</label>
                 <select id="status" name="status" class="w-full px-3 py-2 border rounded">
                     <option value="ACTIVE">Active</option>
-                    <option value="NEEDS_CONFIRMATION">Needs Confirmation</option>
                     <option value="BANNED">Banned</option>
                 </select>
                 @error('status')

@@ -13,9 +13,6 @@
                 <select id="filter-input" name="status" class="border p-2 rounded mr-2">
                     <option value="ANY">Any Status</option>
                     <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
-                    <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>
-                        Needs
-                        Confirmation</option>
                     <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
                 </select>
                 <a href="{{ route('admin.users.showCreate') }}"

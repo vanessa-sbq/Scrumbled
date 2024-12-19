@@ -54,9 +54,6 @@
                                 <a href="mailto:{{ $profileOwner->email }}">{{ $profileOwner->email }}</a>
                             </div>
                             @switch($profileOwner->status)
-                                @case('NEEDS_CONFIRMATION')
-                                    <h3>(Email not verified)</h3>
-                                    @break
                                 @case('ACTIVE')
                                     <h3>(Active)</h3>
                                     @break
