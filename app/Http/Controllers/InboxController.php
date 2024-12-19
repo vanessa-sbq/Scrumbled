@@ -119,6 +119,8 @@ class InboxController extends Controller
         if (!$deleted) {
             return redirect()->back()->with('error', 'Failed to decline the invitation.');
         }
+
+        session()->flash('invite_decline_event', true);
         Notification::where('id', $id)->delete(); // Delete the corresponding notification
         return redirect()->back()->with('success', 'Invitation declined successfully.');
     }    

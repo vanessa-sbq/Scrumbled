@@ -128,19 +128,28 @@
             });
         </script>
 
-        @if(session('invite_accept_event'))
-        <script>
-            fetch('/trigger-event', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    message: 'Invitation accepted successfully!'
-                })
-            });
-        </script>
-        @endif
+        @php
+            $events = [
+                'invite_accept_event' => 'Invitation accepted successfully!',
+                'invite_decline_event' => 'Invitation declined.',
+            ];
+        @endphp
+
+        @foreach($events as $event => $message)
+            @if(session($event))
+                <script>
+                    fetch('/trigger-event', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            message: '{{ $message }}'
+                        })
+                    });
+                </script>
+            @endif
+        @endforeach
     @endpush
 @endonce
