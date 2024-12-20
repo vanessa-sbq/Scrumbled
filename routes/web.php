@@ -190,9 +190,6 @@ Route::controller(CommentController::class)->group(function () {
 });
 
 // Pusher
-Route::controller(PusherController::class)->group(function () {
-    Route::get('/pusher', 'showPusherTest');
-});
 Route::post('/trigger-event', function (\Illuminate\Http\Request $request) {
     $user = Auth::user();
     if (!$user) {
