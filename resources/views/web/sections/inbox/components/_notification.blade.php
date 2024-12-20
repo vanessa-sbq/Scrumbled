@@ -15,7 +15,7 @@
         @elseif ($notificationInfo['type'] == "ASSIGN")
             You got assigned to task "{{ $notificationInfo['task_title'] }}" in project {{ $notificationInfo['project']->title }}.
         @elseif ($notificationInfo['type'] == "PO_CHANGE")
-            {{ $notificationInfo['old_po'] }} gave his role of Product Owner to {{ $notificationInfo['new_po'] }} in project {{ $notificationInfo['project']->title }}.
+            {{ $notificationInfo['old_po'] }} gave their role of Product Owner to {{ $notificationInfo['new_po'] }} in project {{ $notificationInfo['project']->title }}.
         @endif
     </div>
 
