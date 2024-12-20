@@ -13,11 +13,11 @@
 
         <!-- Actions -->
         <div class="flex space-x-2" data-edit-comment-url="{{ route('comments.edit', $comment->id) }}" data-delete-comment-url="{{ route('comments.delete', $comment->id) }}">
-            @if (Auth::user()->id === $comment->user->id)
-                <button class="text-blue-500 hover:text-blue-700 edit-comment" data-id="{{ $comment->id }}">
+            @if (Auth::guard("admin")->check() || (Auth::user() && Auth::user()->id === $comment->user->id))
+                <button class="edit-comment-button text-blue-500 hover:text-blue-700 edit-comment" data-id="{{ $comment->id }}">
                     ✏️ Edit
                 </button>
-                <button type="button" class="text-red-500 hover:text-red-700 delete-comment" data-id="{{ $comment->id }}">
+                <button type="button" class="delete-comment-buttton text-red-500 hover:text-red-700 delete-comment" data-id="{{ $comment->id }}">
                     🗑️ Delete
                 </button>
             @endif
@@ -34,7 +34,7 @@
         @csrf
         <textarea name="description" id="description-{{ $comment->id }}" rows="3"
                   class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200" required>{{ $comment->description }}</textarea>
-        <button type="button" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 save-edit" data-id="{{ $comment->id }}">
+        <button type="button" class="save-edit-comment-button mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 save-edit" data-id="{{ $comment->id }}">
             Save Changes
         </button>
     </form>

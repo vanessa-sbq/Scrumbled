@@ -80,6 +80,7 @@ class Kernel extends HttpKernel
         'task.can.access' => \App\Http\Middleware\TaskAccess::class,
         'task.can.access.api' => \App\Http\Middleware\TaskAccessApi::class,
         'task.not.archived' => \App\Http\Middleware\TaskReadOnlyIfArchived::class,
-        'task.not.archived.api' => \App\Http\Middleware\TaskReadOnlyIfArchivedApi::class
+        'task.not.archived.api' => \App\Http\Middleware\TaskReadOnlyIfArchivedApi::class,
+        'can.alter.comment' => \App\Http\Middleware\CanAlterComment::class
     ];
 }

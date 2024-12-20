@@ -211,10 +211,12 @@ Route::controller(TaskController::class)->group(function () {
 //Comments
 Route::controller(CommentController::class)->group(function () {
     Route::middleware(['auth.admin_or_user'])->group(function () {
-        Route::middleware(['task.not.archived', 'task.can.access'])->group(function () {
+        Route::middleware(['no.admin', 'task.not.archived.api', 'task.can.access.api'])->group(function () {
             Route::post('/tasks/{id}/comment', 'create')->name('comments.create');
         });
-        Route::post('/comments/{id}', 'delete')->name('comments.delete');// FIXME: Check if comment can be deleted
-        Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');// FIXME: Check if comment can be edited
+        Route::middleware(['can.alter.comment'])->group(function () {
+            Route::post('/comments/{id}', 'delete')->name('comments.delete');
+            Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');
+        });
     });
 });

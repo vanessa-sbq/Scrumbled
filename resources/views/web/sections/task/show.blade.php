@@ -17,11 +17,12 @@
             <!-- Task Title -->
             <header class="mb-6 border-b pb-4 flex justify-between items-center">
                 <h1 class="text-3xl font-extrabold text-primary">{{ $task->title }}</h1>
-
+                @if (Auth::guard("admin")->check() || Auth::user())
                 <a href="{{ route('tasks.showEdit', ['slug' => $project->slug, 'id' => $task->id]) }}"
                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition ml-auto">
                     Edit Task
                 </a>
+                @endif
             </header>
 
             <!-- Task Details -->
@@ -100,28 +101,32 @@
             </div>
 
             <!-- Add Comment Section -->
-            <div class="mt-6">
-                <button id="addComment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                    Add Comment
-                </button>
-            </div>
+            @if (Auth::guard("admin")->check() || Auth::user())
+                @if (!Auth::guard("admin")->check())
+                    <div class="mt-6">
+                        <button id="addComment" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Add Comment
+                        </button>
+                    </div>
+                @endif
 
-            <div id="commentForm" class="mt-4 hidden">
-                <div class="bg-gray-50 p-4 rounded-lg shadow">
-                    <form id="add-comment-form">
-                        @csrf
-                        <div class="mb-4">
-                    <textarea name="description" id="new-comment-description" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200"
-                              placeholder="Write your comment here..." required></textarea>
-                        </div>
-                        <div class="flex justify-end">
-                            <button type="button" id="submit-comment" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                                Confirm
-                            </button>
-                        </div>
-                    </form>
+                <div id="commentForm" class="mt-4 hidden">
+                    <div class="bg-gray-50 p-4 rounded-lg shadow">
+                        <form id="add-comment-form">
+                            @csrf
+                            <div class="mb-4">
+                        <textarea name="description" id="new-comment-description" rows="3" class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-200"
+                                  placeholder="Write your comment here..." required></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="button" id="submit-comment" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                                    Confirm
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            @endif
         </section>
     </div>
 @endsection

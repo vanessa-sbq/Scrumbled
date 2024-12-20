@@ -3,9 +3,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const commentForm = document.getElementById('commentForm');
 
     // Toggle Comment Form
-    document.getElementById('addComment').addEventListener('click', () => {
-        commentForm.classList.toggle('hidden');
-    });
+    if (document.getElementById('addComment')) {
+        document.getElementById('addComment').addEventListener('click', () => {
+            commentForm.classList.toggle('hidden');
+        });
+    }
 
     // Add Comment
     document.getElementById('submit-comment').addEventListener('click', () => {
@@ -41,43 +43,49 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
-    // Edit Comment
-    document.querySelector('.space-y-4').addEventListener('click', (e) => {
-        if (e.target.matches('.edit-comment')) {
-            const commentId = e.target.getAttribute('data-id');
-            toggleEditForm(commentId, true);
-        } else if (e.target.matches('.save-edit')) {
-            const commentId = e.target.getAttribute('data-id');
-            const description = document.getElementById(`description-${commentId}`).value.trim();
-            const editCommentUrl = document.querySelector(`div[data-edit-comment-url]`).dataset.editCommentUrl;
+    function saveComment(e) {
+        const commentId = e.target.getAttribute('data-id');
+        const description = document.getElementById(`description-${commentId}`).value.trim();
+        const editCommentUrl = `/comments/${commentId}/edit`
 
-            fetch(editCommentUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken,
-                },
-                body: JSON.stringify({ description }),
+        fetch(editCommentUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+            },
+            body: JSON.stringify({ description }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`comment-text-${commentId}`).textContent = data.comment.description;
+                    toggleEditForm(commentId, false);
+                } else {
+                    alert(`Error while editing comment: ${data.message}`);
+                }
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(`comment-text-${commentId}`).textContent = data.comment.description;
-                        toggleEditForm(commentId, false);
-                    } else {
-                        alert('Failed to edit comment.');
-                    }
-                })
-                .catch(error => {
-                    console.error("Error editing comment:", error);
-                    alert('An unexpected error occurred. Please try again.');
-                });
-        }
-    });
+            .catch(error => {
+                console.error("Error editing comment:", error);
+                alert('An unexpected error occurred. Please try again.');
+            });
+    }
+
+    // Edit Comment
+    document.querySelectorAll('.save-edit-comment-button').forEach( (button) => {
+        button.addEventListener('click', saveComment);
+    })
+
+    document.querySelectorAll('.edit-comment-button').forEach( (button) => {
+        button.addEventListener('click', (e) => {
+                const commentId = e.target.getAttribute('data-id');
+                toggleEditForm(commentId, true);
+        });
+    })
 
     // Delete Comment
-    document.querySelector('.space-y-4').addEventListener('click', (e) => {
-        if (e.target.matches('.delete-comment')) {
+    document.querySelectorAll('.delete-comment-buttton').forEach( (button) => {
+        button.addEventListener('click', (e) => {
             const commentId = e.target.getAttribute('data-id');
             const deleteCommentUrl = e.target.closest('div').dataset.deleteCommentUrl;
 
@@ -101,8 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error("Error deleting comment:", error);
                     alert('An unexpected error occurred. Please try again.');
                 });
-        }
-    });
+        });
+    })
 
     // Toggle Edit Form
     function toggleEditForm(commentId, show) {
@@ -128,6 +136,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const newComment = commentsContainer.lastElementChild;
         const editButton = newComment.querySelector('.edit-comment');
         const deleteButton = newComment.querySelector('.delete-comment');
+        const saveButton = newComment.querySelector('.save-edit-comment-button');
+
+        saveButton.addEventListener('click', saveComment);
 
         editButton.addEventListener('click', () => {
             const commentId = editButton.getAttribute('data-id');
