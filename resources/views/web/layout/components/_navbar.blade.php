@@ -19,7 +19,16 @@
                 ['route' => 'contact', 'label' => 'Contact Us'],
                 ['route' => 'faq', 'label' => 'FAQ'],
             ];
+        
+            $user = Auth::user();
+            if ($user) {
+                $unreadNotifications = App\Models\Notification::where('receiver_id', $user->id)->where('is_read', false)->get();
+            }
+            else $unreadNotifications = null;
         @endphp
+            @if ($unreadNotifications !== null && count($unreadNotifications) > 0)
+                <script src="{{ asset('js/notification-dot.js') }}" defer></script>
+            @endif
         @foreach ($links as $link)
             <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
                 <a href="{{ route($link['route']) }}"
@@ -40,6 +49,7 @@
                     <img src="{{ auth()->user()->profilePic() }}" alt="Profile Photo"
                         class="absolute inset-0 h-full w-full object-cover">
                 </button>
+                <div id="pfp-dot" class="absolute top-0 right-0 w-3 h-3 bg-blue-500 rounded-full hidden"></div>
             </x-slot>
 
             <div class="px-4 py-3 flex gap-3 ">
@@ -57,7 +67,7 @@
             </x-dropdown-item>
             <x-dropdown-item to="{{ route('inbox', Auth::user()->username) }}" class="flex items-center relative">
                 <!-- Blue Dot -->
-                <div id="notification-dot" class="hidden absolute top-2 right-32 w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>  
+                <div id="notification-dot" class="hidden absolute top-2 right-[14.8rem] w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>  
                 <!-- Bell Icon -->
                 <div class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></div> 
                 Notifications
@@ -87,7 +97,7 @@
     </button>
 
     <!-- Toast container -->
-    <div id="toast-container" class="fixed top-20 right-4 z-50"></div>
+    <div id="toast-container" class="fixed top-20 right-4 z-50" data-user-id="{{ Auth::id() }}" data-toast-message="{{ session('toast_message', '') }}" data-audio="{{ asset('storage/sounds/receive.mp3') }}"></div>
 </div>
 
 
@@ -97,45 +107,7 @@
         <script src="{{ asset('js/navbar.js') }}" defer></script>
         <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
         <script src="{{ asset('js/toast.js') }}" defer></script>
-        <script defer>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Pusher Setup
-                Pusher.logToConsole = true;
-
-                const pusher = new Pusher('03b9124b3ce439d7ba7d', {
-                    cluster: 'eu',
-                    encrypted: true
-                });
-
-                // Subscribe to the notifications channel
-                const channel = pusher.subscribe('user.{{ Auth::id() }}'); // Private channel for the authenticated user
-
-                // Listen for new notification events
-                channel.bind('new-notification', function(data) {
-                    showNotificationDot();
-                    showToast(data.message);
-                });
-
-                // Show the blue dot
-                function showNotificationDot() {
-                    const notificationDot = document.getElementById('notification-dot');
-                    if (notificationDot) {
-                        let audio = new Audio('{{ asset("storage/sounds/receive.mp3") }}');
-                        audio.play();
-                        notificationDot.classList.remove('hidden');
-                    }
-                }
-
-                const toastMessage = "{{ session('toast_message') }}";
-
-                if (toastMessage) {
-                    if (!sessionStorage.getItem('toastShown')) {
-                        showToast(toastMessage);
-                        sessionStorage.setItem('toastShown', 'true');
-                    }
-                }
-            });
-        </script>
+        <script src="{{ asset('js/notification.js') }}" defer></script>
         @php
             $events = [
                 'invite_accept_event' => 'Invitation accepted successfully!',

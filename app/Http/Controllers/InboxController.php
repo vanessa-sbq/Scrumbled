@@ -70,6 +70,15 @@ class InboxController extends Controller
         $user = Auth::user();
         $notifications = Notification::where('receiver_id', $user->id)->paginate(5);
         $notificationInfos = self::getNotificationInfos($notifications);
+
+        foreach ($notifications as $notification) {
+            DB::table('notification')
+            ->where('id', $notification->id)
+            ->update([
+                'is_read' => true,
+            ]);
+        }
+
         return view('web.sections.inbox.index', compact('notificationInfos', 'notifications'));
     }
 
@@ -84,6 +93,8 @@ class InboxController extends Controller
     {
         // Retrieve the project_id and developer_id from the request
         $project_id = $request->input('project_id');
+        $project = Project::where('id', $project_id)->first();
+        $po = $project->product_owner_id;
         $developer_id = $request->input('developer_id');
         
         $invite = DeveloperProject::where('developer_id', $developer_id)
@@ -99,8 +110,9 @@ class InboxController extends Controller
             return redirect()->back()->with('error', 'Failed to accept the invitation.');
         }
 
-        session()->flash('invite_accept_event', true);
         $user = Auth::user();
+        event(new NewNotification($po, $user->username . ' accepted your invitation!'));
+        session()->flash('invite_accept_event', true);
 
         return redirect()->route('inbox')->with('success', 'Invitation accepted successfully.');
     }

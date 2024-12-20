@@ -20,7 +20,8 @@ class Notification extends Model
         'task_id',
         'invited_user_id',
         'completed_by',
-        'created_at'
+        'created_at',
+        'is_read'
     ];
 
     // Define relationships

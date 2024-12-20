@@ -153,5 +153,6 @@ CREATE TABLE
         task_id BIGINT REFERENCES task (id) ON DELETE CASCADE ON UPDATE CASCADE,
         invited_user_id BIGINT REFERENCES authenticated_user (id) ON DELETE CASCADE ON UPDATE CASCADE,
         completed_by BIGINT REFERENCES developer (user_id) ON DELETE SET NULL ON UPDATE CASCADE,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+        is_read BOOLEAN NOT NULL DEFAULT FALSE
     );
