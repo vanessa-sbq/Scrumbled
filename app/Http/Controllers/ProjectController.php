@@ -136,7 +136,8 @@ class ProjectController extends Controller
 
             $project->save();
 
-            session()->flash('created_project');
+            //session()->flash('created_project');
+            session()->flash('created_project', true);
 
             // Log the project attributes after saving
             Log::info('Project attributes after saving:', $project->getAttributes());

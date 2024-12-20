@@ -94,10 +94,10 @@
 
 @once
     @push('scripts')
-        <script src="{{ asset('js/navbar.js') }}"></script>
+        <script src="{{ asset('js/navbar.js') }}" defer></script>
         <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
-        <script src="{{ asset('js/toast.js') }}" ></script>
-        <script>
+        <script src="{{ asset('js/toast.js') }}" defer></script>
+        <script defer>
             document.addEventListener('DOMContentLoaded', () => {
                 // Pusher Setup
                 Pusher.logToConsole = true;
@@ -125,9 +125,17 @@
                         notificationDot.classList.remove('hidden');
                     }
                 }
+
+                const toastMessage = "{{ session('toast_message') }}";
+
+                if (toastMessage) {
+                    if (!sessionStorage.getItem('toastShown')) {
+                        showToast(toastMessage);
+                        sessionStorage.setItem('toastShown', 'true');
+                    }
+                }
             });
         </script>
-
         @php
             $events = [
                 'invite_accept_event' => 'Invitation accepted successfully!',
@@ -140,7 +148,7 @@
 
         @foreach($events as $event => $message)
             @if(session($event))
-                <script>
+                <script defer>
                     fetch('/trigger-event', {
                         method: 'POST',
                         headers: {
