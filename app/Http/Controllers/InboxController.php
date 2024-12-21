@@ -6,11 +6,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AuthenticatedUser;
 use App\Models\Notification;
 use App\Models\DeveloperProject;
+use App\Models\Developer;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Events\NewNotification;
 
 class InboxController extends Controller
 {
@@ -68,6 +70,15 @@ class InboxController extends Controller
         $user = Auth::user();
         $notifications = Notification::where('receiver_id', $user->id)->paginate(5);
         $notificationInfos = self::getNotificationInfos($notifications);
+
+        foreach ($notifications as $notification) {
+            DB::table('notification')
+            ->where('id', $notification->id)
+            ->update([
+                'is_read' => true,
+            ]);
+        }
+
         return view('web.sections.inbox.index', compact('notificationInfos', 'notifications'));
     }
 
@@ -82,6 +93,8 @@ class InboxController extends Controller
     {
         // Retrieve the project_id and developer_id from the request
         $project_id = $request->input('project_id');
+        $project = Project::where('id', $project_id)->first();
+        $po = $project->product_owner_id;
         $developer_id = $request->input('developer_id');
         
         $invite = DeveloperProject::where('developer_id', $developer_id)
@@ -96,7 +109,12 @@ class InboxController extends Controller
         if (!$updated) {
             return redirect()->back()->with('error', 'Failed to accept the invitation.');
         }
-        return redirect()->back()->with('success', 'Invitation accepted successfully.');
+
+        $user = Auth::user();
+        event(new NewNotification($po, $user->username . ' accepted your invitation!'));
+        session()->flash('invite_accept_event', true);
+
+        return redirect()->route('inbox')->with('success', 'Invitation accepted successfully.');
     }
     
     public function declineInvitation(Request $request)
@@ -113,6 +131,8 @@ class InboxController extends Controller
         if (!$deleted) {
             return redirect()->back()->with('error', 'Failed to decline the invitation.');
         }
+
+        session()->flash('invite_decline_event', true);
         Notification::where('id', $id)->delete(); // Delete the corresponding notification
         return redirect()->back()->with('success', 'Invitation declined successfully.');
     }    
@@ -121,10 +141,30 @@ class InboxController extends Controller
         $validated = $request->validate([
             'selected_notifications' => 'required|array|min:1', // Ensure at least one ID is selected
         ]);
-
-        Notification::whereIn('id', $request->selected_notifications)->delete();
-
-        return redirect()->back()->with('success', 'Notifications deleted successfully.');
+    
+        // Get the selected notifications
+        $notifications = Notification::whereIn('id', $request->selected_notifications)->get();
+    
+        // Loop through the notifications
+        foreach ($notifications as $notification) {
+            if ($notification->type == 'INVITE') {
+                $user = Auth::user();
+                $project_id = $notification->project_id;
+                $developer_id = $notification->receiver_id;
+                $id = $notification->id;
+                $deleted = DB::table('developer_project')
+                    ->where('developer_id', $developer_id)
+                    ->where('project_id', $project_id)
+                    ->delete();
+                Notification::where('id', $id)->delete(); // Delete the corresponding notification
+            } else {
+                $notification->delete();
+            }
+        }
+        
+        session()->flash('notifications_deleted', true);
+        
+        return redirect()->back()->with('success', 'Notifications processed successfully.');
     }
 
 }

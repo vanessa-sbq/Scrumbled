@@ -4,7 +4,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\PusherController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\ProfileController as ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Events\NewNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -204,3 +207,15 @@ Route::controller(CommentController::class)->group(function () {
         Route::post('/comments/{id}/edit', 'edit')->name('comments.edit');////////////////////////////////
     });
 });
+
+// Pusher
+Route::post('/trigger-event', function (\Illuminate\Http\Request $request) {
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['status' => 'error', 'message' => 'User not authenticated'], 401);
+    }
+    $message = $request->input('message', 'Default notification message');
+    event(new NewNotification($user->id, $message));
+    $event_type = $request->input('event_type');
+    return response()->json(['status' => 'success', 'message' => 'Notification triggered successfully']);
+})->middleware(['auth', 'no.admin']);
