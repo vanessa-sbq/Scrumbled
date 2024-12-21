@@ -74,5 +74,13 @@ class Kernel extends HttpKernel
         'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class,
         'not.archived.api' => \App\Http\Middleware\ProjectReadOnlyIfArchivedApi::class,
         'not.archived' => \App\Http\Middleware\ProjectReadOnlyIfArchived::class,
+        'comment.not.archived' => \App\Http\Middleware\CommentReadOnlyIfArchived::class,
+        'sprint.not.archived' => \App\Http\Middleware\SprintReadOnlyIfArchived::class,
+        'sprint.can.access' => \App\Http\Middleware\SprintAccess::class,
+        'task.can.access' => \App\Http\Middleware\TaskAccess::class,
+        'task.can.access.api' => \App\Http\Middleware\TaskAccessApi::class,
+        'task.not.archived' => \App\Http\Middleware\TaskReadOnlyIfArchived::class,
+        'task.not.archived.api' => \App\Http\Middleware\TaskReadOnlyIfArchivedApi::class,
+        'can.alter.comment' => \App\Http\Middleware\CanAlterComment::class
     ];
 }

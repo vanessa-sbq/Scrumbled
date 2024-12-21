@@ -1,7 +1,7 @@
     @extends('web.layout')
 
     @section('content')
-        <div class="container p-4 md:py-16">
+        <div class="container py-8 p-4">
             <!-- Navbar with Breadcrumb -->
             @include('web.sections.project.components._navbar', ['project' => $project])
 

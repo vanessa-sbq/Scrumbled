@@ -20,7 +20,11 @@
         <x-lucide-chevron-right />
     </div>
 
-    <div class="flex flex-col flex-1 container p-4 md:py-16">
+    <x-modal id="leave_project_modal" title="Leave Project" closeButtonText="Cancel" saveButtonText="Leave" saveAction="leaveProject" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+        <p>Are you sure you want to leave this project? This action cannot be reverted by you.</p>
+    </x-modal>
+
+    <div class="flex flex-col flex-1 container py-8 p-4">
         <!-- Navbar with Breadcrumb -->
         @php $hidden = "hidden" @endphp
         @include('web.sections.project.components._navbar', ['project' => $project, 'hidden' => $hidden])
@@ -36,8 +40,6 @@
                 @else
                     @include('web.sections.project.components._team', ['project' => $project, 'developers' => $developers])
                 @endif
-
-
             </div>
         </div>
     </div>

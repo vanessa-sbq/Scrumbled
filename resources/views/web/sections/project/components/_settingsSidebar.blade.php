@@ -11,9 +11,6 @@
                     Leave Project
                 </button>
                 <span class="absolute left-0 top-0 rounded h-full w-full bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                <x-modal id="leave_project_modal" title="Leave Project" closeButtonText="Cancel" saveButtonText="Leave" saveAction="leaveProject" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
-                    <p>Are you sure you want to leave this project? This action cannot be reverted by you.</p>
-                </x-modal>
             </div>
         @endif
     </nav>

@@ -107,11 +107,11 @@
         <!-- Archive this project -->
         <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
-                <h3 class="font-semibold">Archive this project</h3>
-                <p class="text-gray-400">Mark this project as archived.</p>
+                <h3 class="font-semibold">{{$project->is_archived ? 'Una' : 'A'}}rchive this project</h3>
+                <p class="text-gray-400">Mark this project as {{$project->is_archived ? 'active' : 'archived'}}.</p>
             </div>
             <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="archive_project">
-                Archive this project
+                {{$project->is_archived ? 'Una' : 'A'}}rchive this project
             </button>
 
             <x-modal id="archive_modal" title="Project Archival" closeButtonText="Cancel" saveButtonText="Proceed" saveAction="archiveProject" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">

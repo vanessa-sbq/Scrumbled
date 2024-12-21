@@ -53,5 +53,10 @@ function leaveProject() {
 }
 
 if (document.querySelector('.leave_project_button') != null) {
-    document.querySelector('.leave_project_button').addEventListener('click',() => {openModal('leave_project_modal');});
+    document.querySelectorAll('.leave_project_button').forEach( (button) => {
+        button.addEventListener('click', () => {
+            console.log("aaa");
+            openModal('leave_project_modal');
+        });
+    });
 }
