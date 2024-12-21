@@ -1,4 +1,4 @@
-<div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
+<div id="SPRINT_BACKLOG" class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white border-b border-black rounded-t-lg">
             <tr>

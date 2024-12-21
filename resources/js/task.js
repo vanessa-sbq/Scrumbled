@@ -14,95 +14,40 @@ function sendStateChange(url, state) {
         });
 }
 
-function placeTask(taskElement, url, state) {
-    let inProgressContainer = document.querySelector('#in-progress');
-    let doneContainer = document.querySelector('#done');
-    let acceptedContainer = document.querySelector('#accepted');
-
-    taskElement.parentNode.removeChild(taskElement);
-
-    let buttons = taskElement.querySelector('#buttons');
-
-    buttons.innerText = '';
-
-    let rightArrow = document.createElement("button");
-    rightArrow.innerText = "➡️";
-    rightArrow.className = "arrow-button";
-    rightArrow.setAttribute('data-url', url);
-
-    let leftArrow = document.createElement("button");
-    leftArrow.innerText = "⬅️";
-    leftArrow.className = "arrow-button";
-    leftArrow.setAttribute('data-url', url);
-
-    switch (state) {
-        case 'IN_PROGRESS':
-            rightArrow.setAttribute('data-state', 'DONE');
-            rightArrow.addEventListener('click', buttonListener);
-            buttons.appendChild(rightArrow); // Append the right button
-            inProgressContainer.appendChild(taskElement); // Append to the right table.
-            break;
-        case 'DONE':
-            leftArrow.setAttribute('data-state', 'IN_PROGRESS');
-            leftArrow.addEventListener('click', buttonListener);
-            buttons.appendChild(leftArrow); // Append the left button
-
-            rightArrow.setAttribute('data-state', 'ACCEPTED');
-            rightArrow.addEventListener('click', buttonListener);
-            buttons.appendChild(rightArrow); // Append the right button
-
-            doneContainer.appendChild(taskElement);
-            break;
-        case 'ACCEPTED':
-            leftArrow.setAttribute('data-state', 'DONE');
-            leftArrow.addEventListener('click', buttonListener);
-            buttons.appendChild(leftArrow); // Append the left button
-            acceptedContainer.appendChild(taskElement);
-            break;
-        default:
-            alert('An error occurred.');
-            location.reload();
-            break;
-    }
-}
-
-function buttonListener() {
-    const url = this.getAttribute('data-url');
-    const state = this.getAttribute('data-state');
-
+function placeTask(taskElement, url, state, target) {
     sendStateChange(url, state)
         .then(data => {
-            if (data.status !== 'success') {
-                alert(data.message || 'An error occurred.');
+            if (data.status === 'success') {
+                const targetContainer = document.querySelector(`#${target}`);
+                targetContainer.appendChild(taskElement);
             }
         })
-        .finally(() => location.reload());
+        .finally(() => location.reload()); // Reload to reflect changes
 }
 
-function arrowListener() {
+function stateButtonListener() {
     const url = this.getAttribute('data-url');
     const state = this.getAttribute('data-state');
 
-    placeTask(this.parentElement.parentElement, url, state);
-
-    sendStateChange(url, state)
-        .then(data => {
-            if (data.status !== 'success') {
-                alert(data.message || 'An error occurred.');
-                location.reload();
-            }
-        });
+    const taskElement = this.closest('.task-card');
+    placeTask(taskElement, url, state, 'IN_PROGRESS');
 }
 
+function cancelButtonListener() {
+    const url = this.getAttribute('data-url');
+    const state = this.getAttribute('data-state');
 
-document.querySelectorAll('.arrow-button').forEach(button => {
-    button.addEventListener('click', arrowListener);
+    const taskElement = this.closest('.task-card');
+    placeTask(taskElement, url, state, 'SPRINT_BACKLOG');
+}
+
+document.querySelectorAll('.cancel-button').forEach(button => {
+    button.addEventListener('click', cancelButtonListener);
 });
 
 document.querySelectorAll('.state-button').forEach(button => {
-    button.addEventListener('click', buttonListener);
+    button.addEventListener('click', stateButtonListener);
 });
-
 
 // Handle "Show only my tasks" checkbox
 const showMyTasksCheckbox = document.getElementById('showMyTasks');
