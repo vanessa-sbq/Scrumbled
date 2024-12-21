@@ -5,9 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const effortInput = document.getElementById("effort-input");
     const searchInput = document.getElementById("task-search-input");
     const taskSearchForm = document.getElementById("task-search");
+    const assignedInput = document.getElementById("assigned-input");
 
     // Element for task counter
-    const taskCounterElement = document.querySelector("th.text-lg.font-bold.text-primary"); // Adjust the selector if needed
+    const taskCounterElement = document.querySelector("th.text-lg.font-bold.text-primary");
 
     // Function to fetch filtered tasks
     function fetchFilteredTasks(event) {
@@ -18,9 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const state = stateInput.value;
         const value = valueInput.value;
         const effort = effortInput.value;
+        const assignedTo = assignedInput.value; // Get selected developer or 'unassigned'
 
         // Append existing filters to the search URL
-        const params = new URLSearchParams({ query, state, value, effort });
+        const params = new URLSearchParams({ query, state, value, effort, assigned_to: assignedTo });
         const url = `${taskSearchForm.action}?${params.toString()}`;
 
         // Update the URL without reloading the page
@@ -76,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Attach event listeners for filters and search
-    [stateInput, valueInput, effortInput].forEach((input) =>
+    [stateInput, valueInput, effortInput, assignedInput].forEach((input) =>
         input.addEventListener("change", fetchFilteredTasks)
     );
     taskSearchForm.addEventListener("submit", fetchFilteredTasks);

@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!confirm('Are you sure you want to delete this comment?')) return;
 
             fetch(deleteCommentUrl, {
-                method: "DELETE",
+                method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": csrfToken,
                 },

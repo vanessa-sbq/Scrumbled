@@ -201,6 +201,7 @@ Route::controller(TaskController::class)->group(function () {
             Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
             Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
             Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
+            Route::post('projects/{slug}/tasks/{id}/delete', 'deleteTask')->name('tasks.deleteTask');
         });
         Route::middleware(['task.not.archived.api', 'task.can.access.api'])->group(function () {
             Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');

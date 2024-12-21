@@ -22,6 +22,10 @@ class TaskController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Task must be in the sprint backlog to be assigned.'], 400);
         }
 
+        if (!$task->project->developers->contains($request->user_id)) {
+            return response()->json(['status' => 'error', 'message' => 'User is not a developer for this project.'], 403);
+        }
+
         // Ensure the task is not already assigned
         if ($task->assigned_to !== null) {
             return response()->json(['status' => 'error', 'message' => 'Task is already assigned to another user.'], 400);
@@ -30,7 +34,13 @@ class TaskController extends Controller
         // Assign the task to the user
         $task->update(['assigned_to' => $request->user_id]);
 
-        return response()->json(['status' => 'success']);
+        $task->load('assignedDeveloper');
+
+        return response()->json([
+            'status' => 'success',
+            'userComponent' => view('components.user', ['user' => $task->assignedDeveloper->user])->render(),
+            'assignedToCurrentUser' => $task->assignedDeveloper->user_id === Auth::id(),
+        ]);
     }
 
     public function updateState(Request $request, $taskId)
@@ -116,5 +126,16 @@ class TaskController extends Controller
         $comments = $task->comments()->orderBy('created_at', 'asc')->get();
 
         return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project, 'comments' => $comments,]);
+    }
+
+    public function deleteTask($slug, $id)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $task = Task::where('id', $id)->where('project_id', $project->id)->firstOrFail();
+
+        $task->delete();
+
+        return redirect()->route('projects.backlog', ['slug' => $slug])
+            ->with('success', 'Task deleted successfully.');
     }
 }

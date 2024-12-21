@@ -25,12 +25,14 @@
         @endif
     </td>
 
-    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-        <button
-                data-url="{{ route('tasks.updateState', $task->id) }}"
-                data-state="{{ $state === 'backlog' ? 'BACKLOG' : 'SPRINT_BACKLOG' }}"
-                class="{{ $state === 'backlog' ? 'add-button bg-primary' : 'remove-button bg-primary' }} text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
-            {{ $state === 'backlog' ? 'Add to Sprint' : 'Remove' }}
-        </button>
-    </td>
+    @if ($currentSprint)
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+            <button id="{{ $currentSprint->id }}"
+                    data-url="{{ route('tasks.updateState', $task->id) }}"
+                    data-state="{{ $task->state === 'BACKLOG' ? 'BACKLOG' : 'SPRINT_BACKLOG' }}"
+                    class="{{ $task->state === 'BACKLOG' ? 'add-button bg-primary' : 'remove-button bg-primary' }} text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
+                {{ $task->state === 'BACKLOG' ? 'Add to Sprint' : 'Remove' }}
+            </button>
+        </td>
+    @endif
 </tr>

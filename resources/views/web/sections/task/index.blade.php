@@ -21,8 +21,9 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="flex gap-2 mb-2">
-                    <select id="state-input" name="state" class="w-1/5 border py-1.5 px-2 rounded text-sm">
+                <div class="flex gap-4 mb-2">
+                    <!-- State Filter -->
+                    <select id="state-input" name="state" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
                         <option value="">All States</option>
                         <option value="BACKLOG">Backlog</option>
                         <option value="SPRINT_BACKLOG">Sprint Backlog</option>
@@ -30,14 +31,18 @@
                         <option value="DONE">Done</option>
                         <option value="ACCEPTED">Accepted</option>
                     </select>
-                    <select id="value-input" name="value" class="w-1/5 border py-1.5 px-2 rounded text-sm">
+
+                    <!-- Value Filter -->
+                    <select id="value-input" name="value" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
                         <option value="">All Values</option>
                         <option value="MUST_HAVE">Must Have</option>
                         <option value="SHOULD_HAVE">Should Have</option>
                         <option value="COULD_HAVE">Could Have</option>
                         <option value="WILL_NOT_HAVE">Will Not Have</option>
                     </select>
-                    <select id="effort-input" name="effort" class="w-1/5 border py-1.5 px-2 rounded text-sm">
+
+                    <!-- Effort Filter -->
+                    <select id="effort-input" name="effort" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
                         <option value="">All Efforts</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -45,6 +50,15 @@
                         <option value="5">5</option>
                         <option value="8">8</option>
                         <option value="13">13</option>
+                    </select>
+
+                    <!-- Assigned To Filter -->
+                    <select id="assigned-input" name="assigned_to" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
+                        <option value="">All Developers</option>
+                        @foreach($project->developers as $developer)
+                            <option value="{{ $developer->id }}">{{ $developer->username }}</option>
+                        @endforeach
+                        <option value="unassigned">Unassigned</option>
                     </select>
                 </div>
             </form>

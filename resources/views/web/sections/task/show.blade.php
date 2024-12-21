@@ -18,10 +18,20 @@
             <header class="mb-6 border-b pb-4 flex justify-between items-center">
                 <h1 class="text-3xl font-extrabold text-primary">{{ $task->title }}</h1>
                 @if (Auth::guard("admin")->check() || Auth::user())
-                <a href="{{ route('tasks.showEdit', ['slug' => $project->slug, 'id' => $task->id]) }}"
-                   class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition ml-auto">
-                    Edit Task
-                </a>
+                    <div class="flex gap-4">
+                        <!-- Edit Task Button -->
+                        <a href="{{ route('tasks.showEdit', ['slug' => $project->slug, 'id' => $task->id]) }}"
+                           class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                            Edit Task
+                        </a>
+                        <!-- Delete Task Button -->
+                        <form action="{{ route('tasks.deleteTask', ['slug' => $project->slug, 'id' => $task->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this task?');">
+                            @csrf
+                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+                                Delete Task
+                            </button>
+                        </form>
+                    </div>
                 @endif
             </header>
 

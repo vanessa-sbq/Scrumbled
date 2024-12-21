@@ -23,7 +23,7 @@
                     <tr>
                         <th
                             class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
-                            To Do ({{ count($backlogTasks) }})
+                            To Do <span id="backlog-counter">({{ count($backlogTasks) }})</span>
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
                             Effort</th>
@@ -66,7 +66,7 @@
                         <tr>
                             <th
                                 class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
-                                Sprint Backlog ({{ count($sprintBacklogTasks) }})
+                                Sprint Backlog <span id="sprint-counter">({{ count($sprintBacklogTasks) }})</span>
                             </th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">

@@ -88,6 +88,24 @@ document.addEventListener('DOMContentLoaded', function () {
         // Move the task card to the new column
         event.currentTarget.appendChild(taskCard);
 
+        if (targetColumn !== 'IN_PROGRESS') {
+            const cancelButton = taskCard.querySelector('.cancel-button');
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+        }
+
+        if (targetColumn === 'IN_PROGRESS') {
+            let cancelButton = taskCard.querySelector('.cancel-button');
+            cancelButton = document.createElement('button');
+            cancelButton.className = 'cancel-button bg-gray-400 text-white px-3 py-1 rounded-md hover:bg-gray-500 transition';
+            cancelButton.textContent = 'Cancel';
+            cancelButton.setAttribute('data-url', `/tasks/${taskId}/state`);
+            cancelButton.setAttribute('data-state', 'SPRINT_BACKLOG');
+            cancelButton.addEventListener('click', cancelButtonListener);
+            taskCard.appendChild(cancelButton);
+        }
+
         // Perform the move (e.g., send an AJAX request to update the task status)
         updateTaskStatus(taskId, targetColumn);
 

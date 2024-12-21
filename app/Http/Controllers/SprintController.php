@@ -145,8 +145,13 @@ class SprintController extends Controller {
     {
         $sprint = Sprint::where('id', $id)->firstOrFail();
 
-        $sprint->update(['is_archived' => true]);
+        $tasks = $sprint->tasks()->where('state', '!=', 'ACCEPTED')->get();
+        foreach ($tasks as $task) {
+            $task->update(['state' => 'BACKLOG']);
+        }
 
-        return redirect()->back()->with('success', 'Sprint closed successfully!');
+        $sprint->update(['is_archived' => true]);
+        
+        return redirect()->back()->with('success', 'Sprint closed successfully and tasks moved to BACKLOG!');
     }
 }
