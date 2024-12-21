@@ -87,6 +87,12 @@ document.getElementById('changeTitleBtn').addEventListener('click', function(eve
         return; // Prevent the fetch request
     }
 
+    if (title.length > 20) {
+        titleError.textContent = "Title cannot exceed 20 characters.";
+        titleError.style.display = "block";
+        return; // Prevent the fetch request
+    }
+
     // Prepare form data
     const formData = {
         title: title,
@@ -125,8 +131,8 @@ document.getElementById('changeDescriptionBtn').addEventListener('click', functi
     descriptionError.style.display = "none"; // Clear any previous error
 
     // Validate description length
-    if (description.length > 5000) {
-        descriptionError.textContent = "Description cannot exceed 5000 characters.";
+    if (description.length > 3000) {
+        descriptionError.textContent = "Description cannot exceed 3000 characters.";
         descriptionError.style.display = "block";
         return; // Prevent the fetch request
     }

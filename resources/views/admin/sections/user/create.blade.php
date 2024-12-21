@@ -58,7 +58,7 @@
 
             <!-- Bio -->
             <div>
-                <label for="bio" class="block text-gray-700">Bio</label>
+                <label for="bio" class="block text-gray-700 ">Bio</label>
                 <textarea id="bio" name="bio" placeholder="Write a short biography" class="w-full px-3 py-2 border rounded"></textarea>
                 @error('bio')
                     <div class="text-red-500 mt-2">{{ $message }}</div>

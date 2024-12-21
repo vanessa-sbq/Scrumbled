@@ -8,10 +8,10 @@
             {{ csrf_field() }}
 
             {{-- Full Name --}}
-            <x-input type="text" name="full_name" label="Full Name" placeholder="Enter your full name" required autofocus />
+            <x-input type="text" name="full_name" label="Full Name" placeholder="Enter your full name" maxlength="30" required autofocus />
 
             {{-- Username --}}
-            <x-input type="text" name="username" label="Username" placeholder="Enter your username" required autofocus />
+            <x-input type="text" name="username" label="Username" placeholder="Enter your username" maxlength="20" required autofocus />
 
             {{-- Email --}}
             <x-input type="email" name="email" label="E-Mail" placeholder="Enter your email" required />
