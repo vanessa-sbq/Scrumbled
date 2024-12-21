@@ -30,6 +30,10 @@ class CheckProjectMembership
             return $next($request);
         }
 
+        if (!Auth::user()) {
+            return redirect()->route('projects')->with('error', 'You do not have access to this project.');
+        }
+
         $authId = Auth::user()->id;
 
         $pending_developers = DeveloperProject::where(['project_id' => $project->id, 'is_pending' => true])->get();
