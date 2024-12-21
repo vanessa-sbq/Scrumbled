@@ -46,6 +46,13 @@
                         <option value="8">8</option>
                         <option value="13">13</option>
                     </select>
+                    <select id="assigned-input" name="assigned_to" class="w-1/5 border py-1.5 px-2 rounded text-sm">
+                        <option value="">All Developers</option>
+                        @foreach($project->developers as $developer)
+                            <option value="{{ $developer->id }}">{{ $developer->username }}</option>
+                        @endforeach
+                        <option value="unassigned">Unassigned</option>
+                    </select>
                 </div>
             </form>
 

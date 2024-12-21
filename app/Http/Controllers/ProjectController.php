@@ -248,7 +248,14 @@ class ProjectController extends Controller
 
         // Apply filters
         if ($request->filled('assigned_to')) {
-            $tasks->where('assigned_to', $request->input('assigned_to'));
+            // Handle "assigned_to" filter
+            if ($request->input('assigned_to') === 'unassigned') {
+                // Filter tasks that are not assigned to anyone
+                $tasks->whereNull('assigned_to');
+            } else {
+                // Filter tasks assigned to a specific developer
+                $tasks->where('assigned_to', $request->input('assigned_to'));
+            }
         }
 
         if ($request->filled('value')) {
