@@ -2,6 +2,7 @@
  
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\AuthenticatedUser;
 use Illuminate\Http\Request;
@@ -60,20 +61,60 @@ class LoginController extends Controller
         return view('web.sections.auth.forgotPassword');
     }
 
-    public function resetPassword(Request $request) {
+    public function sendResetLink(Request $request) {
         $count = AuthenticatedUser::where('email', $request->email)->count();
-
         if ($count > 0){
+            $token = bin2hex(random_bytes(32)); // Generate a token
+            $expires_at = now()->addHour(); // Expires 1 hour from now
+            DB::table('password_resets')->insert([
+                'email' => $request->email,
+                'token' => $token,
+                'expires_at' => $expires_at
+            ]);
+
             $user = AuthenticatedUser::where('email', $request->email)->first();
-            $randomPass = rand(111111, 999999);
-            $user->password = Hash::make($randomPass);
-            $user->save();
-            $user->random_password = $randomPass;
-            Mail::to($user->email)->send(new ForgotPasswordMail($user));
+            $user->reset_link = url()->current() . '/reset-password?token=' . $token;
+            Mail::to($user->email)->send(new ForgotPasswordMail($user, $token));
             return redirect()->back()->with('success', 'Password has been sent to email');
         } else {
             return redirect()->back()->with('error', 'Email not found');
         }
+    }
+
+    public function resetForm(){
+        return view('web.sections.auth.resetPassword');
+    }
+
+    public function resetPassword(Request $request){
+
+        $request->validate([
+            'token' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $resetData = DB::table('password_resets')->where('token', $request->token)->first();
+        if (!$resetData) {
+            return redirect()->back()->with('error', 'Invalid token');
+        }
+
+        if (strtotime($resetData->expires_at) < time()) {
+            return redirect()->back()->with('error', 'Token has expired');
+        }
+
+        $user = AuthenticatedUser::where('email', $resetData->email)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found');
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        DB::table('password_resets')
+            ->where('email', $resetData->email)
+            ->delete();
+
+        return redirect()->route('login')->with('success', 'Password has been reset successfully');
     }
 
     /**
