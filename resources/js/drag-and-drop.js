@@ -90,7 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (targetColumn !== 'IN_PROGRESS') {
             const cancelButton = taskCard.querySelector('.cancel-button');
-            cancelButton.remove(); // Remove the button from the DOM
+            if (cancelButton) {
+                cancelButton.remove();
+            }
         }
 
         if (targetColumn === 'IN_PROGRESS') {
