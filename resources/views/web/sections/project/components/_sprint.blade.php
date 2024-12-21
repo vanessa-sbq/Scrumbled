@@ -51,17 +51,17 @@
                             <button class="open-sidebar-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                                 Assign
                             </button>
-                            <div class="assign-sidebar fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50">
-                                <div class="p-4 border-b flex justify-between items-center">
-                                    <h2 class="text-lg font-semibold">Assign Developer</h2>
+                            <div class="assign-sidebar fixed top-0 right-0 w-80 h-full bg-white p-6 rounded-lg shadow-md transform translate-x-full transition-transform duration-300 z-50">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-semibold text-gray-800">Assign Developer</h2>
                                     <button class="close-sidebar-button text-gray-500 hover:text-gray-700">✖</button>
                                 </div>
-                                <div class="p-4 overflow-y-auto">
+                                <div class="overflow-y-auto">
                                     @if (count($task->project->developers) > 0)
                                         @foreach ($task->project->developers as $developer)
-                                            <div class="flex justify-between items-center py-2 border-b">
-                                                <span>{{ $developer->username }}</span>
-                                                <button class="assign-button bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 transition"
+                                            <div class="flex justify-between items-center p-4 mb-4 border border-gray-300 rounded-md shadow-sm">
+                                                <span class="font-medium text-gray-800">{{ $developer->username }}</span>
+                                                <button class="assign-button bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                                                         data-developer-id="{{ $developer->id }}"
                                                         data-task-id="{{ $task->id }}">
                                                     Assign
@@ -69,10 +69,14 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        <p>No developers available.</p>
+                                        <div class="p-4 border border-gray-300 rounded-md text-gray-500">
+                                            No developers available.
+                                        </div>
                                     @endif
                                 </div>
                             </div>
+
+</div>
                         @elseif (Auth::check() && $task->assigned_to == Auth::id())
                         <!-- Start Button -->
                         <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS"
