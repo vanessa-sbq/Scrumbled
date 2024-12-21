@@ -127,4 +127,15 @@ class TaskController extends Controller
 
         return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project, 'comments' => $comments,]);
     }
+
+    public function deleteTask($slug, $id)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $task = Task::where('id', $id)->where('project_id', $project->id)->firstOrFail();
+
+        $task->delete();
+
+        return redirect()->route('projects.backlog', ['slug' => $slug])
+            ->with('success', 'Task deleted successfully.');
+    }
 }
