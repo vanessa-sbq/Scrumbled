@@ -64,7 +64,8 @@
                                     <h3 class="text-red-700">(Banned)</h3>
                             @endswitch
                         </div>
-                        <h3>Bio: {{ $profileOwner->bio }}</h3>
+                        <h3>Bio:</h3>
+                        <div class="whitespace-normal break-words w-full max-w-full">{{ $profileOwner->bio }}</div>
                     </div>
                 </div>
             </div>

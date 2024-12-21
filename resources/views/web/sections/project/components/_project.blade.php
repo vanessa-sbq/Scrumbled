@@ -17,8 +17,8 @@
                 {{ $project->title }}
             </a>
         </h2>
-        <p class="text-gray-700 mb-4 overflow-hidden text-ellipsis truncate text-wrap">
-            {{ $project->description }}
+        <p class="text-gray-700 mb-4 overflow-hidden text-ellipsis truncate text-wrap break-all">
+            {{ Str::limit($project->description, 100) }}
         </p>
     </div>
 </div>

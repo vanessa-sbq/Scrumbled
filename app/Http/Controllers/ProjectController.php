@@ -103,8 +103,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title' => 'required|string|max:20',
+            'description' => 'nullable|string|max:3000',
             'is_public' => 'required|boolean',
             'is_archived' => 'boolean'
         ]);
