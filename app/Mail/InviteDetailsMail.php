@@ -14,13 +14,19 @@ class InviteDetailsMail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $project;
+    public $inviter;
+    public $url;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $project, $inviter, $url)
     {
         $this->user = $user;
+        $this->project = $project;
+        $this->inviter = $inviter;
+        $this->url = $url;
     }
 
     /**
