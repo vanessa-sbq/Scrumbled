@@ -118,7 +118,7 @@ function canMoveTask(taskCard, targetColumn) {
     if (canManageProject) {
         return true;
     }
-    if (assignedTo === userId_dragndrop && (targetColumn === 'IN_PROGRESS' || targetColumn === 'DONE')) {
+    if (assignedTo === userId_dragndrop && (targetColumn === 'IN_PROGRESS' || targetColumn === 'DONE') && sourceColumnId !== 'ACCEPTED') {
         return true;
     }
     return false;

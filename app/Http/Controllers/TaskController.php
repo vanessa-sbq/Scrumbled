@@ -61,7 +61,13 @@ class TaskController extends Controller
         // Authorization checks
         $userId = Auth::id();
 
-        if (in_array($newState, ['IN_PROGRESS', 'DONE', 'ACCEPTED']) && $task->assigned_to !== $userId) {
+        $project = Project::findOrFail($task->project_id);
+
+        if ($userId !== $project->product_owner_id && in_array($newState, ['IN_PROGRESS', 'DONE']) && $task->assigned_to !== $userId && $task->state === 'ACCEPTED') {
+            return response()->json(['status' => 'error', 'message' => 'You are not authorized to modify this task.'], 403);
+        }
+
+        if ($userId !== $project->product_owner_id && $task->state === 'ACCEPTED') {
             return response()->json(['status' => 'error', 'message' => 'You are not authorized to modify this task.'], 403);
         }
 
