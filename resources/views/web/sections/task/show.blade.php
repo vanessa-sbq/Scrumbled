@@ -9,7 +9,7 @@
                 {{ $project->title }}
             </a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="font-bold text-gray-800">{{ $task->title }}</span>
+            <span class="font-bold text-gray-800 truncate text-wrap break-all ">{{ $task->title }}</span>
         </nav>
 
         <!-- Task Details Section -->
@@ -41,7 +41,7 @@
                 <section>
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Details</h2>
                     <div class="space-y-3 text-gray-600 text-sm">
-                        <p>
+                        <p class="text-gray-700 mb-4 overflow-hidden text-ellipsis truncate text-wrap break-all">
                             <span class="font-semibold">Description:</span>
                             {{ $task->description ?? 'No description provided' }}
                         </p>

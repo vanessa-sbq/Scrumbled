@@ -12,13 +12,15 @@
                 <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
                 <input type="text" name="title" id="title" value="{{ $task->title }}"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Enter the task title">
+                    placeholder="Enter the task title"
+                    maxlength="50">
             </div>
 
             <!-- Description -->
             <div class="mb-4">
                 <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
                 <textarea name="description" id="description"
+                    maxlength="2000"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Provide a brief description">{{ $task->description }}</textarea>
             </div>

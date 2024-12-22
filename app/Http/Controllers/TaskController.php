@@ -94,12 +94,21 @@ class TaskController extends Controller
     public function createNew(Request $request)
     {
         $project = Project::where('slug', $request->slug)->firstOrFail();
-        $task = new Task();
-        $task->project_id = $project->id;
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->value = $request->value;
-        $task->effort = $request->effort;
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:2000',
+            'effort' => 'required',
+            'value' => 'required',
+        ]);
+
+        $task = new Task([
+            'project_id' => $project->id,
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? 'No description',
+            'value' => $validated['value'],
+            'effort' => $validated['effort'],
+        ]);
 
         if ($this->authorize('create', $task)){
             $task->save();
@@ -116,11 +125,18 @@ class TaskController extends Controller
     }
 
     public function editTask(Request $request, $slug, $taskId){
+        $validated = $request->validate([
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:2000',
+            'effort' => 'required',
+            'value' => 'required',
+        ]);
+
         $task = Task::findOrFail($taskId);
-        $task->title = $request->title;
-        $task->description = $request->description;
-        $task->value = $request->value;
-        $task->effort = $request->effort;
+        $task->title =  $validated['title'];
+        $task->description = $validated['description'] ?? 'No description';
+        $task->value = $validated['value'];
+        $task->effort = $validated['effort'];
 
         if ($this->authorize('update', $task)){
             $task->save();

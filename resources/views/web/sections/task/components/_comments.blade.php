@@ -36,7 +36,9 @@
 
     <!-- Comment Text -->
     <div id="comment-text-{{ $comment->id }}" class="mb-2">
-        {{ $comment->description }}
+        <p class="overflow-hidden text-ellipsis truncate text-wrap break-all">
+            {{ $comment->description }}
+        </p>
     </div>
 
     <!-- Edit Comment Form -->
