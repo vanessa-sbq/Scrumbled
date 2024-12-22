@@ -116,8 +116,8 @@ Route::controller(ProfileController::class)->group(function () {
         Route::get('/profiles', 'index')->name('profiles');
         Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
         Route::middleware(['auth', 'no.admin'])->group(function () {
-            Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
-            Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
+            Route::get('/profiles/{username}/settings', 'showProfileSettings')->name('profile.settings');
+            Route::post('/profiles/{username}/store', 'store')->name('profiles.store');
         });
     });
 });

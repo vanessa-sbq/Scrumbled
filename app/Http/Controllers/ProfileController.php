@@ -78,7 +78,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function showEditProfileUI($username)
+    public function showProfileSettings($username)
     {
         $profileOwner = AuthenticatedUser::where('username', $username)->get();
 
@@ -87,13 +87,13 @@ class ProfileController extends Controller
         }
 
         if (Auth::check() && Auth::user()->username === $username) {
-            return view('web.sections.profile.edit', ['user' => Auth::user()]);
+            return view('web.sections.profile.settings', ['user' => Auth::user()]);
         }
 
         abort(403);
     }
 
-    public function editProfile(Request $request)
+    public function store(Request $request)
     {
 
         if (!(Auth::check() && Auth::user()->id !== $request->id)) {

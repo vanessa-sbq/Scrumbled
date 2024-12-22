@@ -13,15 +13,6 @@
                 <h2 class="text-2xl font-bold">{{ $profileOwner->full_name }}</h2>
                 <h5>{{ $profileOwner->username }}</h5>
             </div>
-
-            @if (Auth::check())
-                @if ($user->username === $profileOwner->username)
-                    <a href="{{ route('edit.profile.ui', ['username' => $user->username]) }}"
-                        class="ml-auto place-self-start bg-primary text-white p-3 rounded hover:bg-blue-600">
-                        Edit Profile
-                    </a>
-                @endif
-            @endif
         </div>
 
         {{-- Check if the profile is public OR user has access --}}
