@@ -23,7 +23,7 @@
                 </a>
             @endif
         </header>
-
+        @if ($profileOwner->is_public || (Auth::check() && ($user->username === $profileOwner->username || $user->isInSameProject($profileOwner))))
         <div class="flex flex-col-reverse md:flex-row gap-4">
             <!-- User Projects -->
             <div class="md:w-2/3 space-y-4">
@@ -75,5 +75,13 @@
                 </div>
             </div>
         </div>
+        @else
+            {{-- If the user does not have access to this profile --}}
+            <div class="text-center text-gray-600 mt-8">
+                <h2 class="text-2xl font-bold">This Profile Is Private</h2>
+                <p>You do not have permission to view this profile.</p>
+            </div>
+        @endif
+
     </div>
 @endsection

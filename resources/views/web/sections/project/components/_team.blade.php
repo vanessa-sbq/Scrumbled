@@ -3,11 +3,11 @@
     <h2 class="text-xl font-semibold mb-4">Product Owner</h2>
     @if ($project->productOwner)
         <div class="flex items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
-            <div class="flex items-center space-x-4">
+            <a href="{{route('show.profile', App\Models\AuthenticatedUser::where(['id' => $project->productOwner->id])->firstOrFail()->username)}}" class="flex items-center space-x-4">
                 <img src="{{ $project->productOwner->picture ? asset('storage/' . $project->productOwner->picture) : asset('images/users/default.png') }}"
                     alt="{{ $project->productOwner->full_name }}" class="w-12 h-12 rounded-full">
                 <span class="font-medium text-gray-800">{{ $project->productOwner->full_name }}</span>
-            </div>
+            </a>
         </div>
     @else
         <div class="mb-4 p-4 border border-gray-300 rounded-md text-gray-500">No Product Owner assigned.</div>
@@ -18,11 +18,11 @@
     @if ($project->scrumMaster)
         <div
             class="flex flex-col gap-2 md:flex-row md:gap-0 md:items-center justify-between mb-4 p-4 border border-gray-300 rounded-md shadow-sm">
-            <div class="flex flex-wrap md:flex-nowrap items-center space-x-4">
+            <a href="{{route('show.profile', App\Models\AuthenticatedUser::where(['id' => $project->scrumMaster->id])->firstOrFail()->username)}}" class="flex flex-wrap md:flex-nowrap items-center space-x-4">
                 <img src="{{ $project->scrumMaster->picture ? asset('storage/' . $project->scrumMaster->picture) : asset('images/users/default.png') }}"
                     alt="{{ $project->scrumMaster->full_name }}" class="w-12 h-12 rounded-full">
                 <span class="font-medium text-gray-800">{{ $project->scrumMaster->full_name }}</span>
-            </div>
+            </a>
             @if (Auth::guard('admin')->check() || auth()->id() === $project->product_owner_id)
                 <button data-user-id="{{ $project->scrum_master_id }}"
                     class="remove_sm_button px-3 py-1 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-md">
@@ -41,11 +41,11 @@
             @foreach ($developers as $developer)
                 <div
                     class="flex flex-col gap-2 md:flex-row md:gap-0 md:items-center p-4 border border-gray-300 rounded-md shadow-sm">
-                    <div class="flex justify-self-start flex-wrap md:flex-nowrap items-center space-x-4">
+                    <a href="{{route('show.profile', $developer->username)}}" class="flex justify-self-start flex-wrap md:flex-nowrap items-center space-x-4">
                         <img src="{{ $developer->picture ? asset('storage/' . $developer->picture) : asset('images/users/default.png') }}"
                             alt="{{ $developer->full_name }}" class="w-12 h-12 rounded-full">
                         <span class="font-medium text-gray-800">{{ $developer->full_name }}</span>
-                    </div>
+                    </a>
                     <div class=" md:ml-auto flex gap-2 items-center justify-center flex-wrap">
                         @if (Auth::guard('admin')->check() || auth()->id() === $project->product_owner_id)
                             @if (!isset($project->scrum_master_id))
