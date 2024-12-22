@@ -76,7 +76,6 @@ class SprintController extends Controller {
      */
     public function store(Request $request, $slug)
     {
-        // Get project by slug
         $project = Project::where('slug', $slug)->firstOrFail();
 
         $openSprint = Sprint::where('project_id', $project->id)->where('is_archived', false)->first();
@@ -88,16 +87,17 @@ class SprintController extends Controller {
         // Validate the request data
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'nullable|date|after_or_equal:today',
+            'end_date' => 'nullable|date|after:start_date',
             'is_archived' => 'nullable|boolean',
         ]);
 
-        // Create the sprint with default values where needed
-        $sprint = Sprint::create([
+        $startDate = $validated['start_date'] ?? now()->toDateString();
+
+        Sprint::create([
             'project_id' => $project->id,
             'name' => $validated['name'] ?? null,
-            'start_date' => $validated['start_date'] ?? now(),
+            'start_date' => $startDate,
             'end_date' => $validated['end_date'] ?? null,
             'is_archived' => $validated['is_archived'] ?? false,
         ]);
@@ -125,14 +125,16 @@ class SprintController extends Controller {
 
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'nullable|date|after_or_equal:today',
+            'end_date' => 'nullable|date|after:start_date',
             'is_archived' => 'nullable|boolean',
         ]);
 
+        $startDate = $validated['start_date'] ?? $sprint->start_date ?? now()->toDateString();
+        
         $sprint->update([
             'name' => $validated['name'] ?? $sprint->name,
-            'start_date' => $validated['start_date'] ?? $sprint->start_date,
+            'start_date' => $startDate,
             'end_date' => $validated['end_date'] ?? $sprint->end_date,
         ]);
 
