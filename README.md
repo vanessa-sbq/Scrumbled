@@ -1,93 +1,225 @@
 # lbaw24113
 
+Scrumbled fosters an environment where agile project management is approachable and straightforward while enabling teams to adopt and master the Scrum methodology with ease. Improving team collaboration is key, with each sprint serving as an opportunity for effective, transparent, and targeted advancement.
 
+Scrumbled is a project management website, designed to use the Scrum Framework. It is easy to use and helps users follow Scrum practices to ensure a good team collaboration.
 
-## Getting started
+### 1. Installation
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The final version of the Docker image can be found [here](gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113), this needs to be used with the command below.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Using Mailtrap
+In order to view the emails sent to Mailtrap, we have created a test account.
+Note that Mailtrap has a limit of 100 monthly emails for the free version.
 
-## Add your files
+The Gmail account for mailtrap has the following credentials:
+- Email: ``scrumbledTest@gmail.com`` 
+- Password: ``Scrum6L3dT35t`` 
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+The ``.env`` that we published in repository is linked to this account in Mailtrap. Using it with a different account will not work without changing the ``.env`` file.
 
+To run it use this bash command:
+
+```bash
+$ docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113
 ```
-cd existing_repo
-git remote add origin https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+### 2. Usage
 
-- [ ] [Set up project integrations](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/settings/integrations)
+#### 2.1. Administration Credentials
 
-## Collaborate with your team
+In order to access the admin page, append ``/admin`` to the base URL.  
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+| Username        | Password |
+| --------------- | -------- |
+| admin@email.com | password |
 
-## Test and Deploy
+#### 2.2. User Credentials
 
-Use the built-in continuous integration in GitLab.
+| Type                       | Username          | Password |
+| -------------------------- | ----------------- | -------- |
+| Product Owner of Jira      | up202207919@up.pt | password |
+| Product Owner of Scrumbled | up202205469@up.pt | password |
+| Scrum Master of Jira       | up202205794@up.pt | password |
+| Developer in Jira          | up202206370@up.pt | password |
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### 3. Application Help
 
-***
+Our website provides help in the pages "About Us", "Contact Us" and "FAQ": 
 
-# Editing this README
+#### Contact Us
+- URL path: **/contact**
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+On this page, you can send us a message for additional support. This feature allows you to directly get in touch with our team for further help.
 
-## Suggestions for a good README
+![image](uploads/62488027b33dd9705f38fa3e58a8e0f4/image.png){width=1211 height=587}
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+#### FAQ
+- URL path: **/faq**
 
-## Name
-Choose a self-explaining name for your project.
+In the FAQ page, you can find answers to common questions and helpful information about our website. If you have any further inquiries, feel free to reach out to us directly, in the "Contact Us" page.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+![image](uploads/a38d0ac6c4bd5e71917269ca6f9fdfdc/image.png){width=1212 height=569}
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+#### About Us
+- URL path: **/about**
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+This page provides more information about our team.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+![image](uploads/204d446417beeccf1238490020407022/image.png){width=936 height=723}
+![image](uploads/9f1e0e12e190b82c20b43ae20e4897da/image.png){width=922 height=408}
+ 
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### 4. Input Validation
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+#### Server-side Validation
+For the back-end, we use requests from *Illuminate\Http\Request*. To validate the request we use $request->validate(). Here is an example of how we validate data  when registering a new user:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+![image](uploads/3475ebf1a8899c1559b7dbba2b3ab99b/image.png){width=527 height=264}
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+#### Client-side Validation
+For the front-end, we use JavaScript to validate the inputs. For example, when editing a project: description
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+![image](uploads/82b766a5ae9bdb666fdaa621cfbaeb4c/image.png){width=509 height=287}
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### 5. Check Accessibility and Usability
 
-## License
-For open source projects, say how it is licensed.
+Accessibility: https://ux.sapo.pt/checklists/acessibilidade/ (16/18)
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The results are in the docs folder of the repository and can be accessed [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/207577d50d5086733f3c2cc261a9dc56383fdd0d/docs/accessibilityTest.pdf)
+
+Usability: https://ux.sapo.pt/checklists/usabilidade/ (27/28)
+
+The results are in the docs folder of the repository and can be accessed [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/207577d50d5086733f3c2cc261a9dc56383fdd0d/docs/usabilityTest.pdf)
+
+### 6. HTML & CSS Validation
+
+We did HTML and CSS validation with [https://validator.w3.org/nu/ and https://jigsaw.w3.org/css-validator/] respectively.
+
+The result of HTML is inside: [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/61a0dfdb5f110fc1e3e95d3317d53749cbb37de7/docs/w3Validator.pdf)
+
+The result of CSS is inside: [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/61a0dfdb5f110fc1e3e95d3317d53749cbb37de7/docs/css.pdf)
+
+### 7. Revisions to the Project
+
+The most prominent changes made to the project were made and documented in the 22nd of December 2024. All sections (user stories, database and the project itself) were changed and revised.
+
+### 8. Implementation Details
+
+#### 8.1. Libraries Used
+
+These are the libraries that make up the Scrumbled project.
+
+| Framework/Library                    | Description                                               |
+| ------------------------------------ | --------------------------------------------------------- |
+| [Laravel](https://laravel.com/)      | Used for back-end.                                        |
+| [Tailwind](https://tailwindcss.com/) | Used for front-end design.                                |
+| [Lucide](https://lucide.dev/)        | Used for icons.                                           |
+| [Pusher](https://pusher.com/)        | Used for real-time notifications and toast notifications. |
+| [Mailtrap](https://mailtrap.io/)     | Used for sending and receiving emails.                    |  
+
+#### 8.2 User Stories
+
+This section includes all high, medium and low priority user stories, sorted by order of implementation.
+
+| Identifier | Name                               | Module | Priority | Team Members      | State |
+|------------|------------------------------------|--------|----------|-------------------|-------|
+| US33       | Logout                             | M01    | High     | **Simão**         | 100%  |
+| US11       | Login                              | M01    | High     | **Simão**         | 100%  |
+| US12       | Register                           | M01    | High     | **Vanessa**       | 100%  |
+| US810      | Administrator Accounts             | M06    | Medium   | **João**          | 100%  |
+| US21       | See User Profile                   | M01    | High     | **Vanessa**       | 100%  |
+| US34       | Edit Authenticated User's Profile  | M01    | High     | **Vanessa**       | 100%  |
+| US36       | User's Profile Picture             | M01    | Medium   | **António**       | 100%  |
+| US32       | View My Projects                   | M03    | High     | **João**          | 100%  |
+| US31       | Create Project                     | M03    | High     | **António**       | 100%  |
+| US48       | View Project Board                 | M03    | Low      | **João**          | 100%  |
+| US611      | Manage Members Permissions         | M03    | Low      | **António**       | 100%  |
+| US89       | View Project Details               | M03    | Medium   | **António**       | 100%  |
+| US52       | Assigned to Task                   | M05    | Medium   | **João**          | 100%  |
+| US53       | Assign Tasks                       | M05    | Medium   | **João**          | 100%  |
+| US51       | Complete an Assigned Task          | M05    | High     | **João**          | 100%  |
+| US65       | Accept a Completed Task            | M05    | High     | **António**       | 100%  |
+| US82       | View User Accounts                 | M06    | High     | **Vanessa**       | 100%  |
+| US83       | Edit User Accounts                 | M06    | High     | **António**       | 100%  |
+| US71       | Edit Project Details               | M03    | Medium   | **Simão**         | 100%  |
+| US66       | Add User to Project                | M03    | High     | **João**          | 100%  |
+| US22       | Exact Match Search                 | M02    | High     | **Vanessa**       | 100%  |
+| US24       | Search Filters                     | M04    | High     | **António**       | 100%  |
+| US81       | Search User Accounts               | M06    | High     | **Simão**         | 100%  |
+| US69       | Archive Project                    | M03    | Medium   | **Vanessa**       | 100%  |
+| US613      | Add task to sprint                 | M04    | Low      | **António**       | 100%  |
+| US44       | View Project Team                  | M03    | Medium   | **João**          | 100%  |
+| US46       | View Team Members Profiles         | M02    | Medium   | **Vanessa**       | 100%  |
+| US23       | Full-text Search                   | M05    | High     | **Simão**         | 100%  |
+| US41       | Search Tasks                       | M05    | High     | **António**       | 100%  |
+| US42       | Search over Multiple Attributes    | M05    | High     | **João**          | 100%  |
+| US61       | Create Task                        | M05    | High     | **Vanessa**       | 100%  |
+| US63       | Manage Task Labels                 | M05    | High     | **Simão**         | 100%  |
+| US62       | Manage Task Priority               | M05    | High     | **João**          | 100%  |
+| US84       | Create User Accounts               | M06    | High     | **João**          | 100%  |
+| US29       | Placeholders in Form Inputs        | M01    | Medium   | **Vanessa**       | 100%  |
+| US43       | Leave Project                      | M03    | Medium   | **António**       | 100%  |
+| US612      | Manage Project Invitation          | M03    | Low      | **João**          | 100%  |
+| US39       | Manage Project Invitation          | M03    | Low      | **Vanessa**       | 100%  |
+| US45       | Change in Product Owner            | M03    | Medium   | **Simão**         | 100%  |
+| US68       | Remove Project Member              | M03    | Medium   | **Simão**         | 100%  |
+| US38       | Mark Project as Favorite           | M03    | Medium   | **Vanessa**       | 100%  |
+| US25       | About US                           | M01    | Medium   | **Vanessa**       | 100%  |
+| US26       | Product's Main Features            | M01    | Medium   | **António**       | 100%  |
+| US27       | Contact Information                | M01    | Medium   | **João**          | 100%  |
+| US37       | Authenticated User's Notifications | M01    | Medium   | **João**          | 100%  |
+| US610      | Completed Task in Project Managed  | M03    | Medium   | **António**       | 100%  |
+| US67       | Assign New Coordinator             | M03    | Medium   | **João**          | 100%  |
+| US615      | Private Projects                   | M03    | Low      | **António**       | 100%  |
+| US614      | Delete My Project                  | M03    | Low      | **Simão**         | 100%  |
+| US88       | Browse Projects                    | M06    | Medium   | **Vanessa**       | 100%  |
+| US811      | Delete Projects                    | M06    | Low      | **Simão**         | 100%  |
+| US311      | Private Profile                    | M02    | Low      | **Simão**         | 100%  |
+| US47       | Comment on Task                    | M05    | Medium   | **Simão**         | 100%  |
+| US49       | Edit Comment                       | M05    | Low      | **Simão**         | 100%  |
+| US410      | Delete Comment                     | M05    | Low      | **Vanessa**       | 100%  |
+| US35       | Delete Account                     | M02    | Medium   | **Vanessa**       | 100%  |
+| US85       | Block User Accounts                | M06    | Medium   | **António**       | 100%  |
+| US86       | Unblock User Accounts              | M06    | Medium   | **João**          | 100%  |
+| US87       | Delete User Accounts               | M06    | Medium   | **Simão**         | 100%  |
+| US13       | Recover Password                   | M01    | Medium   | **Simão**         | 100%  |
+| US28       | Accept Email Invitation            | M01    | Medium   | **Simão**         | 100%  |
+| US72       | Accepted Invitation to Project     | M01    | Medium   | **Vanessa**       | 100%  |
+| US210      | Contextual Error Messages          | M01    | Medium   | **António**       | 100%  |
+| US211      | Contextual Help                    | M01    | Medium   | **João**          | 100%  |
+---
+
+
+## A10: Presentation
+ 
+This artifact corresponds to the presentation of the product.
+
+### 1. Product presentation
+
+Scrumbled is a project management website, designed to streamline Agile workflows, focusing on two key features: creating Scrum projects and managing Scrum roles. Users can easily organize their work into Sprints, allowing teams to focus on specific goals and track progress efficiently. The Sprint feature provides tools for setting clear objectives, assigning tasks and ensuring that teams stay on track and meet deadlines.
+
+In addition, the website helps define and manage Scrum roles within the team. It supports the essential Scrum framework by allowing users to assign roles such as Scrum Master, Product Owner, and Developer. This ensures everyone knows their responsibilities, facilitating smooth communication and collaboration throughout the project lifecycle. 
+
+### 2. Video presentation
+
+The video presentation can be found in the repository's docs folder. You can access it by clicking [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/d7e28c2c6bd0492cb93979b4cf53943407992e39/docs/ScrumbledDemo.mp4).
+
+![image](uploads/74c4a3ae271666c4ddc9d8dc7b94c79e/image.png){width=834 height=462}
+
+---
+
+
+## Revision history
+
+No revision history yet.
+
+---
+
+GROUP24113, 25/11/2024
+
+* António Santos, up202205469@up.pt
+* Vanessa Queirós, up202207919@up.pt
+* João Santos, up202205794@up.pt
+* Simão Neri, up202206370@up.pt
