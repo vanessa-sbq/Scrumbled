@@ -1,13 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const commentForm = document.getElementById('commentForm');
-
-    // Toggle Comment Form
-    if (document.getElementById('addComment')) {
-        document.getElementById('addComment').addEventListener('click', () => {
-            commentForm.classList.toggle('hidden');
-        });
-    }
 
     // Add Comment
     document.getElementById('submit-comment').addEventListener('click', () => {
@@ -32,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     addCommentToUI(data.html); // Server should return rendered HTML
                     document.getElementById('new-comment-description').value = '';
-                    commentForm.classList.add('hidden');
                 } else {
                     alert('Failed to add comment.');
                 }
@@ -72,19 +63,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Edit Comment
-    document.querySelectorAll('.save-edit-comment-button').forEach( (button) => {
+    document.querySelectorAll('.save-edit-comment-button').forEach((button) => {
         button.addEventListener('click', saveComment);
     })
 
-    document.querySelectorAll('.edit-comment-button').forEach( (button) => {
+    document.querySelectorAll('.edit-comment-button').forEach((button) => {
         button.addEventListener('click', (e) => {
-                const commentId = e.target.getAttribute('data-id');
-                toggleEditForm(commentId, true);
+            const commentId = e.target.getAttribute('data-id');
+            toggleEditForm(commentId, true);
         });
     })
 
     // Delete Comment
-    document.querySelectorAll('.delete-comment-buttton').forEach( (button) => {
+    document.querySelectorAll('.delete-comment-buttton').forEach((button) => {
         button.addEventListener('click', (e) => {
             const commentId = e.target.getAttribute('data-id');
             const deleteCommentUrl = e.target.closest('div').dataset.deleteCommentUrl;
@@ -130,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add Comment to UI
     function addCommentToUI(html) {
-        const commentsContainer = document.querySelector('.space-y-4');
+        const commentsContainer = document.querySelector('.comments-container');
         commentsContainer.insertAdjacentHTML('beforeend', html);
 
         const newComment = commentsContainer.lastElementChild;
