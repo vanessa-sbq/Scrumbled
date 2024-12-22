@@ -122,7 +122,7 @@ Route::controller(ProfileController::class)->group(function () {
         Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
         Route::middleware(['auth', 'no.admin'])->group(function () {
             Route::get('/profiles/{username}/settings', 'showProfileSettings')->name('profile.settings');
-            Route::post('/profiles/{username}/store', 'store')->name('profiles.store');
+            Route::post('/profiles/{username}/updatePicture', 'updatePicture')->name('profiles.updatePicture');
         });
     });
 });

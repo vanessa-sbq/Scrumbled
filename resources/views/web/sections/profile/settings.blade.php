@@ -2,20 +2,17 @@
 
 @section('content')
     <div class="flex flex-col flex-1 container py-8 p-4 items-center">
-        <div class="flex flex-1 flex-col w-3/4 p-6">
+        <div class="flex flex-1 flex-col p-6">
             <h2 class="text-4xl font-bold mb-4 text-center">Profile Settings</h2>
 
-            <div class="flex flex-row gap-6 mb-5">
+            <div class="flex flex-col lg:flex-row gap-6 mb-5">
                 <div class="flex-shrink-0 flex flex-col items-center">
                     <label for="old_picture" class="block text-lg font-medium text-muted-foreground mb-4">Current Picture</label>
                     <img class="h-24 w-24 rounded-full border border-gray-300 shadow-sm mb-4" id="old_picture"
                          src="{{ asset($user->picture ? 'storage/' . $user->picture : 'images/users/default.png') }}" alt="Profile Picture">
-                    <form id="changeProfilePictureForm" class="flex flex-col gap-2 w-full items-center">
+                    <form class="flex flex-col gap-2 w-full items-center" method="POST" enctype=multipart/form-data action="{{ route('profiles.updatePicture', $user->username) }}">
                         @csrf
                         <x-input type="file" name="picture" label="New Picture" />
-                        @error('picture')
-                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
                         <button type="submit" class="inline-flex items-center justify-center rounded-md transition-colors bg-primary text-white hover:bg-primary/90 px-6 py-2 text-base w-full">
                             Update Picture
                         </button>

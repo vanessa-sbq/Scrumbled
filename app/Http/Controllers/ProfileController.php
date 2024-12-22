@@ -93,9 +93,8 @@ class ProfileController extends Controller
         abort(403);
     }
 
-    public function store(Request $request)
+    public function updatePicture(Request $request)
     {
-
         if (!(Auth::check() && Auth::user()->id !== $request->id)) {
             abort(403);
         }
@@ -103,31 +102,21 @@ class ProfileController extends Controller
         // Get the authenticated user
         $user = Auth::user();
 
-        // Validate the request data
         $request->validate([
-            'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
-            'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
-            'full_name' => 'nullable|string|max:255',
-            'bio' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_public' => 'nullable|boolean',
         ]);
 
-        // Collect the validated data
-        $data = $request->only('username', 'email', 'full_name', 'bio', 'is_public');
-
         // Handle the file upload
-        if ($request->hasFile('picture')) {
-            $picturePath = $request->file('picture')->store('images/users', 'public');
-            $data['picture'] = $picturePath;
+        if (!$request->hasFile('picture')) {
+            abort(404);
         }
 
-        // Edit the user's profile
-        $user->update($data);
+        $picturePath = $request->file('picture')->store('images/users', 'public');
+        $user->update(['picture' => $picturePath]);
 
         session()->flash('edited_profile', true);
 
         // Redirect to the login page with a success message
-        return redirect()->route('show.profile', $user->username)->with('success', 'Profile edited successfully');
+        return redirect()->route('profile.settings', $user->username)->with('success', 'Profile edited successfully');
     }
 }
