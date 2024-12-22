@@ -48,16 +48,26 @@
                     </a>
                     <div class=" md:ml-auto flex gap-2 items-center justify-center flex-wrap">
                         @if (Auth::guard('admin')->check() || auth()->id() === $project->product_owner_id)
-                            @if (!isset($project->scrum_master_id))
+                            @if (!isset($project->scrum_master_id) && (!\App\Models\DeveloperProject::where(['project_id' => $project->id , 'developer_id' => $developer->id])->firstOrFail()->is_pending))
                                 <button data-user-id="{{ $developer->id }}"
                                     class="set_as_sm_button px-3 py-1 bg-primary text-white rounded-md hover:bg-blue-700">
                                     Set as Scrum Master
                                 </button>
+                            @else
+                                <div class="px-3 py-1 bg-amber-100 border border-amber-500 rounded-md">
+                                    Pending invite
+                                </div>
                             @endif
                             <button data-user-id="{{ $developer->id }}" data-user-name="{{ $developer->username }}"
                                 class="remove_dev_button px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600">
                                 Remove Developer
                             </button>
+                        @else
+                            @if (!\App\Models\DeveloperProject::where(['project_id' => $project->id , 'developer_id' => $developer->id])->firstOrFail()->is_pending)
+                                    <div class="px-3 py-1 bg-amber-100 border border-amber-500 rounded-md">
+                                        Pending invite
+                                    </div>
+                            @endif
                         @endif
                     </div>
                 </div>
