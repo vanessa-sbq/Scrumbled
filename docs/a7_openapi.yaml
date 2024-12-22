@@ -20,6 +20,8 @@ tags:
   - name : 'M04 - Sprint'
   - name : 'M05 - Task'
   - name : 'M06 - Admin'
+  - name : 'M07 - Inbox'
+  - name : 'M08 - API'
 
 paths:
   /login:
@@ -144,6 +146,39 @@ paths:
                   value: '/projects'
         '403':
           description: 'Access denied.'
+  /login/forgot-password:
+    get:
+      operationId: R106
+      summary: 'R106: Forgot Password UI'
+      description: 'Get the Forgot Password Page UI. Access: PUB.'
+      tags:
+        - 'M01 - Auth'
+      responses:
+        '200':
+          description: 'Ok. Show Forgot Password UI.'
+  /login/reset-password:
+    post:
+      operationId: R107
+      summary: 'R107: Reset Password Action'
+      description: 'Reset the password of the user. Access: PUB.'
+      tags:
+        - 'M01 - Auth'
+      responses:
+        '302':
+          description: 'Redirect after processing password reset.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully reset password. Redirect to Login UI.'
+                  value: '/login'
+                302Error:
+                  description: 'Unsuccessful password reset. Redirect to Login UI.'
+                  value: '/login'
+        '403':
+          description: 'Access denied.'
 
   /profiles:
     get:
@@ -156,10 +191,9 @@ paths:
         '200':
           description: 'Success. Show Profiles UI'
         '404':
-          description: 'Project was not found.'
+          description: 'User was not found.'
         '403':
           description: Access Denied
-  
   /profiles/{username}:
     get:
       operationId: R202
@@ -250,8 +284,7 @@ paths:
         '403':
           description: Access Denied
         '404':
-          description: 'User was not found.'
-          
+          description: 'User was not found.' 
   /api/profiles/search:
     get:
       operationId: R205
@@ -291,6 +324,50 @@ paths:
                       full_name: "John Doe"
                       email: "johndoe@example.com"
                       picture: "https://example.com/profiles/johndoe.jpg"
+  /api/profiles/changeProfileVisibility:
+    post:
+      operationId: R206
+      summary: 'R206: Change Profile Visibility Action'
+      description: 'Change the visibility of a user profile. Access: USR.'
+      tags:
+        - 'M02 - Profile'
+      responses:
+        '302':
+          description: 'Redirect after processing visibility change.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful visibility change. Redirect to profile.'
+                  value: '/profiles'
+                302Error:
+                  description: 'Unsuccessful logout. Redirect to profile.'
+                  value: '/profiles'
+        '403':
+          description: 'Access denied.'
+  /profiles/{username}/settings:
+    get:
+      operationId: R207
+      summary: 'R207: Get User Settings'
+      description: 'Get page for user settings. Access: OWN.'
+      tags:
+        - 'M02 - Profile'
+      parameters:
+        - in: path
+          name : username
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show the page for user settings.'
+        '403':
+          description: 'Access Denied.'
+        '404':
+          description: 'User was not found.'
+
   /projects:
     get:
       operationId: R301
@@ -329,16 +406,6 @@ paths:
                       slug: test_project
                       description: "This is a test project for demonstration purposes."
                       favorite: false
-        '302':
-          description: Login Required.
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Redirecting to login.'
-                  value: '/login'
   /projects/new:
     get:
       operationId: R302
@@ -426,10 +493,24 @@ paths:
           description: Access Denied
         '404':
           description: 'Project was not found.'
+  /projects/{slug}/favorite:
+    post:
+      operationId: R305
+      summary: 'R305: Favorite/Unfavorite a project'
+      description: 'Favorites/Unfavorites a project. Access: USR.'
+      tags:
+        - 'M03 - Project'
+      responses:
+        '200':
+          description: Successfully favorited/unfavorited the project
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
   /projects/{slug}/invite:
     get:
-      operationId: R305
-      summary: 'R305: Add user to Project UI'
+      operationId: R306
+      summary: 'R306: Add user to Project UI'
       description: 'Get the Add user to Project form. Access: OWN.'
       tags:
         - 'M03 - Project'
@@ -441,9 +522,9 @@ paths:
         '404':
           description: 'Project was not found.'
     post:
-      operationId: R306
-      summary: 'R306: Add User to Project'
-      description: 'Adds a user to the project Access: USR.'
+      operationId: R307
+      summary: 'R307: Add User to Project'
+      description: 'Adds a user to the project Access: OWN.'
       tags:
         - 'M03 - Project'
       parameters:
@@ -477,11 +558,10 @@ paths:
           description: 'Project was not found.'
         '403':
           description: Access Denied.
-
   /projects/{slug}/backlog:
     get:
-      operationId: R307
-      summary: 'R307: View project backlog page'
+      operationId: R308
+      summary: 'R308: View project backlog page'
       description: 'Show the individual project backlog. Access: PUB.'
       tags:
         - 'M03 - Project'
@@ -498,11 +578,10 @@ paths:
           description: 'Project was not found.'
         '403':
           description: Access Denied
-
   /projects/{slug}/team:
     get:
-      operationId: R308
-      summary: 'R308: View project team page'
+      operationId: R309
+      summary: 'R309: View project team page'
       description: 'Show the project team page. Access: PUB.'
       tags:
         - 'M03 - Project'
@@ -519,7 +598,75 @@ paths:
           description: 'Project was not found.'
         '403':
           description: Access Denied
-  
+  /projects/{slug}/settings/general:
+    get:
+      operationId: R310
+      summary: 'R310: General Project Settings UI'
+      description: 'Show the general project settings page. Access: USR.'
+      tags:
+        - 'M03 - Project'
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success. Show General Project Settings UI'
+        '403':
+          description: Access Denied
+        '404':
+          description: 'Project was not found.'
+  /projects/{slug}/settings/team:
+    get:
+      operationId: R311
+      summary: 'R311: Team Project Settings UI'
+      description: 'Show the team project settings page. Access: USR.'
+      tags:
+        - 'M03 - Project'
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success. Show Team Project Settings UI'
+        '403':
+          description: Access Denied
+        '404':
+          description: 'Project was not found.'
+  /projects/{slug}/leave:
+    post:
+      operationId: R312
+      summary: 'R312: Leave a project'
+      description: 'Leave a project. Access: USR.'
+      tags:
+        - 'M03 - Project'
+      responses:
+        '200':
+          description: Successfully left the project
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /projects/{slug}/remove/{username}:
+    post:
+      operationId: R313
+      summary: 'R313: Remove a user from a project'
+      description: 'Removes a user from a project. Access: OWN.'
+      tags:
+        - 'M03 - Project'
+      responses:
+        '200':
+          description: Successfully removed user from the project
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
   /projects/{slug}/sprints:
       get:
         operationId: R401
@@ -651,7 +798,6 @@ paths:
                 302Error:
                   description: 'Failure while creating a sprint.'
                   value: '/project/{slug}/backlog'
-
   /sprints/{id}/edit:
     get:
       operationId: R404
@@ -715,7 +861,6 @@ paths:
           description: Access denied.
         '404':
           description: Task not found. 
-          
   /sprints/{id}:
     get:
       operationId: R407
@@ -775,6 +920,26 @@ paths:
                 302Success:
                   description: 'Redirecting to login.'
                   value: '/login'
+  /sprints/{id}/show:
+    get:
+      operationId: R408
+      summary: 'R408: Sprint UI'
+      description: 'Show sprint page. Access: PUB.'
+      tags:
+        - 'M04 - Sprint'
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success. Show Sprint UI'
+        '403':
+          description: Access Denied
+        '404':
+          description: 'Sprint was not found.'
 
   /projects/{slug}/tasks/new:
     get:
@@ -805,7 +970,6 @@ paths:
                   value: '/login'
         '403':
           description: Access Denied
-        
     post:
       operationId: R502
       summary: 'R502: Create a new Task'
@@ -857,8 +1021,7 @@ paths:
                   value: '/login'
                 302Error:
                   description: 'Failure while creating a task.'
-                  value: '/project/{slug}/backlog'
-                  
+                  value: '/project/{slug}/backlog'     
   /tasks/{id}:
     get:
       operationId: R503
@@ -886,7 +1049,6 @@ paths:
           description: 'Access Denied'
         '404':
           description: 'Task not found.'
-
   /projects/{slug}/tasks/{id}/edit:
     get:
       operationId: R504
@@ -984,7 +1146,6 @@ paths:
           description: Access denied.
         '404':
           description: Task not found.
-
   /api/projects/{slug}/tasks/search:
     get:
       operationId: R507
@@ -1023,7 +1184,6 @@ paths:
                     effort:
                       type: integer
                       enum: [1, 2, 3, 5, 8, 13]
-
   /tasks/{id}/assign:
     post:
       operationId: R508
@@ -1069,7 +1229,6 @@ paths:
                 302Redirect:
                   description: 'Redirecting to login.'
                   value: '/login'
-
   /projects/{slug}/tasks:
     get:
       operationId: R509
@@ -1090,7 +1249,147 @@ paths:
           description: 'Project was not found.'
         '403':
           description: Access Denied
-    
+  /projects/{slug}/tasks/{id}/delete:
+    post:
+      operationId: R510
+      summary: 'R510: Delete a task'
+      description: 'Deletes a task. Access: USR.'
+      tags:
+        - 'M05 - Task'
+      responses:
+        '200':
+          description: Successfully deleted the task
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /tasks/{id}/comment:
+    post:
+      operationId: R511
+      summary: 'R511: Create a new task comment'
+      description: 'Creates a new task comment. Access: USR.'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          description: Task where I'm creating a comment
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: The details of the comment 
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+              required:
+                - description
+      responses:
+        '200':
+          description: Comment created successfully.
+        '404':
+          description: Task not found.
+        '403':
+          description: Access Denied
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+                302Error:
+                  description: 'Failure while creating a comment.'
+                  value: '/project/{slug}/tasks/{id}'
+  /tasks/{id}/comments/{id}:
+    post:
+      operationId: R512
+      summary: 'R512: Delete a task comment'
+      description: 'Deletes a task comment. Access: USR.'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          description: Task where I'm deleting a comment
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Comment deleted successfully.
+        '404':
+          description: Task not found.
+        '403':
+          description: Access Denied
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+                302Error:
+                  description: 'Failure while deleting a comment.'
+                  value: '/project/{slug}/tasks/{id}'
+  /tasks/{id}/comments/{id}/edit:
+    post:
+      operationId: R513
+      summary: 'R513: Edit a task comment'
+      description: 'Edits a task comment. Access: USR.'
+      tags:
+        - 'M05 - Task'
+      parameters:
+        - in: path
+          name: id
+          description: Task where I'm editing a comment
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: The details of the comment 
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+              required:
+                - description
+      responses:
+        '200':
+          description: Comment edited successfully.
+        '404':
+          description: Task not found.
+        '403':
+          description: Access Denied
+        '302':
+          description: Login Required.
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirecting to login.'
+                  value: '/login'
+                302Error:
+                  description: 'Failure while editing a comment.'
+                  value: '/project/{slug}/tasks/{id}'
+
   /admin/users:
     get:
       operationId: R601
@@ -1219,7 +1518,6 @@ paths:
           description: 'Ok. User account edited'
         '400':
           description: 'User account not found or Editing invalid.'
-
   /admin/users/{username}/ban:
     post:
       operationId: R604
@@ -1270,7 +1568,6 @@ paths:
           description: 'Ok. User account banned'
         '400':
           description: 'User account not found or ban invalid.'
-
   /admin/users/{username}/unban:
     post:
       operationId: R605
@@ -1321,7 +1618,6 @@ paths:
           description: 'Ok. User account unbanned'
         '400':
           description: 'User account not found or unban invalid.'
-
   /admin/users/{username}:
     get:
       operationId: R606
@@ -1358,7 +1654,6 @@ paths:
                     type: string
         '400':
           description: 'User account not found.'
-
   /admin/login:
     get:
       operationId: R607
@@ -1404,7 +1699,6 @@ paths:
               description: 'Failed authentication, incorrect password.'
         '404':
               description: 'Failed, admin not found.'
-  
   /admin/users/create:
     get:
         operationId: R609
@@ -1450,6 +1744,722 @@ paths:
                 description: 'Failed user creation.'
           '404':
                 description: 'Failed, admin not found.'
+  /admin/users/delete:
+    post:
+      operationId: R611
+      summary: 'R611: Delete a user'
+      description: 'Lets an admin delete a user. Access: ADM.'
+      tags:
+        - 'M06 - Admin'
+      requestBody:
+        description: The details of the user to be deleted.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: User deleted successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /admin/logout:
+    post:
+      operationId: R612
+      summary: 'R612: Admin Logout Action'
+      description: 'Logout the current admin. Access: ADM.'
+      tags:
+        - 'M06 - Admin'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to Main Page UI.'
+                  value: '/'
+                302Error:
+                  description: 'Unsuccessful logout. Redirect to users list.'
+                  value: '/admin/users'
+        '403':
+          description: 'Access denied.'
+  /admin/projects:
+    get:
+      operationId: R613
+      summary: 'R613: Projects Page UI'
+      description: 'Retrieve list of projects with filtering. Access: ADM.'
+      tags:
+        - 'M06 - Admin'
+      parameters:
+        - in: query
+          name: query
+          description: 'String to search for projects'
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: status
+          description: 'Filter projects by visibility'
+          schema:
+            type: string
+            enum: [needs-confirmation, banned, active]
+          required: false
+        - in: query
+          name: is_archived
+          description: 'Filter projects by archival status. True for archived, false for active.'
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 'Ok. List of projects returned.'
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    slug:
+                      type: string
+                    is_archived:
+                      type: boolean
+                    is_public:
+                      type: boolean
 
-    
-    
+  /inbox:
+    get:
+      operationId: R701
+      summary: 'R701: Inbox UI'
+      description: 'Get the Inbox UI. Access: USR.'
+      tags:
+        - 'M07 - Inbox'
+      responses:
+        '200':
+          description: 'Ok. Show Inbox UI'
+  /inbox/invitations:
+    get:
+      operationId: R702
+      summary: 'R702: Inbox Invitations UI'
+      description: 'Get the Inbox Invitations UI. Access: USR.'
+      tags:
+        - 'M07 - Inbox'
+      responses:
+        '200':
+          description: 'Ok. Show Inbox Invitiations UI'
+  /inbox/acceptInvitation:
+    post:
+      operationId: R703
+      summary: 'R703: Accept an invitation to a project'
+      description: 'Accepts an invitation to a project. Access: USR.'
+      tags:
+        - 'M07 - Inbox'
+      responses:
+        '200':
+          description: Successfully accpeted the project invitation
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /inbox/declineInvitation:
+    post:
+      operationId: R704
+      summary: 'R704: Decline an invitation to a project'
+      description: 'Declines an invitation to a project. Access: USR.'
+      tags:
+        - 'M07 - Inbox'
+      responses:
+        '200':
+          description: Successfully declined the project invitation
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /inbox/delete:
+    post:
+      operationId: R705
+      summary: 'R705: Delete selected notifications'
+      description: 'Deletes notifications that are selected in the inbox. Access: USR.'
+      tags:
+        - 'M07 - Inbox'
+      responses:
+        '200':
+          description: Successfully deleted the notifications
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  
+  /api/projects/changeVisibility:
+    post:
+      operationId: R801
+      summary: 'R801: Change project visibility'
+      description: 'Changes project visibility. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+              required:
+                - slug
+      responses:
+        '302':
+          description: 'Redirect occurs after changing project visibility.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully changed project visibility. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed changing project visibility.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/transferProject:
+    post:
+      operationId: R802
+      summary: 'R802: Transfer project ownership'
+      description: 'Transfers project ownership. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                user_id:
+                  type: integer
+                sm_loss:
+                  type: boolean
+                dev_loss:
+                  type: boolean
+              required:
+                - slug
+                - user_id
+                - sm_loss
+                - dev_loss
+      responses:
+        '302':
+          description: 'Redirect occurs after transfering project ownership.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully tranferred project ownership. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed transfering project ownership.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/transferProject/search:
+    post:
+      operationId: R803
+      summary: 'R803: Search Users when Transfering Project'
+      description: 'Searches userse when transfering a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                slug:
+                  type: string
+              required:
+                - search
+                - slug
+      responses:
+        '200':
+              description: 'Ok. Show searched users.'
+        '401':
+              description: 'Failed retrieving searched users.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/team/setScrumMaster:
+    post:
+      operationId: R804
+      summary: 'R804: Set Project Scrum Master'
+      description: 'Sets a user as scrum master of a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                userId:
+                  type: integer
+              required:
+                - slug
+                - userId
+      responses:
+        '302':
+          description: 'Redirect occurs after setting user as scrum master.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully set Scrum Master. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed setting Scrum Master.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/team/removeScrumMaster:
+    post:
+      operationId: R805
+      summary: 'R805: Remove Project Scrum Master'
+      description: 'Removes scrum master of a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                userId:
+                  type: integer
+              required:
+                - slug
+                - userId
+      responses:
+        '302':
+          description: 'Redirect occurs after removing scrum master.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully removed Scrum Master. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed removing Scrum Master.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/team/removeDeveloper:
+    post:
+      operationId: R806
+      summary: 'R806: Removes Developer from Project'
+      description: 'Removes a developer from a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                userId:
+                  type: integer
+              required:
+                - slug
+                - userId
+      responses:
+        '302':
+          description: 'Redirect occurs after removing developer from project.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully removed developer. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed removing developer.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/leaveProject:
+    post:
+      operationId: R807
+      summary: 'R807: Leave Project'
+      description: 'Leave a project. Access: USR.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                userId:
+                  type: integer
+              required:
+                - slug
+                - userId
+      responses:
+        '302':
+          description: 'Redirect occurs after leaving project.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully left project. Redirect to projects page.'
+                  value: '/projects'
+        '401':
+              description: 'Failed leaving project.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/archiveProject:
+    post:
+      operationId: R808
+      summary: 'R808: Archive a project'
+      description: 'Archives a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+              required:
+                - slug
+      responses:
+        '302':
+          description: 'Redirect occurs after archiving a project.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully archived project. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed archiving project.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/deleteProject:
+    post:
+      operationId: R809
+      summary: 'R809: Delete a project'
+      description: 'Deletes a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the project to be deleted.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+      responses:
+        '200':
+          description: Project deleted successfully.
+        '404':
+          description: Project not found.
+        '403':
+          description: Access Denied.
+  /api/projects/changeProjectTitle:
+    post:
+      operationId: R810
+      summary: 'R810: Changes Project Title'
+      description: 'Changes the title of a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                title:
+                  type: string
+              required:
+                - slug
+                - title
+      responses:
+        '302':
+          description: 'Redirect occurs after changing project title.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully changed project title. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed changing project title.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/changeProjectDescription:
+    post:
+      operationId: R811
+      summary: 'R811: Changes Project Description'
+      description: 'Changes the description of a project. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                slug:
+                  type: string
+                description:
+                  type: string
+              required:
+                - slug
+                - description
+      responses:
+        '302':
+          description: 'Redirect occurs after changing project description.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successfully changed project description. Redirect to project settings.'
+                  value: '/projects/{slug}/settings/general'
+        '401':
+              description: 'Failed changing project description.'
+        '404':
+              description: 'Failed, project not found.'
+  /api/projects/search:
+    post:
+      operationId: R812
+      summary: 'R812: Search Projects'
+      description: 'Searches project. Access: USR.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                search:
+                  type: string
+                statusVisibility:
+                  type: boolean
+                statusArchival:
+                  type: boolean
+              required:
+                - search
+                - statusVisibility
+                - statusArchival
+      responses:
+        '200':
+              description: 'Ok. Show searched projets.'
+        '401':
+              description: 'Failed retriving searched projects.'
+        '404':
+              description: 'Failed, user not found.'
+  /api/profiles/changeUsername:
+    post:
+      operationId: R813
+      summary: 'R813: Change username'
+      description: 'Changes a username. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be changed.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Username changed successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /api/profiles/changeEmail:
+    post:
+      operationId: R814
+      summary: 'R814: Change email'
+      description: 'Changes an email. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be changed.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Email changed successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /api/profiles/changeFullName:
+    post:
+      operationId: R815
+      summary: 'R815: Change Full Name'
+      description: 'Changes full name of a user. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be changed.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                full_name:
+                  type: string
+      responses:
+        '200':
+          description: Full name changed successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /api/profiles/changeBio:
+    post:
+      operationId: R816
+      summary: 'R816: Change Bio'
+      description: 'Changes the bio of a user. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be changed.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                bio:
+                  type: string
+      responses:
+        '200':
+          description: Bio changed successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /api/profiles/changeProfilePicture:
+    post:
+      operationId: R817
+      summary: 'R817: Change Profile Picture'
+      description: 'Changes the profile picture of a user. Access: OWN.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be changed.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                profile_picture:
+                  type: string
+      responses:
+        '200':
+          description: Profile picture changed successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
+  /api/users/delete:
+    post:
+      operationId: R618
+      summary: 'R618: Delete a user'
+      description: 'Lets an admin delete a user. Access: ADM.'
+      tags:
+        - 'M08 - API'
+      requestBody:
+        description: The details of the user to be deleted.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: User deleted successfully.
+        '404':
+          description: User not found.
+        '403':
+          description: Access Denied.
