@@ -30,7 +30,7 @@
                 @if ($projects->isEmpty())
                     <p class="text-gray-600">No public projects.</p>
                 @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex flex-1 flex-wrap gap-4 flex-col">
                         @foreach ($projects as $project)
                             <div
                                 class="block relative bg-white border border-gray-300 rounded-lg p-4 sm:p-6 lg:p-8 hover:border-primary transition-all duration-300 w-full max-w-7xl mx-auto min-w-64">
