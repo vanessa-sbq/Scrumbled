@@ -11,7 +11,8 @@
                 <label for="title" class="block text-sm font-medium text-muted-foreground">Title</label>
                 <input id="title" type="text" name="title" value="{{ old('title') }}" required autofocus
                     class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                    placeholder="Enter the task title">
+                    placeholder="Enter the task title"
+                    maxlength="200">
                 @error('title')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -21,6 +22,7 @@
             <div class="mb-4">
                 <label for="description" class="block text-sm font-medium text-muted-foreground">Description</label>
                 <textarea id="description" name="description"
+                    maxlength="2000"
                     class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     placeholder="Provide a brief description">{{ old('description') }}</textarea>
                 @error('description')

@@ -56,11 +56,16 @@ class CommentController extends Controller
         ]);
 
         $comment->description = $request->description;
-        $comment->save();
 
-        return response()->json([
-            'success' => true,
-            'comment' => $comment,
-        ]);
+        if ($this->authorize('update', $comment)){
+            $comment->save();
+            return response()->json([
+                'success' => true,
+                'comment' => $comment,
+            ]);
+        }
+        else {
+            return response()->json(['success' => false]);
+        }
     }
 }

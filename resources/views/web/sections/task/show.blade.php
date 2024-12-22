@@ -12,7 +12,7 @@
                 {{ $project->title }}
             </a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="font-bold text-gray-800">{{ $task->title }}</span>
+            <span class="font-bold text-gray-800 truncate text-wrap break-all ">{{ $task->title }}</span>
         </nav>
 
         <!-- Task Header -->

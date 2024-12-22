@@ -94,7 +94,7 @@ class SprintController extends Controller {
         ]);
 
         // Create the sprint with default values where needed
-        $sprint = Sprint::create([
+        $sprint = new Sprint([
             'project_id' => $project->id,
             'name' => $validated['name'] ?? null,
             'start_date' => $validated['start_date'] ?? now(),
@@ -102,9 +102,12 @@ class SprintController extends Controller {
             'is_archived' => $validated['is_archived'] ?? false,
         ]);
 
-        // Redirect to a relevant page (e.g., project or sprint list)
-        return redirect()->route('projects.show', $project->slug)
-            ->with('success', 'Sprint created successfully!');
+        if ($this->authorize('create', $sprint)){
+            $sprint->save();
+            return redirect()->route('projects.show', $project->slug)->with('success', 'Sprint created successfully!');
+        } else {
+            return redirect()->back()->withErrors(['error'=> 'You are not authorized to create a sprint.'])->withInput();
+        }        
     }
 
     public function edit($id)
@@ -129,29 +132,35 @@ class SprintController extends Controller {
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'is_archived' => 'nullable|boolean',
         ]);
-
-        $sprint->update([
-            'name' => $validated['name'] ?? $sprint->name,
-            'start_date' => $validated['start_date'] ?? $sprint->start_date,
-            'end_date' => $validated['end_date'] ?? $sprint->end_date,
-        ]);
-
-        $project = $sprint->project;
-
-        return redirect()->route('projects.show', $project->slug)->with('success', 'Sprint updated successfully.');
+        
+        if ($this->authorize('update', $sprint)){
+            $sprint->update([
+                'name' => $validated['name'] ?? $sprint->name,
+                'start_date' => $validated['start_date'] ?? $sprint->start_date,
+                'end_date' => $validated['end_date'] ?? $sprint->end_date,
+            ]);
+            $project = $sprint->project;
+            return redirect()->route('projects.show', $project->slug)->with('success', 'Sprint updated successfully.');
+        }
+        else{
+            return redirect()->back()->withErrors(['error'=> 'You are not authorized to update this sprint.'])->withInput();
+        }
     }
 
     public function close($id)
     {
         $sprint = Sprint::where('id', $id)->firstOrFail();
 
-        $tasks = $sprint->tasks()->where('state', '!=', 'ACCEPTED')->get();
-        foreach ($tasks as $task) {
-            $task->update(['state' => 'BACKLOG']);
+        if ($this->authorize('close', $sprint)){
+            $tasks = $sprint->tasks()->where('state', '!=', 'ACCEPTED')->get();
+            foreach ($tasks as $task) {
+                $task->update(['state' => 'BACKLOG']);
+            }
+            $sprint->update(['is_archived' => true]);
+            return redirect()->back()->with('success', 'Sprint closed successfully and tasks moved to BACKLOG!');
         }
-
-        $sprint->update(['is_archived' => true]);
-        
-        return redirect()->back()->with('success', 'Sprint closed successfully and tasks moved to BACKLOG!');
+        else{
+            return redirect()->back()->withErrors(['error'=> 'You are not authorized to close this sprint.']);
+        }
     }
 }
