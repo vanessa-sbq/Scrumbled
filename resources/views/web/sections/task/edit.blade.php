@@ -13,7 +13,7 @@
                 <input type="text" name="title" id="title" value="{{ $task->title }}"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Enter the task title"
-                    maxlength="50">
+                    maxlength="200">
             </div>
 
             <!-- Description -->

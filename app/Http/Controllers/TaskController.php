@@ -96,7 +96,7 @@ class TaskController extends Controller
         $project = Project::where('slug', $request->slug)->firstOrFail();
 
         $validated = $request->validate([
-            'title' => 'required|string|max:50',
+            'title' => 'required|string|max:200',
             'description' => 'nullable|string|max:2000',
             'effort' => 'required',
             'value' => 'required',
@@ -126,7 +126,7 @@ class TaskController extends Controller
 
     public function editTask(Request $request, $slug, $taskId){
         $validated = $request->validate([
-            'title' => 'required|string|max:50',
+            'title' => 'required|string|max:200',
             'description' => 'nullable|string|max:2000',
             'effort' => 'required',
             'value' => 'required',

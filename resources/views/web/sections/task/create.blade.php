@@ -12,7 +12,7 @@
                 <input id="title" type="text" name="title" value="{{ old('title') }}" required autofocus
                     class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     placeholder="Enter the task title"
-                    maxlength="50">
+                    maxlength="200">
                 @error('title')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
