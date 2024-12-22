@@ -1,4 +1,4 @@
-<div id="SPRINT_BACKLOG" class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
+<div class="overflow-x-auto bg-white shadow-md rounded-lg p-6 mb-6">
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white border-b border-black rounded-t-lg">
             <tr>
@@ -17,24 +17,23 @@
                     Start</th>
             </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody id="SPRINT_BACKLOG" class="bg-white divide-y divide-gray-200">
             @foreach ($tasks as $task)
                 <tr data-task-id="{{ $task->id }}">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
-                        <a href="{{ route('task.show', $task->id) }}"
-                            class="text-lg font-semibold text-gray-800 hover:text-primary transition">
+                        <a href="{{ route('task.show', $task->id) }}" class="task_title text-gray-800 hover:text-primary transition">
                             {{ $task->title }}
                         </a>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
                         <span
-                            class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                class="task_effort inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             {{ $task->effort }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
                         <span
-                            class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                class="task_value inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                             {{ $task->value }}
                         </span>
                     </td>
@@ -79,7 +78,7 @@
 </div>
                         @elseif (Auth::check() && $task->assigned_to == Auth::id())
                         <!-- Start Button -->
-                        <button data-url="{{ route('tasks.updateState', $task->id) }}" data-state="IN_PROGRESS"
+                        <button data-url="{{ route('tasks.updateState', $task->id) }}" data-task-id="{{$task->id}}" data-state="IN_PROGRESS"
                                 class="state-button bg-primary text-white px-3 py-1 rounded-md hover:bg-blue-700 transition">
                             Start
                         </button>
