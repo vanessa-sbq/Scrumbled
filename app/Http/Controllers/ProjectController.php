@@ -15,7 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\InviteDetailsMail;
 use App\Events\InviteCreated;
 use App\Events\NewNotification;

@@ -6,19 +6,15 @@
 </head>
 
 <body>
-    <header>
-        @if (Auth::guard("admin")->check())
-            @include('admin.layout.header')
-        @else
-            @include('web.layout.header')
-        @endif
-    </header>
+    @if (Auth::guard("admin")->check())
+        @include('admin.layout.header')
+    @else
+        @include('web.layout.header')
+    @endif
     <main>
         @yield('content')
     </main>
-    <footer>
         @include('web.layout.footer')
-    </footer>
 
     <!-- Scripts -->
     @include('web.layout.scripts')
