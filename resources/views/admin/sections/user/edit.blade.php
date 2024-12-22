@@ -76,8 +76,6 @@
                 <label for="status" class="block text-gray-700">Account Status</label>
                 <select id="status" name="status" class="w-full px-3 py-2 border rounded">
                     <option value="ACTIVE" {{ $user->status == 'ACTIVE' ? 'selected' : '' }}>Active</option>
-                    <option value="NEEDS_CONFIRMATION" {{ $user->status == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>Needs
-                        Confirmation</option>
                     <option value="BANNED" {{ $user->status == 'BANNED' ? 'selected' : '' }}>Banned</option>
                 </select>
                 @error('status')

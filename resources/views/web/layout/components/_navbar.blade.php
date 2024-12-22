@@ -72,7 +72,7 @@
                 <div class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></div> 
                 Notifications
             </x-dropdown-item>
-            <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
+            <x-dropdown-item to="{{ route('profile.settings', Auth::user()->username) }}" class="flex items-center">
                 <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-settings /></span> Settings
             </x-dropdown-item>
             <hr class="border-t border-muted">

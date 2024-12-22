@@ -16,8 +16,7 @@
         <td class="px-6 py-4 whitespace-nowrap text-sm hidden md:table-cell">
             <span
                 class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium
-                                        @if ($user->status === 'NEEDS_CONFIRMATION') bg-yellow-100 text-yellow-800
-                                        @elseif ($user->status === 'BANNED')
+                                        @if ($user->status === 'BANNED')
                                             bg-red-100 text-red-800
                                         @else
                                             bg-green-100 text-green-800 @endif">

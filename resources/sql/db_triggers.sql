@@ -102,6 +102,8 @@ CREATE TRIGGER developer_update_task
 CREATE OR REPLACE FUNCTION handle_invite_response()
 RETURNS TRIGGER AS $$
 BEGIN
+    IF NEW.developer_id IS NOT NULL THEN
+
     -- Delete the invite notification
     DELETE FROM notification
     WHERE receiver_id = NEW.developer_id AND project_id = NEW.project_id AND type = 'INVITE';
@@ -119,6 +121,9 @@ BEGIN
     WHERE id = NEW.project_id AND scrum_master_id <> NEW.developer_id;
 
     RETURN NEW;
+
+    END IF;
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -138,6 +143,8 @@ CREATE TRIGGER handle_invite_response_trigger
 CREATE OR REPLACE FUNCTION create_pending_notification()
 RETURNS TRIGGER AS $$
 BEGIN
+    IF NEW.developer_id IS NOT NULL THEN
+
     INSERT INTO notification (
         receiver_id,
         type,
@@ -154,6 +161,9 @@ BEGIN
     );
 
     RETURN NEW;
+
+    END IF;
+
 END;
 $$ LANGUAGE plpgsql;
 

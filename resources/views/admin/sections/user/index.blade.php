@@ -8,9 +8,6 @@
                 <select id="filter-input" name="status" class="basis-1/9 border py-2 rounded">
                     <option value="ANY">Any Visibility</option>
                     <option value="ACTIVE" {{ request('status') == 'ACTIVE' ? 'selected' : '' }}>Active</option>
-                    <option value="NEEDS_CONFIRMATION" {{ request('status') == 'NEEDS_CONFIRMATION' ? 'selected' : '' }}>
-                        Needs
-                        Confirmation</option>
                     <option value="BANNED" {{ request('status') == 'BANNED' ? 'selected' : '' }}>Banned</option>
                 </select>
             </div>

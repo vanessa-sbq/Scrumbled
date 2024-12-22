@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SprintController;
 use App\Http\Controllers\InboxController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
-use App\Http\Controllers\ProfileController as ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Events\NewNotification;
 
@@ -121,8 +121,8 @@ Route::controller(ProfileController::class)->group(function () {
         Route::get('/profiles', 'index')->name('profiles');
         Route::get('/profiles/{username}', 'getProfile')->name('show.profile');
         Route::middleware(['auth', 'no.admin'])->group(function () {
-            Route::get('/profiles/{username}/edit', 'showEditProfileUI')->name('edit.profile.ui');
-            Route::post('/profiles/{username}/edit', 'editProfile')->name('edit.profile');
+            Route::get('/profiles/{username}/settings', 'showProfileSettings')->name('profile.settings');
+            Route::post('/profiles/{username}/updatePicture', 'updatePicture')->name('profiles.updatePicture');
         });
     });
 });
@@ -141,6 +141,18 @@ Route::controller(InboxController::class)->group(function () {
 // API
 Route::controller(\App\Http\Controllers\Api\UserController::class)->group(function () {
     Route::get('/api/profiles/search', 'search');
+});
+
+Route::controller(\App\Http\Controllers\Api\ProfileController::class)->group(function () {
+    Route::middleware(['auth.admin_or_user'])->group(function () {
+        Route::post('/api/profiles/changeProfileVisibility', 'changeProfileVisibility');
+        Route::post('/api/profiles/deleteProfile', 'deleteProfile');
+        Route::post('/api/profiles/changeUsername', 'changeUsername');
+        Route::post('/api/profiles/changeEmail', 'changeEmail');
+        Route::post('/api/profiles/changeFullName', 'changeFullName');
+        Route::post('/api/profiles/changeBio', 'changeBio');
+        Route::post('/api/profiles/changeProfilePicture', 'changeProfilePicture');
+    });
 });
 
 Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(function () {

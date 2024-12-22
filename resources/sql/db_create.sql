@@ -10,7 +10,7 @@ CREATE TABLE
     );
 
 -- Relation: authenticated_user
-CREATE TYPE account_status AS ENUM ('NEEDS_CONFIRMATION', 'ACTIVE', 'BANNED');
+CREATE TYPE account_status AS ENUM ('ACTIVE', 'BANNED');
 
 CREATE TABLE
     authenticated_user (
@@ -22,7 +22,7 @@ CREATE TABLE
         bio TEXT,
         picture TEXT,
         is_public BOOLEAN NOT NULL DEFAULT TRUE,
-        status account_status NOT NULL DEFAULT 'NEEDS_CONFIRMATION',
+        status account_status NOT NULL DEFAULT 'ACTIVE',
         remember_token VARCHAR(255),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
