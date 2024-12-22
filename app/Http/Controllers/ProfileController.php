@@ -125,6 +125,8 @@ class ProfileController extends Controller
         // Edit the user's profile
         $user->update($data);
 
+        session()->flash('edited_profile', true);
+
         // Redirect to the login page with a success message
         return redirect()->route('show.profile', $user->username)->with('success', 'Profile edited successfully');
     }

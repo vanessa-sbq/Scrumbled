@@ -15,6 +15,11 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\Paginator;
+use Mail;
+use App\Mail\InviteDetailsMail;
+use App\Events\InviteCreated;
+use App\Events\NewNotification;
+
 
 class ProjectController extends Controller
 {
@@ -98,8 +103,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title' => 'required|string|max:20',
+            'description' => 'nullable|string|max:3000',
             'is_public' => 'required|boolean',
             'is_archived' => 'boolean'
         ]);
@@ -131,6 +136,9 @@ class ProjectController extends Controller
             Log::info('Project attributes before saving:', $project->getAttributes());
 
             $project->save();
+
+            //session()->flash('created_project');
+            session()->flash('created_project', true);
 
             // Log the project attributes after saving
             Log::info('Project attributes after saving:', $project->getAttributes());
@@ -175,7 +183,8 @@ class ProjectController extends Controller
         return view('web.sections.project.invite', compact('project', 'users'));
     }
 
-    /**
+    // TODO: Remove?
+    /** 
      * Invite a member to the project.
      *
      * @param \Illuminate\Http\Request $request
@@ -214,6 +223,8 @@ class ProjectController extends Controller
             ]);
         }
 
+        //Mail::to($user->email)->send(new InviteDetailsMail($user));
+        event(new NewNotification($user->id, 'You received an invitation!'));
         return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
     }
 
@@ -345,7 +356,7 @@ class ProjectController extends Controller
             Favorite::where('user_id', $user->id)
                 ->where('project_id', $project->id)
                 ->delete();
-
+            //event(new NewNotification($user->id, 'Removed from Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Unfavorited!"]);
         } else {
             // Favorite logic
@@ -353,6 +364,7 @@ class ProjectController extends Controller
                 'user_id' => $user->id,
                 'project_id' => $project->id,
             ]);
+            //event(new NewNotification($user->id, 'Added to Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Favorited!"]);
         }
     }

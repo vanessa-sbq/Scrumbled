@@ -42,7 +42,7 @@ class UserController extends Controller
             'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
             'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
             'full_name' => 'nullable|string|max:255',
-            'bio' => 'nullable|string',
+            'bio' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:ACTIVE,NEEDS_CONFIRMATION,BANNED'
         ]);
@@ -88,7 +88,7 @@ class UserController extends Controller
             'email' => 'required|email|max:250|unique:authenticated_user',
             'password' => 'required|string|min:8',
             'full_name' => 'nullable|string|max:255',
-            'bio' => 'nullable|string',
+            'bio' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:ACTIVE,BANNED'
         ]);

@@ -1,5 +1,4 @@
 <!-- resources/views/web/sections/static/_navbar.blade.php -->
-
 <div id="collapseMenu"
     class='max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
     <button id="toggleClose"
@@ -20,7 +19,16 @@
                 ['route' => 'contact', 'label' => 'Contact Us'],
                 ['route' => 'faq', 'label' => 'FAQ'],
             ];
+        
+            $user = Auth::user();
+            if ($user) {
+                $unreadNotifications = App\Models\Notification::where('receiver_id', $user->id)->where('is_read', false)->get();
+            }
+            else $unreadNotifications = null;
         @endphp
+            @if ($unreadNotifications !== null && count($unreadNotifications) > 0)
+                <script src="{{ asset('js/notification-dot.js') }}" defer></script>
+            @endif
         @foreach ($links as $link)
             <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
                 <a href="{{ route($link['route']) }}"
@@ -41,6 +49,7 @@
                     <img src="{{ auth()->user()->profilePic() }}" alt="Profile Photo"
                         class="absolute inset-0 h-full w-full object-cover">
                 </button>
+                <div id="pfp-dot" class="absolute top-0 right-0 w-3 h-3 bg-blue-500 rounded-full hidden"></div>
             </x-slot>
 
             <div class="px-4 py-3 flex gap-3 ">
@@ -56,8 +65,12 @@
             <x-dropdown-item to="{{ route('show.profile', Auth::user()->username) }}" class="flex items-center">
                 <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-user-pen /></span> My Profile
             </x-dropdown-item>
-            <x-dropdown-item to="{{ route('inbox', Auth::user()->username) }}" class="flex items-center">
-                <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></span> Notifications
+            <x-dropdown-item to="{{ route('inbox', Auth::user()->username) }}" class="flex items-center relative">
+                <!-- Blue Dot -->
+                <div id="notification-dot" class="hidden absolute top-2 right-[14.8rem] w-3 h-3 bg-blue-500 rounded-full -mr-1"></div>  
+                <!-- Bell Icon -->
+                <div class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-bell /></div> 
+                Notifications
             </x-dropdown-item>
             <x-dropdown-item to="{{ route('profile.settings', Auth::user()->username) }}" class="flex items-center">
                 <span class="flex-shrink-0 w-5 h-5 mr-2 text-gray-500"><x-lucide-settings /></span> Settings
@@ -82,10 +95,45 @@
     <button id="toggleOpen" class='lg:hidden'>
         <x-lucide-menu class="w-8 h-8" />
     </button>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50" data-user-id="{{ Auth::id() }}" data-toast-message="{{ session('toast_message', '') }}" data-audio="{{ asset('storage/sounds/receive.mp3') }}"></div>
 </div>
+
+
 
 @once
     @push('scripts')
-        <script src="{{ asset('js/navbar.js') }}"></script>
+        <script src="{{ asset('js/navbar.js') }}" defer></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js" defer></script>
+        <script src="{{ asset('js/toast.js') }}" defer></script>
+        <script src="{{ asset('js/notification.js') }}" defer></script>
+        @php
+            $events = [
+                'invite_accept_event' => 'Invitation accepted successfully!',
+                'invite_decline_event' => 'Invitation declined.',
+                'notifications_deleted' => 'Notifications deleted.',
+                'edited_profile' => 'Profile edited successfully!',
+                'created_project' =>  'Created project!'
+            ];
+        @endphp
+
+        @foreach($events as $event => $message)
+            @if(session($event))
+                <script defer>
+                    fetch('/trigger-event', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            message: '{{ $message }}',
+                            event_type: '{{ $event }}' 
+                        })
+                    });
+                </script>
+            @endif
+        @endforeach
     @endpush
 @endonce

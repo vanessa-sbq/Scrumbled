@@ -29,11 +29,11 @@ class RegisterController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user',
-            'email' => 'required|email|max:250|unique:authenticated_user',
+            'username' => 'required|string|max:20|alpha_dash|unique:authenticated_user',
+            'email' => 'required|email|max:40|unique:authenticated_user',
             'password' => 'required|min:8|confirmed',
-            'full_name' => 'required|string|max:255',
-            'bio' => 'nullable|string',
+            'full_name' => 'required|string|max:40',
+            'bio' => 'nullable|string|max:1000',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
