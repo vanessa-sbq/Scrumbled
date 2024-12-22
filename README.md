@@ -28,7 +28,6 @@ $ docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw2
 
 The video presentation can be found in the repository's docs folder. You can access it by clicking [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/d7e28c2c6bd0492cb93979b4cf53943407992e39/docs/ScrumbledDemo.mp4).
 
-![image](uploads/74c4a3ae271666c4ddc9d8dc7b94c79e/image.png){width=834 height=462}
 
 ---
 
