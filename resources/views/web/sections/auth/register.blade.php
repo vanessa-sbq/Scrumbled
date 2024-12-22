@@ -7,6 +7,9 @@
         <x-form :action="route('register')" method="POST" label="Register" enctype="multipart/form-data" class="">
             {{ csrf_field() }}
 
+            {{-- Full Name --}}
+            <x-input type="text" name="full_name" label="Full Name" placeholder="Enter your full name" required autofocus />
+
             {{-- Username --}}
             <x-input type="text" name="username" label="Username" placeholder="Enter your username" required autofocus />
 

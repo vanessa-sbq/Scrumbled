@@ -17,33 +17,34 @@ class CommentController extends Controller
 
         $task = Task::findOrFail($taskId);
 
-        $task->comments()->create([
+        $comment = $task->comments()->create([
             'description' => $request->description,
-            'user_id' => auth()->id(), // Assumes the user is authenticated
+            'user_id' => auth()->id(),
             'task_id' => $taskId,
         ]);
 
-        return redirect()->route('task.show', $taskId)->with('success', 'Comment added successfully!');
+        $html = view('web.sections.task.components._comments', compact('comment'))->render();
+
+        return response()->json(['success' => true, 'html' => $html]);
     }
 
     public function delete($commentId)
     {
         $comment = Comment::findOrFail($commentId);
-
-        $author = $comment->user;
-        $user = Auth::user();
-
-        $task = $comment->task;
+        $taskId = $comment->task->id;
 
         $comment->delete();
 
-        return redirect()->route('task.show', $task->id)->with('success', 'Comment deleted successfully!');
+        return response()->json([
+            'success' => true,
+            'commentId' => $commentId,
+            'task_id' => $taskId,
+        ]);
     }
 
     public function edit(Request $request, $commentId)
     {
         $comment = Comment::findOrFail($commentId);
-        $user = Auth::user();
 
         $request->validate([
             'description' => 'required|string|max:1000',
@@ -52,6 +53,9 @@ class CommentController extends Controller
         $comment->description = $request->description;
         $comment->save();
 
-        return redirect()->route('task.show', $comment->task->id)->with('success', 'Comment updated successfully!');
+        return response()->json([
+            'success' => true,
+            'comment' => $comment,
+        ]);
     }
 }

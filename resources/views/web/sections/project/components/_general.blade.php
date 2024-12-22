@@ -70,7 +70,7 @@
                 Transfer
             </button>
 
-            <x-modal id="transfer_modal" title="Project ownership" closeButtonText="Cancel" saveButtonText="remove_button" saveAction="transferOwnership" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+            <x-modal id="transfer_modal" title="Project ownership" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="transferOwnership" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
                 <div class="container mx-auto py-8">
                     <h1 class="text-4xl font-bold mb-8 text-center">User Profiles</h1>
 
@@ -80,7 +80,7 @@
                                placeholder="Search users...">
 
                         <div id="results-container" class="space-y-4">
-                            @include('web.sections.project.components._userInvite', ['users' => $users, 'project' => $project])
+                            @include('web.sections.project.components._userInvite', ['users' => $users])
                         </div>
                         <div id="pagination-container" class="mt-4">
                             {{ $users->links() }} <!-- Pagination links -->
@@ -88,16 +88,30 @@
                     </div>
                 </div>
             </x-modal>
+
+            <x-modal id="transfer_modal_sm" title="Confirm Scrum Master Role Change" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="confirmScrumMasterLoss" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                <p class="text-gray-600">
+                    The selected user is currently assigned as the Scrum Master. By transferring ownership, they will lose this role.
+                    Do you want to proceed?
+                </p>
+            </x-modal>
+
+            <x-modal id="transfer_modal_dev" title="Confirm Developer Role Change" closeButtonText="Cancel" saveButtonText="Confirm" saveAction="confirmDeveloperLoss" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                <p class="text-gray-600">
+                    The selected user is currently assigned as a Developer. By transferring ownership, they will lose this role.
+                    Do you want to proceed?
+                </p>
+            </x-modal>
         </div>
 
         <!-- Archive this project -->
         <div class="p-4 flex flex-wrap gap-4 items-center justify-between">
             <div>
-                <h3 class="font-semibold">Archive this project</h3>
-                <p class="text-gray-400">Mark this project as archived.</p>
+                <h3 class="font-semibold">{{$project->is_archived ? 'Una' : 'A'}}rchive this project</h3>
+                <p class="text-gray-400">Mark this project as {{$project->is_archived ? 'active' : 'archived'}}.</p>
             </div>
             <button class="inline-flex items-center justify-center rounded-md transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300 px-6 py-2 text-base " id="archive_project">
-                Archive this project
+                {{$project->is_archived ? 'Una' : 'A'}}rchive this project
             </button>
 
             <x-modal id="archive_modal" title="Project Archival" closeButtonText="Cancel" saveButtonText="Proceed" saveAction="archiveProject" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">

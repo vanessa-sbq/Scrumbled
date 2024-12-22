@@ -23,4 +23,12 @@
             </span>
         </div>
     </div>
+
+    @if ($task->state === 'IN_PROGRESS')
+        <button type="submit" id="{{ $task->id }}" class="cancel-button bg-gray-400 text-white px-3 py-1 rounded-md hover:bg-gray-500 transition"
+                data-url="{{ route('tasks.updateState', $task->id) }}"
+                data-state="SPRINT_BACKLOG">
+            Cancel
+        </button>
+    @endif
 </div>

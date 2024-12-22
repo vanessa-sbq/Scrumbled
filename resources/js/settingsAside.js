@@ -1,3 +1,25 @@
+let toggleOpen_settings = document.getElementById('openSettings');
+let toggleClose_settings = document.getElementById('closeSettings');
+let collapseMenu_settings = document.getElementById('collapseSettings');
+let backdrop = document.getElementById('backdrop');
+
+function toggleSettings() {
+    if (collapseMenu_settings.style.display === 'block') {
+        collapseMenu_settings.style.display = 'none';
+        backdrop.classList.add('hidden');
+    } else {
+        collapseMenu_settings.style.display = 'block';
+        backdrop.classList.remove('hidden');
+    }
+}
+
+toggleOpen_settings.addEventListener('click', toggleSettings);
+toggleClose_settings.addEventListener('click', toggleSettings);
+backdrop.addEventListener('click', () => {
+    collapseMenu_settings.style.display = 'none';
+    backdrop.classList.add('hidden');
+});
+
 function leaveProject() {
     // Get necessary data
     const projectSlug = window.location.pathname.split('/').at(2);
@@ -31,5 +53,10 @@ function leaveProject() {
 }
 
 if (document.querySelector('.leave_project_button') != null) {
-    document.querySelector('.leave_project_button').addEventListener('click',() => {openModal('leave_project_modal');});
+    document.querySelectorAll('.leave_project_button').forEach( (button) => {
+        button.addEventListener('click', () => {
+            console.log("aaa");
+            openModal('leave_project_modal');
+        });
+    });
 }

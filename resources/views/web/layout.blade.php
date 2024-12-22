@@ -7,7 +7,11 @@
 
 <body>
     <header>
-        @include('web.layout.header')
+        @if (Auth::guard("admin")->check())
+            @include('admin.layout.header')
+        @else
+            @include('web.layout.header')
+        @endif
     </header>
     <main>
         @yield('content')

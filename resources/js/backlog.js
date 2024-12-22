@@ -1,8 +1,18 @@
+function updateCounter(containerId, counterElementId) {
+    const taskCount = document.querySelectorAll(`#${containerId} tr`).length;
+    const counterElement = document.querySelector(`#${counterElementId}`);
+    counterElement.innerText = `(${taskCount})`;
+}
+
 function moveTask(taskButton, targetContainerId, newState, url) {
     const taskElement = taskButton.closest('tr'); // Get the task row
     const targetContainer = document.querySelector(`#${targetContainerId}`); // Target container
 
-    // Remove the task from its current container and append to the new one
+    // Determine current and target container IDs for counters
+    const currentContainerId = taskElement.closest('tbody').id;
+    const currentCounterId = currentContainerId === 'backlog-tasks' ? 'backlog-counter' : 'sprint-counter';
+    const targetCounterId = targetContainerId === 'backlog-tasks' ? 'backlog-counter' : 'sprint-counter';
+    
     taskElement.remove();
     targetContainer.appendChild(taskElement);
 
@@ -20,8 +30,11 @@ function moveTask(taskButton, targetContainerId, newState, url) {
 
     taskButton.setAttribute('data-state', newState);
     taskButton.setAttribute('data-url', url);
-}
 
+    // Update the counters
+    updateCounter(currentContainerId, currentCounterId);
+    updateCounter(targetContainerId, targetCounterId);
+}
 
 function handleTaskStateChange(event) {
     const taskButton = event.currentTarget; // The clicked button
@@ -42,7 +55,7 @@ function handleTaskStateChange(event) {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ state : newState, sprintID : sprint_id })
+        body: JSON.stringify({ state: newState, sprintID: sprint_id })
     })
         .then(response => response.json())
         .then(data => {

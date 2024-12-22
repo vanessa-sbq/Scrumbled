@@ -26,10 +26,6 @@ function changeVisibility(id) {
     closeModal(id);
 }
 
-function transferOwnership(id) {
-
-}
-
 function archiveProject(id) {
     fetch('/api/projects/archiveProject', {
         method: 'POST',
@@ -75,20 +71,6 @@ function deleteProject(id) {
             console.error('Error:', error);
         });
     closeModal(id);
-}
-function executeOption(event) {
-    switch(event.srcElement.id) {
-        case 'change_visibility':
-            break;
-        case 'archive_project':
-            console.log("REMOVE_ME: archive_project");
-            break;
-        case 'delete_project':
-            console.log("REMOVE_ME: delete_project");
-            break;
-        default:
-            break;
-    }
 }
 
 // Change Project Title
@@ -179,38 +161,94 @@ document.getElementById('changeDescriptionBtn').addEventListener('click', functi
         });
 });
 
-function attachToTransferButton() {
-    const inviteButtons = document.querySelectorAll(".transferButton");
+let userIdToTransfer = null;
 
-    inviteButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            const userId = button.getAttribute('id');
-            console.log('User ID:', userId);
+function transferProject(event) {
+    if (event) {
+        userIdToTransfer = event.srcElement.id;
+    }
+    console.log('User ID:', userIdToTransfer);
 
-
-            fetch("/api/projects/transferProject", {
-                method: "POST",
-                body: JSON.stringify({ slug: window.location.pathname.split('/').at(2), userId: userId }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.reload();
-                        console.log(data['message'])
-                    } else {
-                        alert('Unable to transfer ownership.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('There was an error processing your request.');
-                });
+    // First fetch attempt to determine if confirmation is required
+    fetch("/api/projects/transferProject", {
+        method: "POST",
+        body: JSON.stringify({
+            slug: window.location.pathname.split('/').at(2),
+            userId: userIdToTransfer
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.status)
+            if (data.status === 'waiting_for_confirmation_sm') {
+                openModal('transfer_modal_sm');
+            } else if (data.status === 'waiting_for_confirmation_dev') {
+                openModal('transfer_modal_dev');
+            } else if (data.status === 'success') {
+                window.location.reload();
+                console.log(data['message']);
+            } else {
+                alert('Unable to transfer ownership: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error processing your request.');
         });
+}
+
+function attachToTransferButton(event) {
+    const transferButtons = document.querySelectorAll(".transferButton");
+
+    transferButtons.forEach(button => {
+        button.addEventListener("click", transferProject);
     });
+}
+
+function confirmScrumMasterLoss(event) {
+    sendConfirmation('transfer_modal_sm', userIdToTransfer, 'sm_loss');
+}
+
+function confirmDeveloperLoss(event) {
+    sendConfirmation('transfer_modal_dev', userIdToTransfer, 'dev_loss');
+}
+
+function sendConfirmation(modalId, userId, confirmationType) {
+    // Make the API call with the confirmation parameter
+    fetch("/api/projects/transferProject", {
+        method: "POST",
+        body: JSON.stringify({
+            slug: window.location.pathname.split('/').at(2),
+            userId: userId,
+            [confirmationType]: true
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            switch (data.status) {
+                case 'success':
+                    window.location.reload();
+                    break;
+                case 'waiting_for_confirmation_dev':
+                    transferProject();
+                    break;
+                default:
+                    alert('Unable to transfer ownership: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error processing your request.');
+        });
+    closeModal(modalId);
 }
 
 function attachToPagination() {
@@ -225,7 +263,6 @@ function attachToPagination() {
                 // Fetch the URL from the link
                 const url = target.href;
 
-                // Perform the AJAX request
                 fetch(url, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
@@ -244,6 +281,7 @@ function attachToPagination() {
                         // Replace the pagination container
                         const newPagination = doc.getElementById('pagination-container');
                         document.getElementById('pagination-container').innerHTML = newPagination.innerHTML;
+                        attachToTransferButton();
                     })
                     .catch(error => {
                         console.error('Error fetching pagination data:', error);
@@ -275,7 +313,7 @@ function searchHelper(savedContainer) {
                 pagination.style.display = 'none';
             }
 
-            let url = `/api/profiles/transferProject/search?search=${query}`;
+            let url = `/api/profiles/transferProject/search?search=${query}&slug=${window.location.pathname.split('/').at(2)}`;
             if (status) {
                 url += `&status=${status}`;
             }

@@ -69,5 +69,18 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Other middleware
         'product.owner' => \App\Http\Middleware\ProductOwnerMiddleware::class,
+        'project.membership' => \App\Http\Middleware\CheckProjectMembership::class,
+        'no.admin' => \App\Http\Middleware\PreventAdminInteraction::class,
+        'auth.admin_or_user' => \App\Http\Middleware\AdminOrUserAuth::class,
+        'not.archived.api' => \App\Http\Middleware\ProjectReadOnlyIfArchivedApi::class,
+        'not.archived' => \App\Http\Middleware\ProjectReadOnlyIfArchived::class,
+        'comment.not.archived' => \App\Http\Middleware\CommentReadOnlyIfArchived::class,
+        'sprint.not.archived' => \App\Http\Middleware\SprintReadOnlyIfArchived::class,
+        'sprint.can.access' => \App\Http\Middleware\SprintAccess::class,
+        'task.can.access' => \App\Http\Middleware\TaskAccess::class,
+        'task.can.access.api' => \App\Http\Middleware\TaskAccessApi::class,
+        'task.not.archived' => \App\Http\Middleware\TaskReadOnlyIfArchived::class,
+        'task.not.archived.api' => \App\Http\Middleware\TaskReadOnlyIfArchivedApi::class,
+        'can.alter.comment' => \App\Http\Middleware\CanAlterComment::class
     ];
 }

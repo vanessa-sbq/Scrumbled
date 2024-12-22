@@ -32,13 +32,13 @@ class RegisterController extends Controller
             'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user',
             'email' => 'required|email|max:250|unique:authenticated_user',
             'password' => 'required|min:8|confirmed',
-            'full_name' => 'nullable|string|max:255',
+            'full_name' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Collect the validated data
-        $data = $request->only('username', 'email', 'full_name', 'bio');
+        $data = $request->only('username', 'email', 'full_name', 'bio', 'full_name');
         $data['password'] = Hash::make($request->password);
 
         // Handle the file upload

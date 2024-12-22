@@ -101,6 +101,7 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_public' => 'required|boolean',
+            'is_archived' => 'boolean'
         ]);
 
         // Ensure the authenticated user is set
@@ -111,7 +112,7 @@ class ProjectController extends Controller
             $project->title = $request->title;
             $project->description = $request->description;
             $project->is_public = $request->is_public;
-            $project->is_archived = false; // Default to false
+            $project->is_archived = $request->input('is_archived') ?? false; // Default to false
             $project->product_owner_id = $user->id;
 
             // Generate a unique slug
@@ -209,7 +210,7 @@ class ProjectController extends Controller
         if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
             DeveloperProject::create([
                 'developer_id' => $user->id,
-                'project_id' => $project->id
+                'project_id' => $project->id,
             ]);
         }
 
@@ -230,28 +231,66 @@ class ProjectController extends Controller
     public function searchTasks(Request $request)
     {
         $url = $request->url();
-
         $slug = explode('/', $url)[4];
-
-
         $project = Project::where('slug', $slug)->firstOrFail();
 
+        // Base query for tasks in the project
+        $tasks = Task::where('project_id', $project->id);
+
+        // Handle search query
         $search = $request->input('query');
-
-        //dd($request);
-
-        $tasks = Task::where('project_id', $project->id)->get();
-
-        if (isset($search) && $search !== '') {
-            $tasks = Task::where('project_id',  $project->id)
-                ->whereRaw("tsvectors @@ plainto_tsquery('english', ?) OR title = ?", [$search, $search])
-                ->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search])
-                ->get();
+        if (!empty($search)) {
+            $tasks->where(function ($queryBuilder) use ($search) {
+                $queryBuilder->whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$search])
+                    ->orWhere('title', 'LIKE', '%' . $search . '%');
+            })->orderByRaw('ts_rank(tsvectors, plainto_tsquery(\'english\', ?)) DESC', [$search]);
         }
 
+        // Apply filters
+        if ($request->filled('assigned_to')) {
+            // Handle "assigned_to" filter
+            if ($request->input('assigned_to') === 'unassigned') {
+                // Filter tasks that are not assigned to anyone
+                $tasks->whereNull('assigned_to');
+            } else {
+                // Filter tasks assigned to a specific developer
+                $tasks->where('assigned_to', $request->input('assigned_to'));
+            }
+        }
 
-        return view('web.sections.task.index', ['project' => $project, 'tasks' => $tasks]);
+        if ($request->filled('value')) {
+            $tasks->where('value', $request->input('value'));
+        }
+
+        if ($request->filled('state')) {
+            $tasks->where('state', $request->input('state'));
+        }
+
+        if ($request->filled('effort')) {
+            $tasks->where('effort', $request->input('effort'));
+        }
+
+        // Get the filtered tasks
+        $tasks = $tasks->get();
+
+        // Handle AJAX requests
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('web.sections.task.components._task', ['tasks' => $tasks])->render(),
+                'count' => $tasks->count(),
+            ]);
+        }
+
+        // Handle regular requests
+        $developers = $project->developers;
+
+        return view('web.sections.task.index', [
+            'project' => $project,
+            'tasks' => $tasks,
+            'developers' => $developers,
+        ]);
     }
+
 
     public function leave($slug) {
         $project = Project::where('slug', $slug)->firstOrFail();
@@ -321,22 +360,9 @@ class ProjectController extends Controller
     public function showProjectSettings($slug)
     {
         $project = Project::where('slug', $slug)->with(['productOwner', 'scrumMaster', 'developers'])->firstOrFail();
-        $users = AuthenticatedUser::paginate(5);
 
-        // Get the IDs to exclude
-        $excludedIds = [$project->scrum_master_id, $project->product_owner_id];
-        foreach ($project->developers as $developer) {
-            $excludedIds[] = $developer->id;
-        }
-
-        $collection = $users->getCollection();
-        $filteredCollection = $collection->filter(function($users) use ($excludedIds) {
-            return !in_array($users->id, $excludedIds);
-        });
-        $users->setCollection($filteredCollection);
-
-        $developers = $project->developers()->paginate(2);
-        return view('web.sections.project.settings', compact('project', 'users', 'developers'));
+        $developers = $project->developers()->paginate(3);
+        return view('web.sections.project.settings', ['project' => $project, 'users' => $developers, 'developers' => $developers]);
     }
 
 }
