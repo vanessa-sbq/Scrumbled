@@ -61,8 +61,6 @@ class ProjectController extends Controller
         $acceptLossOfSM = $request->input('sm_loss');
         $acceptLossOfDev = $request->input('dev_loss');
 
-        Log::info($uid);
-
         $project = Project::where('slug', $projectSlug)->firstOrFail();
         $oldOwner = $project->product_owner_id;
 
@@ -102,8 +100,6 @@ class ProjectController extends Controller
                 return response()->json(['status' => 'waiting_for_confirmation_dev', 'message' => 'The user ' . $newOwner->username . ' is a developer and cannot be both PO and Developer at the same time.']);
             }
         }
-
-        Log::info($acceptLossOfDev);
 
         if (isset($acceptLossOfDev) && !$acceptLossOfDev) {
             return response()->json(['status' => 'error', 'message' => 'The user ' . $newOwner->username . ' is a developer and cannot be both PO and Developer at the same time.']);
@@ -287,8 +283,6 @@ class ProjectController extends Controller
         foreach ($project->developers as $developer) {
             $developers[] = $developer->id;
         }
-
-        //Log::info('Developers Array: ' . json_encode($developers));
 
 
         if (!in_array($uid, $developers)) {

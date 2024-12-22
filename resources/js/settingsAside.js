@@ -55,7 +55,6 @@ function leaveProject() {
 if (document.querySelector('.leave_project_button') != null) {
     document.querySelectorAll('.leave_project_button').forEach( (button) => {
         button.addEventListener('click', () => {
-            console.log("aaa");
             openModal('leave_project_modal');
         });
     });

@@ -40,7 +40,7 @@ class PusherController extends Controller
         // Attach the user to the project
         $project->developers()->attach($user);
 
-        $notification = "New Invite Notification"; // TODO: Change
+        $notification = "New Invite Notification";
         event(new InviteCreated($notification));
 
         return redirect()->route('projects.team', $project->slug)->with('success', 'Member invited successfully.');

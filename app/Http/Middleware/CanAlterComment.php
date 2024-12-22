@@ -23,8 +23,6 @@ class CanAlterComment
 
         $comment = Comment::where('id', $request->route('id'))->firstOrFail();
 
-        Log::info($comment->id);
-
         $task_id  = $comment->task_id;
         $task = Task::where('id', $task_id)->firstOrFail();
         $project = Project::where('id', $task->project_id)->firstOrFail();

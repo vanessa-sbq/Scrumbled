@@ -37,7 +37,6 @@ function archiveProject(event) {
 
 function deleteProject(event) {
     event.preventDefault();
-    console.log("hello")
 
     const projectSlug = event.srcElement.getAttribute('data-project-slug')
 

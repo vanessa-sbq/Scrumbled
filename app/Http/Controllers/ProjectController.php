@@ -140,7 +140,6 @@ class ProjectController extends Controller
                 return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
             }
         } catch (QueryException $e) {
-            Log::error('QueryException:', ['error' => $e->getMessage(), 'errorInfo' => $e->errorInfo]);
             if ($e->errorInfo[1] == 1062) { // 1062 is the error code for duplicate entry
                 return back()->withErrors(['title' => 'Title already in use.'])->withInput();
             }
@@ -176,7 +175,6 @@ class ProjectController extends Controller
         return view('web.sections.project.invite', compact('project', 'users'));
     }
 
-    // TODO: Remove?
     /** 
      * Invite a member to the project.
      *
@@ -217,7 +215,7 @@ class ProjectController extends Controller
 
             $inviter = AuthenticatedUser::where('id', $project->product_owner_id)->first();
             $url = preg_replace('/projects\/\w+\/invite/', 'inbox', $request->url());
-            //Mail::to($user->email)->send(new InviteDetailsMail($user, $project, $inviter, $url));  // TODO: Uncomment
+            Mail::to($user->email)->send(new InviteDetailsMail($user, $project, $inviter, $url));
             event(new NewNotification($user->id, 'You received an invitation!'));
             return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
         }

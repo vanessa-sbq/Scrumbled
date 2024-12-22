@@ -48,8 +48,6 @@ function placeTask(assigned_to, task_id, title, effort, value, state) {
 
                     tableRowElement.innerHTML = data;
 
-                    console.log(tableRowElement)
-
                     tableRowElement.querySelector(".state-button").addEventListener("click", stateButtonListener);
 
                     targetContainer.appendChild(tableRowElement);
@@ -119,15 +117,12 @@ const assignSidebars = document.querySelectorAll(".assign-sidebar");
 const openSidebarButtons = document.querySelectorAll(".open-sidebar-button");
 const closeSidebarButtons = document.querySelectorAll(".close-sidebar-button");
 
-console.log({ openSidebarButtons, closeSidebarButtons, assignSidebars });
-
 // Function to open the sidebar
 openSidebarButtons.forEach(button => {
     button.addEventListener("click", function () {
         const taskRow = button.closest("tr");
         const assignSidebar = taskRow.querySelector(".assign-sidebar");
         if (assignSidebar) {
-            console.log("Opening sidebar...");
             assignSidebar.classList.remove("translate-x-full");
             assignSidebar.classList.add("translate-x-0");
         }
@@ -139,7 +134,6 @@ closeSidebarButtons.forEach(button => {
     button.addEventListener("click", function () {
         const assignSidebar = button.closest(".assign-sidebar");
         if (assignSidebar) {
-            console.log("Closing sidebar...");
             assignSidebar.classList.remove("translate-x-0");
             assignSidebar.classList.add("translate-x-full");
         }
@@ -175,7 +169,6 @@ document.querySelectorAll(".assign-button").forEach(button => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log("Server Response:", data);
 
                 if (data.status === "success") {
                     const taskRow = document.querySelector(`tr[data-task-id="${taskId}"]`);
@@ -187,7 +180,6 @@ document.querySelectorAll(".assign-button").forEach(button => {
                         assignedCell.innerHTML = data.userComponent;
 
                         // Log the assigned user status
-                        console.log("Assigned to Current User:", data.assignedToCurrentUser);
 
                         // Show "Start" button only if the logged-in user is the one assigned
                         if (data.assignedToCurrentUser) {
@@ -247,12 +239,6 @@ function stateButtonListener(event) {
     let assigned_to = task.querySelector('.user_profile_data').innerText;
     let task_id = event.target.getAttribute('data-task-id')
 
-    console.log(title);
-    console.log(effort);
-    console.log(value);
-    console.log(assigned_to);
-    console.log(task_id);
-
     const boundPlaceTask = placeTask.bind(event.target);
 
     boundPlaceTask(assigned_to, task_id, title, effort, value, "IN_PROGRESS")
@@ -273,15 +259,6 @@ function cancelButtonListener(event) {
     let value = task.querySelector('.task_value').innerText;
     let assigned_to = task.getAttribute('data-assigned-to')
     let task_id = task.getAttribute('data-task-id')
-
-    console.log(title);
-    console.log(effort);
-    console.log(value);
-    console.log(assigned_to);
-    console.log(task_id);
-
-    console.log(event.target.parentElement)
-
 
     const boundPlaceTask = placeTask.bind(event.target);
 

@@ -62,7 +62,6 @@ class TaskController extends Controller
         $task->assignedDeveloper = new \stdClass();
         $task->assignedDeveloper->user = $assignedDeveloper;;
 
-        Log::info($request->state);
 
         if ($request->state === 'IN_PROGRESS') {
             $v = view('web.sections.project.components._task', compact('task'))->render();
@@ -70,7 +69,6 @@ class TaskController extends Controller
         }
 
         $v = view('web.sections.project.components._taskSprintBacklog', compact('task'))->render();
-        Log::info(response()->json($v));
         return response()->json($v);
     }
 

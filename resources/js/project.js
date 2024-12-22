@@ -111,7 +111,6 @@ document.getElementById('changeTitleBtn').addEventListener('click', function(eve
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                //alert(data.message); // TODO: Toast Notification ?
                 window.location.replace(data.redirect)
             } else {
                 alert(data.message); // Error message
@@ -155,7 +154,6 @@ document.getElementById('changeDescriptionBtn').addEventListener('click', functi
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // alert(data.message); // Success message // TODO: Toast Notification ?
                 window.location.reload();
             } else {
                 alert(data.message); // Error message
@@ -173,7 +171,6 @@ function transferProject(event) {
     if (event) {
         userIdToTransfer = event.srcElement.id;
     }
-    console.log('User ID:', userIdToTransfer);
 
     // First fetch attempt to determine if confirmation is required
     fetch("/api/projects/transferProject", {
@@ -189,14 +186,12 @@ function transferProject(event) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data.status)
             if (data.status === 'waiting_for_confirmation_sm') {
                 openModal('transfer_modal_sm');
             } else if (data.status === 'waiting_for_confirmation_dev') {
                 openModal('transfer_modal_dev');
             } else if (data.status === 'success') {
                 window.location.reload();
-                console.log(data['message']);
             } else {
                 alert('Unable to transfer ownership: ' + data.message);
             }

@@ -74,7 +74,7 @@ class LoginController extends Controller
 
             $user = AuthenticatedUser::where('email', $request->email)->first();
             $user->reset_link = url()->current() . '/reset-password?token=' . $token;
-            //Mail::to($user->email)->send(new ForgotPasswordMail($user, $token));  // TODO: Uncomment
+            Mail::to($user->email)->send(new ForgotPasswordMail($user, $token));
             return redirect()->back()->with('success', 'Password has been sent to email');
         } else {
             return redirect()->back()->with('error', 'Email not found');

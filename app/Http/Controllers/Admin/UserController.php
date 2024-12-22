@@ -38,7 +38,6 @@ class UserController extends Controller
 
         // Validate the request data
         $request->validate([
-            // FIXME:  . $user->id
             'username' => 'required|string|max:250|alpha_dash|unique:authenticated_user,username,' . $user->id,
             'email' => 'required|email|max:250|unique:authenticated_user,email,' . $user->id,
             'full_name' => 'nullable|string|max:255',
@@ -110,7 +109,6 @@ class UserController extends Controller
     }
 
     public function deleteUser(Request $request) {
-        Log::info(json_encode($request));
         if (!Auth::guard("admin")->check()) {
             return response()->json(['status' => 'error', 'message' => 'You do not have permission to execute this.'], 403);
         }
@@ -144,9 +142,6 @@ class UserController extends Controller
         foreach ($publicProjects as $publicProject) {
             $publicProject->update(['is_archived' => true]);
         }
-
-        Log::info(json_encode($publicProjects));
-        Log::info(json_encode($privateProjects));
 
         $userToDelete->delete();
         return response()->json(['status' => 'success', 'message' => 'User has been successfully deleted.']);

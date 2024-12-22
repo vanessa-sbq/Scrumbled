@@ -70,7 +70,7 @@ Route::controller(ProjectController::class)->group(function () {
             Route::post('/projects/new', 'store')->name('projects.store');
         });
         Route::middleware(['auth'])->group(function () {
-            Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite'); // FIXME: Should this be inside the middleware? Doesn't it expose data to public?
+            Route::post('/projects/{slug}/favorite', 'updateFavorite')->name('projects.updateFavorite');
         });
     });
 

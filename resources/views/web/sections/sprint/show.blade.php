@@ -12,7 +12,7 @@
                                         class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
                 </div>
 
-                <!-- Accepted Card FIXME: Add a link that redirects the user to the task ? -->
+                <!-- Accepted Card -->
                 <div class="bg-white shadow-md rounded-lg p-6">
                         <h3 class="text-xl font-bold text-primary mb-4">Accepted</h3>
                         <div class="space-y-4">

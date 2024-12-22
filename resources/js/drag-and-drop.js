@@ -25,7 +25,6 @@ function handleDragStart(event) {
     sourceColumnId = taskCard.closest('.task-column').id;
     event.dataTransfer.setData('text/plain', taskCard.dataset.taskId);
     taskCard.classList.add('dragging');
-    console.log('Drag Start:', { taskId: taskCard.dataset.taskId, sourceColumnId });
 }
 
 function handleDragEnd(event) {
@@ -64,8 +63,6 @@ function handleDrop(event) {
     const sourceColumn = sourceColumnId;
     const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
     const targetColumn = event.currentTarget.id.toUpperCase(); // Convert to uppercase
-
-    console.log('Drop:', { taskId, sourceColumn, targetColumn });
 
     // Ensure the taskCard is valid
     if (!taskCard) {
@@ -137,7 +134,6 @@ function updateTaskStatus(taskId, targetColumn) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(`Task ${taskId} moved to ${targetColumn}`);
         })
         .catch(error => {
             console.error('Error updating task state:', error);

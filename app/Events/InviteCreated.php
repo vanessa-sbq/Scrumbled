@@ -30,11 +30,11 @@ class InviteCreated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return ['my-channel']; // TODO: Change?
+        return ['my-channel'];
     }
 
     public function broadcastAs()
     {
-        return 'form-submitted'; // TODO: Change?
+        return 'form-submitted';
     }
 }

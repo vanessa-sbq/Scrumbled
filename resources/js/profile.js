@@ -82,7 +82,6 @@ document.getElementById('changeUsernameBtn').addEventListener('click', function(
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                //alert(data.message); // TODO: Toast Notification ?
                 window.location.replace(data.redirect)
             } else {
                 alert(data.message); // Error message
@@ -126,7 +125,6 @@ document.getElementById('changeEmailBtn').addEventListener('click', function(eve
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                //alert(data.message); // TODO: Toast Notification ?
                 window.location.replace(data.redirect)
             } else {
                 alert(data.message); // Error message
@@ -169,7 +167,6 @@ document.getElementById('changeFullNameBtn').addEventListener('click', function(
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                //alert(data.message); // TODO: Toast Notification ?
                 window.location.replace(data.redirect)
             } else {
                 alert(data.message); // Error message
@@ -212,7 +209,6 @@ document.getElementById('changeBioBtn').addEventListener('click', function(event
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // alert(data.message); // Success message // TODO: Toast Notification ?
                 window.location.reload();
             } else {
                 alert(data.message); // Error message
