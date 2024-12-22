@@ -7,11 +7,17 @@ use App\Models\Project;
 
 class ProjectPolicy
 {
+
     /**
-     * Summary of manage
-     * @param \App\Models\AuthenticatedUser $user
-     * @param \App\Models\Project $project
-     * @return bool
+     * Determine whether the user can create models.
+     */
+    public function create(AuthenticatedUser $user, Project $project): bool
+    {
+        return (($user !== null) && ($project !== null));
+    }
+
+    /**
+     * Determine whether the user can manage the project.
      */
     public function manage(AuthenticatedUser $user, Project $project)
     {

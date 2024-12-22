@@ -100,9 +100,14 @@ class TaskController extends Controller
         $task->description = $request->description;
         $task->value = $request->value;
         $task->effort = $request->effort;
-        $task->save();
 
-        return redirect()->route('projects.backlog', $project->slug)->with('success', 'Task created successfully!');
+        if ($this->authorize('create', $task)){
+            $task->save();
+            return redirect()->route('projects.backlog', $project->slug)->with('success', 'Task created successfully!');
+        }
+        else{
+            return redirect()->back()->with('error', 'You are not authorized to create this task.');
+        }
     }
 
     public function showEdit($slug, $task_id){
@@ -116,19 +121,21 @@ class TaskController extends Controller
         $task->description = $request->description;
         $task->value = $request->value;
         $task->effort = $request->effort;
-        $task->save();
 
-        return redirect()->route('task.show', $task)->with('success', 'Task updated successfully!');
+        if ($this->authorize('update', $task)){
+            $task->save();
+            return redirect()->route('task.show', $task)->with('success', 'Task updated successfully!');
+        }
+        else {
+            return redirect()->back()->with('error', 'You are not authorized to update this task.');
+        }
     }
 
     public function show($id)
     {
         $task = Task::where('id', $id)->firstOrFail();
-
         $sprint = $task->sprint;
-
         $project = $task->project;
-
         $comments = $task->comments()->orderBy('created_at', 'asc')->get();
 
         return view('web.sections.task.show', ['task' => $task, 'sprint' => $sprint, 'project' => $project, 'comments' => $comments,]);
@@ -139,9 +146,12 @@ class TaskController extends Controller
         $project = Project::where('slug', $slug)->firstOrFail();
         $task = Task::where('id', $id)->where('project_id', $project->id)->firstOrFail();
 
-        $task->delete();
-
-        return redirect()->route('projects.backlog', ['slug' => $slug])
-            ->with('success', 'Task deleted successfully.');
+        if ($this->authorize('delete', $task)){
+            $task->delete();
+            return redirect()->route('projects.backlog', ['slug' => $slug])->with('success', 'Task deleted successfully.');
+        }
+        else{
+            return redirect()->back()->with('error', 'You are not authorized to delete this task.');
+        }
     }
 }

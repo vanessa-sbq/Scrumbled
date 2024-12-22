@@ -20,9 +20,9 @@ class CommentPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(AuthenticatedUser $authenticatedUser, Comment $comment): bool
+    public function update(AuthenticatedUser $user, Comment $comment): bool
     {
-        //
+        return (($user !== null) && ($comment !== null) && ($comment->user_id === $user->id));
     }
 
 }
