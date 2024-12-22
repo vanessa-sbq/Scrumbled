@@ -114,7 +114,7 @@
                             Change Profile Visibility
                         </button>
 
-                        <x-modal id="visibility_modal_profile" title="Profile Visibility" closeButtonText="Cancel" saveButtonText="Proceed" saveAction="changeProfileVisibility" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                        <x-modal id="visibility_modal" title="Profile Visibility" closeButtonText="Cancel" saveButtonText="Proceed" saveAction="changeProfileVisibility" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
                             <p>Are you sure you want to change the visibility to {{$user->is_public ? 'private' : 'public'}}?</p>
                         </x-modal>
                     </div>
@@ -129,7 +129,7 @@
                             Delete this profile
                         </button>
 
-                        <x-modal id="delete_modal_profile" title="Profile Deletion" closeButtonText="Don't delete" saveButtonText="DELETE" saveAction="deleteProfile" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
+                        <x-modal id="delete_modal" title="Profile Deletion" closeButtonText="Don't delete" saveButtonText="DELETE" saveAction="deleteProfile" activeButtonColor="bg-red-600" hoverButtonColor="bg-red-700">
                             <p>This is the point of no return.</p>
                             <p>Are you sure you want to delete the profile?</p>
                         </x-modal>

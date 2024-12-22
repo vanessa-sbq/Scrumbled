@@ -4,7 +4,7 @@ const data = {
     username: window.location.pathname.split('/').at(2),
 };
 
-function changeVisibility(id) {
+function changeProfileVisibility(id) {
     fetch('/api/profiles/changeProfileVisibility', {
         method: 'POST',
         headers: {
@@ -146,7 +146,7 @@ document.getElementById('changeFullNameBtn').addEventListener('click', function(
 
     // Validate title length
     if (fullName.length <= 0) {
-        fullName.textContent = "Email must not be empty.";
+        fullName.textContent = "Full name must not be empty.";
         fullNameError.style.display = "block";
         return; // Prevent the fetch request
     }
