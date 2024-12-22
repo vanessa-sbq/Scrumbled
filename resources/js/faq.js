@@ -1,7 +1,10 @@
-const defaultAccordionGroup = document.querySelector('.accordion-group[data-accordion="default-accordion"]');
-if (defaultAccordionGroup) {
-    defaultAccordion(defaultAccordionGroup);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const defaultAccordionGroup = document.querySelector('.accordion-group[data-accordion="default-accordion"]');
+    if (defaultAccordionGroup) {
+        defaultAccordion(defaultAccordionGroup);
+    }
+});
+
 function defaultAccordion(defaultAccordionGroup) {
     const accordionButtons = defaultAccordionGroup.querySelectorAll('.accordion-toggle');
 
@@ -31,7 +34,7 @@ function defaultAccordion(defaultAccordionGroup) {
 
                 content.style.maxHeight = content.scrollHeight + 'px';
                 accordion.classList.add('active');
-                chevron.style.transform = 'rotate(180deg)'
+                chevron.style.transform = 'rotate(180deg)';
             }
         });
     });
@@ -39,9 +42,7 @@ function defaultAccordion(defaultAccordionGroup) {
 
 function close(button) {
     const content = button.nextElementSibling;
-    const chevron = document.querySelectorAll('.chevron');
+    const chevron = button.querySelector('.chevron');
     content.style.maxHeight = '';
-    chevron.forEach(element => {
-        element.style.transform = 'rotate(0deg)';
-    });
+    chevron.style.transform = 'rotate(0deg)';
 }
