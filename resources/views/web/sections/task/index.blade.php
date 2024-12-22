@@ -22,7 +22,7 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="flex gap-4 mb-2">
+                <div class="flex flex-col md:flex-row gap-4 mb-2">
                     <!-- State Filter -->
                     <select id="state-input" name="state"
                         class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
@@ -68,29 +68,26 @@
                 </div>
             </form>
 
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-white border-b border-black rounded-t-lg">
+            <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
+                <thead class="bg-white border-b border-black">
                     <tr>
-                        <th
-                            class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                        <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider">
                             To Do ({{ count($tasks) }})
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             Effort
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             Value
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell whitespace-nowrap">
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell whitespace-nowrap">
                             Assigned To
                         </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             SPRINT
                         </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             STATE
                         </th>
                     </tr>

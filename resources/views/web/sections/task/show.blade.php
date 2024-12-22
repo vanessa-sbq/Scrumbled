@@ -4,7 +4,8 @@
     <div class="container py-8 p-4">
         <!-- Breadcrumb Navigation -->
         @if ($project->is_archived)
-            <div class="w-full bg-amber-100 mb-2 p-4 text-center rounded-xl">Project is archived.</div>
+            <div class="w-full bg-amber-100 border-amber-500 border-2 mb-2 p-4 text-center rounded-xl">Project is archived.
+            </div>
         @endif
         <nav class="mb-6 text-sm text-gray-600">
             <a href="{{ route('projects.backlog', $project->slug) }}" class="text-primary hover:underline">
