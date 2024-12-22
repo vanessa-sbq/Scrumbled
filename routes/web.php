@@ -166,10 +166,10 @@ Route::controller(\App\Http\Controllers\Api\ProjectController::class)->group(fun
     });
 });
 
-// TODO: Remove
-/* Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
-    Route::get('/api/projects/{slug}/tasks/search', 'search');
-}); */
+
+Route::controller(\App\Http\Controllers\Api\TaskController::class)->group(function () {
+    Route::post('/api/tasks/generateForSprint', 'generateTaskForBacklog');
+});
 
 //Sprints
 Route::controller(SprintController::class)->group(function () {
@@ -197,11 +197,13 @@ Route::controller(TaskController::class)->group(function () {
             Route::post('/tasks/{id}/assign', 'assign')->name('tasks.assign');
         });
         Route::middleware(['project.membership', 'not.archived'])->group(function () {
-            Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
-            Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
-            Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
-            Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
-            Route::post('projects/{slug}/tasks/{id}/delete', 'deleteTask')->name('tasks.deleteTask');
+            Route::middleware(['product.owner'])->group(function () {
+                Route::get('projects/{slug}/tasks/new', 'showNew')->name('tasks.showNew');
+                Route::post('projects/{slug}/tasks/new', 'createNew')->name('tasks.createNew');
+                Route::get('projects/{slug}/tasks/{id}/edit', 'showEdit')->name('tasks.showEdit');
+                Route::post('projects/{slug}/tasks/{id}/edit', 'editTask')->name('tasks.editTask');
+                Route::post('projects/{slug}/tasks/{id}/delete', 'deleteTask')->name('tasks.deleteTask');
+            });
         });
         Route::middleware(['task.not.archived.api', 'task.can.access.api'])->group(function () {
             Route::post('/tasks/{id}/state', 'updateState')->name('tasks.updateState');

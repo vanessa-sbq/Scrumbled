@@ -9,11 +9,13 @@
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-4xl font-bold text-primary">{{ $project->title }} Backlog</h1>
 
-            <!-- Create Task Button -->
-            <a href="{{ route('tasks.createNew', $project->slug) }}"
-                class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                Create Task
-            </a>
+            @if (Auth::guard("admin")->check() || (Auth::user() && $project->product_owner_id === Auth::user()->id))
+                <!-- Create Task Button -->
+                <a href="{{ route('tasks.createNew', $project->slug) }}"
+                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                    Create Task
+                </a>
+            @endif
         </div>
 
         <!-- Backlog Table -->

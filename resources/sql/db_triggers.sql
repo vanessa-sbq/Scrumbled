@@ -172,8 +172,8 @@ CREATE OR REPLACE FUNCTION create_assign_notification() RETURNS TRIGGER AS $$
 BEGIN
     -- Only insert a notification if assigned_to is not NULL
     IF NEW.assigned_to IS NOT NULL THEN
-INSERT INTO notification (receiver_id, type, task_id)
-VALUES (NEW.assigned_to, 'ASSIGN', NEW.id);
+INSERT INTO notification (project_id, receiver_id, type, task_id)
+VALUES (NEW.project_id, NEW.assigned_to, 'ASSIGN', NEW.id);
 END IF;
 RETURN NEW;
 END;

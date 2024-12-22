@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\AuthenticatedUser;
+use App\Models\Comment;
 use App\Models\Developer;
 use App\Models\DeveloperProject;
+use App\Models\Notification;
 use App\Models\ProductOwner;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
@@ -366,6 +368,35 @@ class ProjectController extends Controller
 
         if ($project->scrum_master_id == $uid) {
             $project->update(['scrum_master_id' => null]);
+        }
+
+        // Remove developer from tasks
+        $developerTasks = Task::where(['project_id' => $project->id , 'assigned_to' => $uid])->get();
+
+        foreach ($developerTasks as $task) {
+            $task->update(['assigned_to' => null]);
+        }
+
+        // Remove all notification refering to this project.
+        $notifications = Notification::where(['project_id' => $project->id])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
+        // Make all comments anonymous
+        $developerComments = Comment::where(['user_id' => $uid])->get();
+
+        $projectComments = $developerComments->filter(function ($developerComment) use ($uid, $project) {
+            $comment_task_id = $developerComment->task_id;
+
+            $task = Task::where(['id' => $comment_task_id])->firstOrFail();
+
+            return $task->project_id === $project->id;
+        });
+
+        foreach ($projectComments as $projectComment) {
+            $projectComment->update(['user_id' => null]);
         }
 
         $project->developers()->detach($uid);

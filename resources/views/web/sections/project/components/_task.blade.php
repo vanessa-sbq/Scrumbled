@@ -2,7 +2,7 @@
     data-task-id="{{ $task->id }}" data-assigned-to="{{ $task->assigned_to }}" draggable="true">
     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-full">
         <a href="{{ route('task.show', $task->id) }}"
-            class="text-lg font-semibold text-gray-800 hover:text-primary transition">
+            class="task_title text-lg font-semibold text-gray-800 hover:text-primary transition">
             {{ $task->title }}
         </a>
     </td>
@@ -14,11 +14,11 @@
         @endif
         <div class="space-y-2">
             <span
-                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                class="task_effort inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                 {{ $task->effort }}
             </span>
             <span
-                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                class="task_value inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                 {{ $task->value }}
             </span>
         </div>

@@ -2,18 +2,28 @@
     <div class="flex justify-between">
         <div>
             <!-- Display User -->
-            <a href="{{ route('show.profile', $comment->user->username) }}" class="flex items-center space-x-2 group">
+            @if ($comment->user)
+            <a href="{{route('show.profile', $comment->user->username) }}" class="flex items-center space-x-2 group">
                 <img src="{{ asset($comment->user->picture ? 'storage/' . $comment->user->picture : 'images/users/default.png') }}"
                      alt="{{ $comment->user->username }}" class="w-6 h-6 rounded-full">
                 <span class="group-hover:underline group-hover:text-primary transition-colors">
                                 {{ $comment->user->username }}
                             </span>
             </a>
+            @else
+                <div class="flex items-center space-x-2 group">
+                    <img src="{{ asset('images/users/default.png') }}"
+                         alt="anonymous" class="w-6 h-6 rounded-full">
+                    <span class="group-hover:underline group-hover:text-primary transition-colors">
+                                anonymous
+                            </span>
+                </div>
+            @endif
         </div>
 
         <!-- Actions -->
         <div class="flex space-x-2" data-edit-comment-url="{{ route('comments.edit', $comment->id) }}" data-delete-comment-url="{{ route('comments.delete', $comment->id) }}">
-            @if (Auth::guard("admin")->check() || (Auth::user() && Auth::user()->id === $comment->user->id))
+            @if (Auth::guard("admin")->check() || (Auth::user() && $comment->user && Auth::user()->id === $comment->user->id))
                 <button class="edit-comment-button text-blue-500 hover:text-blue-700 edit-comment" data-id="{{ $comment->id }}">
                     ✏️ Edit
                 </button>
