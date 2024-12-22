@@ -7,6 +7,7 @@ use App\Models\AuthenticatedUser;
 use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -39,7 +40,7 @@ class TaskController extends Controller
             'title' => 'required',
             'effort' => 'required',
             'value' => 'required',
-            'state' => 'required'
+            'state' => 'required',
         ]);
 
         // Manually create the $task object
@@ -50,14 +51,26 @@ class TaskController extends Controller
         $task->value = $request->value;
         $task->state = $request->state;
 
-        $assignedDeveloper = AuthenticatedUser::where(['username' => $request->assigned_to])->firstOrFail();
+        if ($request->state === 'IN_PROGRESS') {
+            $assignedDeveloper = AuthenticatedUser::where(['username' => $request->assigned_to])->firstOrFail();
+        } else {
+            $assignedDeveloper = AuthenticatedUser::where(['id' => $request->assigned_to])->firstOrFail();
+        }
 
         $task->assigned_to = $assignedDeveloper->id;
 
         $task->assignedDeveloper = new \stdClass();
         $task->assignedDeveloper->user = $assignedDeveloper;;
 
-        $v = view('web.sections.project.components._task', compact('task'))->render();
+        Log::info($request->state);
+
+        if ($request->state === 'IN_PROGRESS') {
+            $v = view('web.sections.project.components._task', compact('task'))->render();
+            return response()->json($v);
+        }
+
+        $v = view('web.sections.project.components._taskSprintBacklog', compact('task'))->render();
+        Log::info(response()->json($v));
         return response()->json($v);
     }
 

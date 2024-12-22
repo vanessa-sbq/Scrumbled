@@ -1,7 +1,8 @@
-<div class="flex">    
-    <div class="basis-3/4">
-        </form> 
-        {{ $notificationInfo['current_po']->username }} invited you to participate in project {{ $notificationInfo['project']->title }}.
+<div class="flex flex-wrap md:flex-nowrap gap-2">
+    <div class="md:basis-3/4">
+        </form>
+        {{ $notificationInfo['current_po']->username }} invited you to participate in project
+        {{ $notificationInfo['project']->title }}.
     </div>
     <div class="basis-1/4 flex gap-2">
         <form id="accept-invitation-form" method="POST" action="{{ route('inbox.acceptInvitation') }}">

@@ -16,16 +16,21 @@ class CommentController extends Controller
         ]);
 
         $task = Task::findOrFail($taskId);
-
-        $comment = $task->comments()->create([
+        
+        $comment = $task->comments()->make([
             'description' => $request->description,
             'user_id' => auth()->id(),
             'task_id' => $taskId,
         ]);
-
-        $html = view('web.sections.task.components._comments', compact('comment'))->render();
-
-        return response()->json(['success' => true, 'html' => $html]);
+        
+        if ($this->authorize('create', $comment)){
+            $comment->save();
+            $html = view('web.sections.task.components._comments', compact('comment'))->render();
+            return response()->json(['success' => true, 'html' => $html]);
+        }
+        else {
+            return response()->json(['success' => false]);
+        }
     }
 
     public function delete($commentId)
@@ -51,11 +56,16 @@ class CommentController extends Controller
         ]);
 
         $comment->description = $request->description;
-        $comment->save();
 
-        return response()->json([
-            'success' => true,
-            'comment' => $comment,
-        ]);
+        if ($this->authorize('update', $comment)){
+            $comment->save();
+            return response()->json([
+                'success' => true,
+                'comment' => $comment,
+            ]);
+        }
+        else {
+            return response()->json(['success' => false]);
+        }
     }
 }

@@ -129,25 +129,18 @@ class ProjectController extends Controller
                 $slug = $originalSlug . '-' . $counter;
                 $counter++;
             }
-
             $project->slug = $slug;
 
-            // Log the project attributes before saving
-            Log::info('Project attributes before saving:', $project->getAttributes());
-
-            $project->save();
-
-            //session()->flash('created_project');
-            session()->flash('created_project', true);
-
-            // Log the project attributes after saving
-            Log::info('Project attributes after saving:', $project->getAttributes());
-
-            return redirect()->route('projects.show', $project->slug)->with('success', 'Project created successfully.');
+            if ($this->authorize('create', $project)){
+                $project->save();
+                session()->flash('created_project', true);
+                return redirect()->route('projects.show', $project->slug)->with('success', 'Project created successfully.');
+            }
+            else{
+                return back()->withErrors(['error' => 'An error occurred while creating the project.'])->withInput();
+            }
         } catch (QueryException $e) {
-            // Log detailed error information
             Log::error('QueryException:', ['error' => $e->getMessage(), 'errorInfo' => $e->errorInfo]);
-
             if ($e->errorInfo[1] == 1062) { // 1062 is the error code for duplicate entry
                 return back()->withErrors(['title' => 'Title already in use.'])->withInput();
             }
@@ -192,7 +185,7 @@ class ProjectController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function inviteMember(Request $request, $slug)
-    {
+    {        
         $request->validate([
             'user_id' => 'required|exists:authenticated_user,id',
         ]);
@@ -209,23 +202,28 @@ class ProjectController extends Controller
             return redirect()->route('projects.show', $project->slug)->with('error', 'User is already in the project.');
         }
 
-        // Add user to the developer table if not already present
-        if (!Developer::where('user_id', $user->id)->exists()) {
-            Developer::create([
-                'user_id' => $user->id,
-            ]);
-        }
+        if ($this->authorize('manage', $project)){
+            // Add user to the developer table if not already present
+            if (!Developer::where('user_id', $user->id)->exists()) {
+                Developer::create(['user_id' => $user->id,]);
+            }
 
-        if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
-            DeveloperProject::create([
-                'developer_id' => $user->id,
-                'project_id' => $project->id,
-            ]);
-        }
+            if (!DeveloperProject::where(['developer_id' => $user->id, 'project_id' => $project->id ])->exists()) {
+                DeveloperProject::create([
+                    'developer_id' => $user->id,
+                    'project_id' => $project->id,
+                ]);
+            }
 
-        //Mail::to($user->email)->send(new InviteDetailsMail($user));
-        event(new NewNotification($user->id, 'You received an invitation!'));
-        return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
+            $inviter = AuthenticatedUser::where('id', $project->product_owner_id)->first();
+            $url = preg_replace('/projects\/\w+\/invite/', 'inbox', $request->url());
+            //Mail::to($user->email)->send(new InviteDetailsMail($user, $project, $inviter, $url));  // TODO: Uncomment
+            event(new NewNotification($user->id, 'You received an invitation!'));
+            return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
+        }
+        else {
+            return redirect()->route('projects.show', $project->slug)->with('error', 'You are not authorized to invite members to this project.');
+        }
     }
 
     public function backlog($slug)
@@ -356,7 +354,6 @@ class ProjectController extends Controller
             Favorite::where('user_id', $user->id)
                 ->where('project_id', $project->id)
                 ->delete();
-            //event(new NewNotification($user->id, 'Removed from Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Unfavorited!"]);
         } else {
             // Favorite logic
@@ -364,7 +361,6 @@ class ProjectController extends Controller
                 'user_id' => $user->id,
                 'project_id' => $project->id,
             ]);
-            //event(new NewNotification($user->id, 'Added to Favorites!'));  // FIXME: Called when I go back from creating a project
             return response()->json(['status' => 'success', 'message' => "Favorited!"]);
         }
     }

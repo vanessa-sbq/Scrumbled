@@ -152,6 +152,12 @@ class ProjectController extends Controller
             $task->update(['assigned_to' => null]);
         }
 
+        $notifications = Notification::where(['project_id' => $project->id, 'receiver_id' => $uid, 'invited_user_id' => $uid])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Project transferred']);
     }
     public function archiveProject(Request $request) {

@@ -99,9 +99,11 @@ Route::controller(ProjectController::class)->group(function () {
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
-    Route::middleware(['no.admin'])->group(function () {
+    Route::middleware(['guest','no.admin'])->group(function () {
         Route::get('/login/forgot-password', 'forgotPassword')->name('login.forgotPassword');
-        Route::post('/login/reset-password', 'resetPassword')->name('login.resetPassword');
+        Route::post('/login/forgot-password', 'sendResetLink')->name('login.sendResetLink');
+        Route::get('/login/forgot-password/reset-password', 'resetForm')->name('login.resetForm');
+        Route::post('/login/forgot-password/reset-password', 'resetPassword')->name('login.resetPassword');
     });
     Route::get('/logout', 'logout')->name('logout')->middleware(['auth:web']);
 });

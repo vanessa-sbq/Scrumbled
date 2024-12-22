@@ -10,20 +10,22 @@
                 <h1 class="text-4xl font-bold text-primary"> All Tasks </h1>
             </div>
 
-            <form id="task-search" method="GET" action="{{ route('projects.tasks.search', ['slug' => $project->slug]) }}" class="flex flex-col gap-3">
+            <form id="task-search" method="GET" action="{{ route('projects.tasks.search', ['slug' => $project->slug]) }}"
+                class="flex flex-col gap-3">
                 <!-- Search Input -->
                 <div class="flex gap-2">
                     <input type="text" name="query" id="task-search-input"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                           placeholder="Search tasks...">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                        placeholder="Search tasks...">
                     <button type="submit"
-                            class="px-3 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Search</button>
+                        class="px-3 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Search</button>
                 </div>
 
                 <!-- Filters -->
-                <div class="flex gap-4 mb-2">
+                <div class="flex flex-col md:flex-row gap-4 mb-2">
                     <!-- State Filter -->
-                    <select id="state-input" name="state" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
+                    <select id="state-input" name="state"
+                        class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                         <option value="">All States</option>
                         <option value="BACKLOG">Backlog</option>
                         <option value="SPRINT_BACKLOG">Sprint Backlog</option>
@@ -33,7 +35,8 @@
                     </select>
 
                     <!-- Value Filter -->
-                    <select id="value-input" name="value" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
+                    <select id="value-input" name="value"
+                        class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                         <option value="">All Values</option>
                         <option value="MUST_HAVE">Must Have</option>
                         <option value="SHOULD_HAVE">Should Have</option>
@@ -42,7 +45,8 @@
                     </select>
 
                     <!-- Effort Filter -->
-                    <select id="effort-input" name="effort" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
+                    <select id="effort-input" name="effort"
+                        class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                         <option value="">All Efforts</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -53,9 +57,10 @@
                     </select>
 
                     <!-- Assigned To Filter -->
-                    <select id="assigned-input" name="assigned_to" class="w-1/5 border py-2 px-3 rounded-md text-sm focus:outline-none focus:ring-primary focus:border-primary shadow-sm">
+                    <select id="assigned-input" name="assigned_to"
+                        class="mt-1 block w-full px-3 py-2 border border-muted rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
                         <option value="">All Developers</option>
-                        @foreach($project->developers as $developer)
+                        @foreach ($project->developers as $developer)
                             <option value="{{ $developer->id }}">{{ $developer->username }}</option>
                         @endforeach
                         <option value="unassigned">Unassigned</option>
@@ -63,26 +68,26 @@
                 </div>
             </form>
 
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-white border-b border-black rounded-t-lg">
+            <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
+                <thead class="bg-white border-b border-black">
                     <tr>
-                        <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider rounded-tl-lg">
+                        <th class="px-6 py-3 text-left text-lg font-bold text-primary uppercase tracking-wider">
                             To Do ({{ count($tasks) }})
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Effort
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
+                            Effort
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Value
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
+                            Value
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell whitespace-nowrap">
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell whitespace-nowrap">
                             Assigned To
                         </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             SPRINT
                         </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider rounded-tr-lg hidden md:table-cell">
+                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">
                             STATE
                         </th>
                     </tr>
