@@ -4,7 +4,7 @@
         <div>
             <!-- Display User -->
             @if ($comment->user)
-                <x-user :user="$task->assignedDeveloper->user" />
+                <x-user :user="$comment->user" />
             @else
                 <div class="flex items-center space-x-2 group">
                     <img src="{{ asset('images/users/default.png') }}" alt="anonymous" class="w-8 h-8 rounded-full">
