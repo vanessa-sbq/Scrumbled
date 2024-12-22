@@ -215,10 +215,15 @@ class ProjectController extends Controller
                 ]);
             }
 
-            //Mail::to($user->email)->send(new InviteDetailsMail($user));
+            $inviter = AuthenticatedUser::where('id', $project->product_owner_id)->first();
+            $url = preg_replace('/projects\/\w+\/invite/', 'inbox', $request->url());
+            //Mail::to($user->email)->send(new InviteDetailsMail($user, $project, $inviter, $url));  // TODO: Uncomment
             event(new NewNotification($user->id, 'You received an invitation!'));
             return redirect()->route('projects.team.settings', $project->slug)->with('success', 'Member invited successfully.');
-        }   
+        }
+        else {
+            return redirect()->route('projects.show', $project->slug)->with('error', 'You are not authorized to invite members to this project.');
+        }
     }
 
     public function backlog($slug)
