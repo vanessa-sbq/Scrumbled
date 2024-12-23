@@ -33,7 +33,8 @@
 
                 </h2>
                 <x-button variant="primary" size="md" href="/register" class="mt-8">
-                    Get Started <x-lucide-chevron-right class="w-3.5" />
+                    Get Started 
+                    <svg class="w-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </x-button>
             </div>
             <div class="relative mt-10 container">
@@ -58,7 +59,7 @@
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
-                                <x-lucide-share-2 class="size-5 text-white" />
+                                <svg class="size-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
                             </div>
                             Create Projects & Invite Members
                         </dt>
@@ -69,7 +70,7 @@
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
-                                <x-lucide-calendar-plus class="size-5 text-white" />
+                                <svg class="size-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="M3 10h18"/><path d="M16 19h6"/><path d="M19 16v6"/></svg>
                             </div>
                             Create Sprints
                         </dt>
@@ -80,7 +81,7 @@
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
-                                <x-lucide-pencil class="size-5 text-white" />
+                                <svg class="size-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
                             </div>
                             Add Tasks to Backlog & Sprints
                         </dt>
@@ -91,7 +92,7 @@
                         <dt class="text-base/7 font-semibold text-gray-900">
                             <div
                                 class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-primary">
-                                <x-lucide-message-square class="size-5 text-white" />
+                                <svg class="size-5 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                             </div>
                             Comment on Tasks
                         </dt>

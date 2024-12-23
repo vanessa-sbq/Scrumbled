@@ -96,7 +96,7 @@
                         <button
                             class="accordion-toggle group inline-flex items-center justify-between text-left text-lg leading-8 text-black font-semibold w-full transition duration-500 hover:text-primary">
                             <h5>{{ $faq['question'] }}</h5>
-                            <x-lucide-chevron-down class="chevron w-4 h-4 transition-transform duration-500" />
+                            <svg class="chevron w-4 h-4 transition-transform duration-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                         </button>
                         <div class="accordion-content w-full overflow-hidden max-h-0 transition-all duration-500">
                             <p class="text-base font-normal leading-6 mt-2">
