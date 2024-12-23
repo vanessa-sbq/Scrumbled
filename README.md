@@ -24,7 +24,26 @@ To run it use this bash command:
 $ docker run -d --name lbaw2425 -p 8001:80 gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113
 ```
 
-### 2. Video presentation
+### 2. Usage
+
+#### 2.1. Administration Credentials
+
+In order to access the admin page, append ``/admin`` to the base URL.  
+
+| Username        | Password |
+| --------------- | -------- |
+| admin@email.com | password |
+
+#### 2.2. User Credentials
+
+| Type                       | Username          | Password |
+| -------------------------- | ----------------- | -------- |
+| Product Owner of Jira      | up202207919@up.pt | password |
+| Product Owner of Scrumbled | up202205469@up.pt | password |
+| Scrum Master of Jira       | up202205794@up.pt | password |
+| Developer in Jira          | up202206370@up.pt | password |
+
+### 3. Video presentation
 
 The video presentation can be found in the repository's docs folder. You can access it by clicking [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/d7e28c2c6bd0492cb93979b4cf53943407992e39/docs/ScrumbledDemo.mp4).
 
