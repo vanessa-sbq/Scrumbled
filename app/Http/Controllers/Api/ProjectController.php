@@ -154,6 +154,12 @@ class ProjectController extends Controller
             $notification->delete();
         }
 
+        $notifications = Notification::where(['project_id' => $project->id, 'receiver_id' => $oldOwner, 'invited_user_id' => $oldOwner])->get();
+
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Project transferred']);
     }
     public function archiveProject(Request $request) {

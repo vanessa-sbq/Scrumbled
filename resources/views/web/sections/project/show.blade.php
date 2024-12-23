@@ -7,19 +7,18 @@
 
         <!-- Title Section -->
         @if ($sprint && !$sprint->is_archived)
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-wrap gap-4 items-center justify-between mb-6">
                 <h1 class="text-4xl font-bold text-primary">{{ $sprint->name }} <span
                         class="text-muted-foreground">(#{{ $sprint->id }})</span></h1>
                 @can('manage', $project)
                     <div class="flex gap-2">
                         <!-- Edit Sprint Button -->
-                        <a href="{{ route('sprint.edit', $sprint->id) }}"
-                           class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition">
+                        <x-button variant="secondary" href="{{ route('sprint.edit', $sprint->id) }}" size="md">
                             Edit Sprint
-                        </a>
+                        </x-button>
 
                         <!-- Close Sprint Button -->
-                        <form method="POST" action="{{ route('sprint.close', $sprint->id) }}" class="ml-4">
+                        <form method="POST" action="{{ route('sprint.close', $sprint->id) }}">
                             @csrf
                             <button type="submit"
                                     class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
