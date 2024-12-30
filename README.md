@@ -6,7 +6,7 @@ Scrumbled is a project management website, designed to use the Scrum Framework. 
 
 ### 1. Installation
 
-The final version of the Docker image can be found [here](gitlab.up.pt:5050/lbaw/lbaw2425/lbaw24113), this needs to be used with the command below.
+The final version of the Docker image can be found [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/container_registry/104), this needs to be used with the command below.
 
 ### Using Mailtrap
 In order to view the emails sent to Mailtrap, we have created a test account.
