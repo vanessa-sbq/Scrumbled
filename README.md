@@ -45,7 +45,7 @@ In order to access the admin page, append ``/admin`` to the base URL.
 
 ### 3. Video presentation
 
-The video presentation can be found in the repository's docs folder. You can access it by clicking [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/d7e28c2c6bd0492cb93979b4cf53943407992e39/docs/ScrumbledDemo.mp4).
+The video presentation can be found in the repository's docs folder. You can access it by clicking [here](https://gitlab.up.pt/lbaw/lbaw2425/lbaw24113/-/blob/3a9a701d4e626682631c526d8e38d8743f7bb353/docs/ScrumbledDemoVideoV2.mp4).
 
 
 ---
